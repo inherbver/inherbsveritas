@@ -154,6 +154,49 @@ Avant CHAQUE modification importante :
 
 ---
 
+## 8. **Frontière Client/Serveur Next.js 15**
+
+### Règles Obligatoires
+Éviter fuites de secrets, erreurs d'hydratation, bloat du bundle et bugs de runtime en respectant strictement la séparation Client/Serveur Next.js 15 App Router.
+
+#### **Choix du type de composant**
+- ✅ **Par défaut Server Components** - Passer en Client uniquement si interactivité/hooks/APIs navigateur nécessaires
+- ✅ **"use client"** entraîne tout son graphe d'imports côté client → attention imports involontaires
+- ✅ **Network Boundary** : data + rendu serveur, micro-interactions client
+
+#### **Secrets & code serveur uniquement**
+- ✅ Taguer modules sensibles avec `import "server-only"` en tête → casse build si import côté client
+- ❌ **JAMAIS** exposer variables d'env avec `NEXT_PUBLIC_` si sensibles → inlinées dans bundle
+- ✅ SDK serveur (Stripe Node, ORM, fs) → `server-only` obligatoire
+
+#### **Sérialisation Server → Client**
+- ✅ **Uniquement objets JSON sérialisables** en props vers Client Components
+- ❌ **JAMAIS** classes, fonctions, Dates non sérialisées entre Server/Client
+
+#### **Hydratation & logique client-only**
+- ❌ **Aucun accès** window/localStorage/Date.now() pendant render serveur
+- ✅ **Déplacer dans useEffect** ou isoler via client component
+- ✅ Contenu volontairement différent client/serveur → déférer au montage
+
+#### **Imports et bundle**
+- ❌ **Éviter** import libs lourdes/serveur depuis modules client → grossit bundle
+- ✅ **dynamic(() => import(...), { ssr: false })** uniquement pour strict client-only
+- ✅ **Runtime Node.js** par défaut, Edge réservé cas adaptés
+
+#### **Data fetching & cache**
+- ✅ **Server Components** : fetch/ORM côté serveur avec `cache: 'no-store'` ou `next: { revalidate: N }`
+- ❌ **Éviter double fetch** SSR puis refetch client si non nécessaire
+
+### Checklist Pré-Commit Client/Serveur
+- [ ] Composants serveur par défaut, chaque "use client" justifié
+- [ ] Aucun secret/SDK serveur/fs/ORM importé en client (`server-only` sur helpers sensibles)
+- [ ] Props Server→Client sérialisables (pas classes/fonctions/Date brutes)
+- [ ] Pas d'accès window/localStorage au render serveur
+- [ ] `NEXT_PUBLIC_*` uniquement variables réellement publiques
+- [ ] Pas de double fetch inutile serveur/client
+
+---
+
 ## 🔄 Workflow Standard
 
 ```mermaid
