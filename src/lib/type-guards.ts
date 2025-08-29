@@ -167,14 +167,14 @@ export function isProduct(value: unknown): value is ProductShape {
   return isObject(value) &&
          hasId(value) &&
          hasTimestamps(value) &&
-         isNonEmptyString(value.slug) &&
-         isNonEmptyString(value.name) &&
-         isPositiveNumber(value.price) &&
-         isNonEmptyString(value.currency) &&
-         isNumber(value.stock) &&
-         isBoolean(value.is_active) &&
-         (value.labels === null || value.labels === undefined || isProductLabelArray(value.labels)) &&
-         (value.inci_list === null || value.inci_list === undefined || isArray(value.inci_list, isString));
+         isNonEmptyString(value['slug']) &&
+         isNonEmptyString(value['name']) &&
+         isPositiveNumber(value['price']) &&
+         isNonEmptyString(value['currency']) &&
+         isNumber(value['stock']) &&
+         isBoolean(value['is_active']) &&
+         (value['labels'] === null || value['labels'] === undefined || isProductLabelArray(value['labels'])) &&
+         (value['inci_list'] === null || value['inci_list'] === undefined || isArray(value['inci_list'], isString));
 }
 
 // User type guard
