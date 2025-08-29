@@ -1,0 +1,43 @@
+{
+  "memory": {
+    "project_memory_files": [
+      "CLAUDE.md",
+      "docs/DEVELOPMENT_PLAN_MVP.md",
+      "docs/DATABASE_SCHEMA_MVP.md"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": {
+      "description": "Vérifie la conformité MVP avant chaque action",
+      "script": "scripts/hooks/pre-tool-use.js",
+      "enabled": true
+    },
+    "UserPromptSubmit": {
+      "description": "Charge la configuration CLAUDE.md à chaque demande",
+      "script": "scripts/hooks/user-prompt-submit.js", 
+      "enabled": true
+    },
+    "PostToolUse": {
+      "description": "Valide les changements contre l'architecture MVP",
+      "script": "scripts/hooks/post-tool-use.js",
+      "enabled": true
+    }
+  },
+  "subagents": {
+    "mvp-validator": {
+      "type": "architect-reviewer",
+      "auto_invoke": true,
+      "triggers": [
+        "database changes",
+        "architecture modifications", 
+        "new features"
+      ]
+    }
+  },
+  "system_prompt_additions": [
+    "TOUJOURS consulter CLAUDE.md avant chaque action significative",
+    "Respecter strictement l'architecture MVP 13 tables",
+    "Valider chaque modification contre le plan 12 semaines",
+    "Maintenir la traçabilité complète pour nouveaux développeurs"
+  ]
+}

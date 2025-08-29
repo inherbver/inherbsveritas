@@ -1,0 +1,123 @@
+{
+  "Navigation": {
+    "shop": "Boutique",
+    "products": "Produits",
+    "cart": "Panier",
+    "checkout": "Commande",
+    "magazine": "Magazine",
+    "partners": "Où nous trouver",
+    "about": "Notre Histoire",
+    "contact": "Contact",
+    "account": "Mon compte",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "Inscription"
+  },
+  "Common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "view": "Voir",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "price": "Prix",
+    "quantity": "Quantité",
+    "total": "Total",
+    "subtotal": "Sous-total",
+    "tax": "TVA",
+    "shipping": "Livraison",
+    "free": "Gratuit",
+    "outOfStock": "Rupture de stock",
+    "inStock": "En stock"
+  },
+  "Products": {
+    "title": "Nos Produits Bio",
+    "description": "Découvrez notre sélection de produits biologiques locaux",
+    "viewDetails": "Voir les détails",
+    "addToCart": "Ajouter au panier",
+    "category": "Catégorie",
+    "origin": "Origine",
+    "composition": "Composition",
+    "usage": "Utilisation",
+    "labels": {
+      "bio": "Bio",
+      "local": "Local", 
+      "artisanal": "Artisanal",
+      "seasonal": "De saison"
+    }
+  },
+  "Cart": {
+    "title": "Mon Panier",
+    "empty": "Votre panier est vide",
+    "continueShopping": "Continuer mes achats",
+    "proceedToCheckout": "Procéder à la commande",
+    "itemAdded": "Article ajouté au panier",
+    "itemRemoved": "Article retiré du panier",
+    "updateQuantity": "Modifier la quantité"
+  },
+  "Checkout": {
+    "title": "Finaliser ma commande",
+    "shippingAddress": "Adresse de livraison",
+    "billingAddress": "Adresse de facturation",
+    "paymentMethod": "Méthode de paiement",
+    "orderSummary": "Récapitulatif de commande",
+    "placeOrder": "Valider la commande"
+  },
+  "Articles": {
+    "title": "Articles & Conseils",
+    "readMore": "Lire la suite",
+    "categories": {
+      "conseils": "Conseils",
+      "recettes": "Recettes",
+      "actualites": "Actualités",
+      "guides": "Guides"
+    }
+  },
+  "Markets": {
+    "title": "Marchés & Événements",
+    "address": "Adresse",
+    "schedule": "Horaires",
+    "contact": "Contact",
+    "getDirections": "Itinéraire"
+  },
+  "Partners": {
+    "title": "Nos Partenaires",
+    "types": {
+      "producer": "Producteur",
+      "supplier": "Fournisseur", 
+      "retailer": "Revendeur",
+      "association": "Association"
+    }
+  },
+  "Auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "phone": "Téléphone",
+    "forgotPassword": "Mot de passe oublié ?",
+    "rememberMe": "Se souvenir de moi",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?"
+  },
+  "Footer": {
+    "description": "HerbisVeritas - Votre partenaire pour une alimentation bio et locale",
+    "quickLinks": "Liens rapides",
+    "categories": "Catégories",
+    "support": "Support",
+    "legal": "Légal",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Inscrivez-vous pour recevoir nos actualités",
+    "subscribe": "S'abonner",
+    "followUs": "Suivez-nous"
+  }
+}

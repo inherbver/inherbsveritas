@@ -1,20 +1,20 @@
 import About from "@/components/About";
 import Breadcrumb from "@/components/Common/Breadcrumb";
-import Team from "@/components/Team";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title:
-    "About Us | Play SaaS Starter Kit and Boilerplate for Next.js",
-  description: "This is About page description",
+  title: "Notre Histoire | HerbisVeritas",
+  description: "Découvrez l'histoire d'HerbisVeritas, nos valeurs et notre engagement pour les cosmétiques bio artisanaux",
 };
 
 const AboutPage = () => {
   return (
     <main>
-      <Breadcrumb pageName="About Us Page" />
+      <Breadcrumb 
+        pageName="Notre Histoire" 
+        pageDescription="L&apos;aventure HerbisVeritas" 
+      />
       <About />
-      <Team />
     </main>
   );
 };

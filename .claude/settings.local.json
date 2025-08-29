@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:docs.typingmind.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(rm:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm run build:*)",
+      "Bash(sed:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

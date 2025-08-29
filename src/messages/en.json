@@ -1,0 +1,123 @@
+{
+  "Navigation": {
+    "shop": "Shop",
+    "products": "Products",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "magazine": "Magazine",
+    "partners": "Find us",
+    "about": "Our Story",
+    "contact": "Contact",
+    "account": "My Account",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register"
+  },
+  "Common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "shipping": "Shipping",
+    "free": "Free",
+    "outOfStock": "Out of stock",
+    "inStock": "In stock"
+  },
+  "Products": {
+    "title": "Our Organic Products",
+    "description": "Discover our selection of local organic products",
+    "viewDetails": "View details",
+    "addToCart": "Add to cart",
+    "category": "Category",
+    "origin": "Origin",
+    "composition": "Composition",
+    "usage": "Usage",
+    "labels": {
+      "bio": "Organic",
+      "local": "Local", 
+      "artisanal": "Artisanal",
+      "seasonal": "Seasonal"
+    }
+  },
+  "Cart": {
+    "title": "My Cart",
+    "empty": "Your cart is empty",
+    "continueShopping": "Continue shopping",
+    "proceedToCheckout": "Proceed to checkout",
+    "itemAdded": "Item added to cart",
+    "itemRemoved": "Item removed from cart",
+    "updateQuantity": "Update quantity"
+  },
+  "Checkout": {
+    "title": "Checkout",
+    "shippingAddress": "Shipping address",
+    "billingAddress": "Billing address",
+    "paymentMethod": "Payment method",
+    "orderSummary": "Order summary",
+    "placeOrder": "Place order"
+  },
+  "Articles": {
+    "title": "Articles & Tips",
+    "readMore": "Read more",
+    "categories": {
+      "conseils": "Tips",
+      "recettes": "Recipes",
+      "actualites": "News",
+      "guides": "Guides"
+    }
+  },
+  "Markets": {
+    "title": "Markets & Events",
+    "address": "Address",
+    "schedule": "Schedule",
+    "contact": "Contact",
+    "getDirections": "Get directions"
+  },
+  "Partners": {
+    "title": "Our Partners",
+    "types": {
+      "producer": "Producer",
+      "supplier": "Supplier", 
+      "retailer": "Retailer",
+      "association": "Association"
+    }
+  },
+  "Auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?"
+  },
+  "Footer": {
+    "description": "HerbisVeritas - Your partner for organic and local food",
+    "quickLinks": "Quick links",
+    "categories": "Categories",
+    "support": "Support",
+    "legal": "Legal",
+    "newsletter": "Newsletter",
+    "newsletterDescription": "Subscribe to receive our news",
+    "subscribe": "Subscribe",
+    "followUs": "Follow us"
+  }
+}
