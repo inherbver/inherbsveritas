@@ -90,8 +90,10 @@ refactor(products): optimisation requêtes Supabase
 
 **Pattern obligatoire avant commit :**
 1. 📋 Interroger développeur sur mise à jour documentation requise
-2. ✅ Valider cohérence avec plan MVP  
-3. 🔍 Message concis décrivant uniquement les changements
+2. 📋 C:\inherbisveritas\doc est le dossier de la documentation définitive
+3. 📋 C:\inherbisveritas\docs est le dossier de la documentation temporaire
+4. ✅ Valider cohérence avec plan MVP  
+5. 🔍 Message concis décrivant uniquement les changements
 
 ### 7. **Règles de Documentation**
 **Style obligatoire :**
