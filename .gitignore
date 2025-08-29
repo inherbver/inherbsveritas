@@ -27,6 +27,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -35,5 +36,47 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Security - Keys & Secrets
+*.key
+*.pem
+*.p12
+*.keystore
+secret*
+secrets*
+*credential*
+*password*
 
-.env
+# Claude Code - Local Settings
+.claude/settings.local.json
+.claude/logs/
+.claude/cache/
+
+# IDE & Editors
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
