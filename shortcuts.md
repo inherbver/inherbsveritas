@@ -5,10 +5,12 @@
 ### Aliases Bash
 ```bash
 # Dans ton terminal (avant Claude Code)
-cc     # → "Consulte CLAUDE.md et applique les patterns définis"
-dp     # → "Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes"
-nl     # → Saut de ligne 
-tt     # → Séparateur de sections avec lignes
+cc        # → "Consulte CLAUDE.md et applique les patterns définis"
+dp        # → "Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes"
+orthodox  # → "Vérifie cohérence entre docs/DEVELOPMENT_PLAN_MVP.md, docs/DATABASE_SCHEMA_MVP.md et architecture 13 tables"
+github    # → "Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote"
+nl        # → Saut de ligne 
+tt        # → Séparateur de sections avec lignes
 ```
 
 ### Usage Efficace
@@ -19,6 +21,12 @@ $ cc
 
 $ dp  
 > Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes
+
+$ orthodox
+> Vérifie cohérence entre docs/DEVELOPMENT_PLAN_MVP.md, docs/DATABASE_SCHEMA_MVP.md et architecture 13 tables
+
+$ github
+> Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote
 
 # 2. Copier-coller dans Claude Code
 # 3. Pour structurer tes prompts
@@ -33,7 +41,9 @@ $ tt
 
 **Pour copier-coller direct :**
 - `cc` → Consulte CLAUDE.md et applique les patterns définis
-- `dp` → Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes
+- `dp` → Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes  
+- `orthodox` → Vérifie cohérence entre docs/DEVELOPMENT_PLAN_MVP.md, docs/DATABASE_SCHEMA_MVP.md et architecture 13 tables
+- `github` → Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote
 - `nl` → [saut de ligne]
 - `mvp` → Respecte architecture MVP 13 tables
 - `i18n` → Support FR/EN uniquement (MVP)

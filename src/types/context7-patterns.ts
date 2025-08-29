@@ -74,14 +74,14 @@ export function isObject(value: unknown): value is Record<string, unknown> {
 
 // Type guard pour vérifier si une valeur a un ID
 export function hasId(value: unknown): value is HasId {
-  return isObject(value) && typeof value.id === 'string';
+  return isObject(value) && typeof value['id'] === 'string';
 }
 
 // Type guard pour vérifier les timestamps
 export function hasTimestamps(value: unknown): value is HasTimestamps {
   return isObject(value) && 
-         typeof value.created_at === 'string' && 
-         typeof value.updated_at === 'string';
+         typeof value['created_at'] === 'string' && 
+         typeof value['updated_at'] === 'string';
 }
 
 // Type guard pour réponses API
@@ -302,11 +302,4 @@ export interface ClickableProps extends BaseComponentProps {
   readonly ariaLabel?: string;
 }
 
-// Export des types principaux pour usage externe
-export type { HasId, HasTimestamps, HasStatus, EntityUpdate, PaginatedResult };
-export type { ApiResult, ApiResponse, ApiError };
-export type { FormState, FormField, FormAction };
-export type { AsyncResource, UseAsyncResult, LoadingState };
-export type { ValidationResult, ValidationError, Validator };
-export type { Result };
-export type { BaseComponentProps, ComponentWithChildren, LoadingComponentProps, ClickableProps };
+// Types principaux déjà exportés via interface/type declarations ci-dessus

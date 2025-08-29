@@ -189,10 +189,10 @@ export function isUser(value: unknown): value is UserShape {
   return isObject(value) &&
          hasId(value) &&
          hasTimestamps(value) &&
-         isNonEmptyString(value.email) &&
-         isUserRole(value.role) &&
-         isNonEmptyString(value.status) &&
-         isBoolean(value.newsletter_subscribed);
+         isNonEmptyString(value['email']) &&
+         isUserRole(value['role']) &&
+         isNonEmptyString(value['status']) &&
+         isBoolean(value['newsletter_subscribed']);
 }
 
 // Order type guard
@@ -208,11 +208,11 @@ export function isOrder(value: unknown): value is OrderShape {
   return isObject(value) &&
          hasId(value) &&
          hasTimestamps(value) &&
-         isNonEmptyString(value.user_id) &&
-         isOrderStatus(value.status) &&
-         isPaymentStatus(value.payment_status) &&
-         isPositiveNumber(value.total_amount) &&
-         isNonEmptyString(value.currency);
+         isNonEmptyString(value['user_id']) &&
+         isOrderStatus(value['status']) &&
+         isPaymentStatus(value['payment_status']) &&
+         isPositiveNumber(value['total_amount']) &&
+         isNonEmptyString(value['currency']);
 }
 
 // ============================================================================
@@ -286,10 +286,10 @@ export function isFormField<T>(
   valueGuard: (v: unknown) => v is T
 ): value is FormField<T> {
   return isObject(value) &&
-         valueGuard(value.value) &&
-         (value.error === undefined || isNonEmptyString(value.error)) &&
-         isBoolean(value.touched) &&
-         isBoolean(value.dirty);
+         valueGuard(value['value']) &&
+         (value['error'] === undefined || isNonEmptyString(value['error'])) &&
+         isBoolean(value['touched']) &&
+         isBoolean(value['dirty']);
 }
 
 // ============================================================================
@@ -305,10 +305,10 @@ export interface PaginationParams {
 
 export function isPaginationParams(value: unknown): value is PaginationParams {
   return isObject(value) &&
-         isPositiveNumber(value.page) &&
-         isPositiveNumber(value.pageSize) &&
-         (value.sortBy === undefined || isNonEmptyString(value.sortBy)) &&
-         (value.sortOrder === undefined || value.sortOrder === 'asc' || value.sortOrder === 'desc');
+         isPositiveNumber(value['page']) &&
+         isPositiveNumber(value['pageSize']) &&
+         (value['sortBy'] === undefined || isNonEmptyString(value['sortBy'])) &&
+         (value['sortOrder'] === undefined || value['sortOrder'] === 'asc' || value['sortOrder'] === 'desc');
 }
 
 export interface PaginatedResult<T> {
@@ -324,11 +324,11 @@ export function isPaginatedResult<T>(
   itemGuard: (item: unknown) => item is T
 ): value is PaginatedResult<T> {
   return isObject(value) &&
-         isArray(value.data, itemGuard) &&
-         isNumber(value.total) &&
-         isPositiveNumber(value.page) &&
-         isPositiveNumber(value.pageSize) &&
-         isBoolean(value.hasMore);
+         isArray(value['data'], itemGuard) &&
+         isNumber(value['total']) &&
+         isPositiveNumber(value['page']) &&
+         isPositiveNumber(value['pageSize']) &&
+         isBoolean(value['hasMore']);
 }
 
 // ============================================================================
@@ -370,7 +370,7 @@ export function validateWithSchema<T>(
     return { success: true, data };
   } catch (error) {
     const message = error instanceof z.ZodError 
-      ? error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
+      ? error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
       : 'Validation failed';
     return { success: false, error: message };
   }
