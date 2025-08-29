@@ -1,4 +1,17 @@
 {
+  "mcpServers": {
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y", 
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=mntndpelpvcskirnyqvx"
+      ],
+      "env": {
+        "SUPABASE_SERVICE_ROLE_KEY": "**REDACTED_SUPABASE_KEY**"
+      }
+    }
+  },
   "memory": {
     "project_memory_files": [
       "CLAUDE.md",
