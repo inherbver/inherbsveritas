@@ -9,6 +9,7 @@ cc        # → "Consulte CLAUDE.md et applique les patterns définis"
 dp        # → "Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes"
 orthodox  # → "Vérifie cohérence entre docs/DEVELOPMENT_PLAN_MVP.md, docs/DATABASE_SCHEMA_MVP.md et architecture 13 tables"
 github    # → "Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote"
+build     # → "Lance npm run build + vérification erreurs + rapport de performance + validation MVP"
 nl        # → Saut de ligne 
 tt        # → Séparateur de sections avec lignes
 ```
@@ -28,6 +29,9 @@ $ orthodox
 $ github
 > Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote
 
+$ build
+> Lance npm run build + vérification erreurs + rapport de performance + validation MVP
+
 # 2. Copier-coller dans Claude Code
 # 3. Pour structurer tes prompts
 $ tt
@@ -44,6 +48,7 @@ $ tt
 - `dp` → Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes  
 - `orthodox` → Vérifie cohérence entre docs/DEVELOPMENT_PLAN_MVP.md, docs/DATABASE_SCHEMA_MVP.md et architecture 13 tables
 - `github` → Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote
+- `build` → Lance npm run build + vérification erreurs + rapport de performance + validation MVP
 - `nl` → [saut de ligne]
 - `mvp` → Respecte architecture MVP 13 tables
 - `i18n` → Support FR/EN uniquement (MVP)

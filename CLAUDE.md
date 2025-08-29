@@ -44,10 +44,52 @@ Read → Edit/Write
 ### 3 bis Structure & Placement des Fichiers
 
 - ✅ Respecter la structure de dossiers définie dans `docs/PROJECT_STRUCTURE.md`.
-- ✅ Vérifier avant création qu’un fichier **de même nom ou rôle n’existe pas déjà** ailleurs.
+- ✅ Vérifier avant création qu'un fichier **de même nom ou rôle n'existe pas déjà** ailleurs.
 - ✅ Centraliser les composants génériques dans `src/components/`, les pages dans `app/`, et les tests dans `tests/`.
 - ✅ Les noms de fichiers doivent suivre la convention définie (`PascalCase` pour composants, `kebab-case` pour fichiers utilitaires).
 - ❌ Interdiction de créer un **doublon fonctionnel** (ex. `Cart.tsx` et `Cart/index.tsx`).
+
+### 4. **Conventions Nommage Next.js (DEV.TO Best Practices)**
+
+**Règles Strictes Basées sur Standards Industrie :**
+
+#### **Fichiers & Dossiers :**
+- ✅ **kebab-case** pour TOUS les fichiers et dossiers (`user-profile.tsx`, `data-table.tsx`)
+- ✅ **Consistance absolue** → JAMAIS mélanger les conventions
+- ✅ **Compatibilité cross-platform** → Windows/Linux/macOS
+- ✅ **URL-friendly** structure pour SEO et navigation
+
+#### **Composants React :**
+- ✅ **PascalCase** pour noms composants (`function UserProfile()`, `const DataTable`)
+- ✅ **Alignement** nom composant ↔ nom fichier (`user-profile.tsx` → `UserProfile`)
+- ✅ **Descriptif** et business-oriented
+
+#### **Structure Dossiers UI :**
+```bash
+src/components/
+├── ui/                    # kebab-case (shadcn/ui standard)
+│   ├── button.tsx         # kebab-case fichiers
+│   ├── input.tsx         # PascalCase composants
+│   └── data-table.tsx    # aligné avec DataTable component
+├── features/             # modules métier kebab-case
+│   ├── user-profile.tsx  
+│   └── product-catalog.tsx
+```
+
+#### **Interdictions Absolues :**
+- ❌ **Doublons casse** : `ui/` ET `UI/` (Git Windows conflict)
+- ❌ **Mix conventions** : `UserProfile.tsx` + `data-table.tsx` dans même dossier
+- ❌ **PascalCase dossiers** : `Components/` → `components/`
+- ❌ **Underscores** : `user_profile.tsx` → `user-profile.tsx`
+
+#### **Validation Pre-Commit :**
+```bash
+# Vérifier absence doublons casse
+find src/ -name "*" | sort | uniq -i -c | sort -nr | head -5
+# Must return 1 per unique filename (case-insensitive)
+```
+
+**Source :** [Next.js Component Naming Best Practices](https://dev.to/vikasparmar/nextjs-component-naming-conventions-best-practices-for-file-and-component-names-39o2)
 - ❌ Interdiction de placer des fichiers **hors du dossier prévu** (ex. pas de composant dans `app/`).
 - ❌ Interdiction de créer de nouveaux dossiers sans validation (valider avec plan MVP).
 
