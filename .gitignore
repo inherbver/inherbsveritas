@@ -48,6 +48,7 @@ secrets*
 
 # Claude Code - Local Settings
 .claude/settings.local.json
+.claude/config.json
 .claude/logs/
 .claude/cache/
 
