@@ -137,6 +137,20 @@ refactor(products): optimisation requêtes Supabase
 4. ✅ Valider cohérence avec plan MVP  
 5. 🔍 Message concis décrivant uniquement les changements
 
+**CHECKPOINT AUTO-VALIDATION COMMIT (Anthropic Best Practice) :**
+Avant CHAQUE commit, Claude DOIT valider :
+```xml
+<commit_validation>
+- FORMAT: type(scope): description concise en français ✓/✗
+- EMOJIS: Aucun emoji présent (🚀, ✅, 🤖) ✓/✗  
+- SIGNATURES: Aucune signature Claude automatique ✓/✗
+- LANGUE: Message 100% français ✓/✗
+- LONGUEUR: Description concise < 60 caractères ✓/✗
+</commit_validation>
+```
+
+**SI UNE SEULE VALIDATION ÉCHOUE → REGERERER LE MESSAGE**
+
 ### 7. **Règles de Documentation**
 **Style obligatoire :**
 - ✅ Ton neutre, purement descriptif
