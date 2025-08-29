@@ -70,6 +70,43 @@ Chaque modification DOIT être :
 - 🔗 Liée au plan MVP
 - ✅ Validée contre l'architecture
 
+### 6. **Règles de Commit Strictes**
+Format obligatoire : Conventional Commits en français
+```bash
+type(scope): description concise
+
+# Exemples valides :
+feat(auth): ajout système 3 rôles utilisateur
+fix(cart): correction calcul total panier invité  
+docs(schema): mise à jour architecture 13 tables
+refactor(products): optimisation requêtes Supabase
+```
+
+**Interdictions commits :**
+- ❌ Emojis/émoticons (🚀, ✅, etc.)
+- ❌ Signatures Claude automatiques  
+- ❌ Messages anglais
+- ❌ Descriptions verbeuses
+
+**Pattern obligatoire avant commit :**
+1. 📋 Interroger développeur sur mise à jour documentation requise
+2. ✅ Valider cohérence avec plan MVP  
+3. 🔍 Message concis décrivant uniquement les changements
+
+### 7. **Règles de Documentation**
+**Style obligatoire :**
+- ✅ Ton neutre, purement descriptif
+- ✅ Langage technique précis
+- ✅ Structure logique avec sections claires
+- ❌ Emphase excessive (gras/italique abusif)  
+- ❌ Emojis/émoticons
+- ❌ Formulation marketing/commerciale
+
+**Validation documentation :**
+- Chaque nouveau fichier .md doit être approuvé explicitement
+- Documentation existante : modification seulement si demandée
+- Interroger sur opportunité mise à jour avant chaque commit
+
 ---
 
 ## 🚫 Interdictions Strictes

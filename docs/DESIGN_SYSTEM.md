@@ -11,7 +11,7 @@ Ce document définit le système de design complet pour HerbisVeritas V2, basé 
 ### Stack Technologique
 
 ```typescript
-// Configuration principale
+// Configuration principal
 - Tailwind CSS v4       → Framework CSS utilitaire
 - shadcn/ui            → Bibliothèque de composants
 - Radix UI Primitives  → Composants accessibles

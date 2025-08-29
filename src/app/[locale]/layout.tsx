@@ -1,0 +1,53 @@
+/**
+ * Internationalized Layout for HerbisVeritas V2
+ * Handles locale-specific routing and translations
+ */
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
+import { notFound } from 'next/navigation'
+import { routing } from '@/i18n/routing'
+import Footer from '@/components/Footer'
+import Header from '@/components/Header'
+import ScrollToTop from '@/components/ScrollToTop'
+import '../../styles/index.css'
+import '../../styles/prism-vsc-dark-plus.css'
+import Providers from '../providers'
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
+
+export default async function LocaleLayout({
+  children,
+  params
+}: {
+  children: React.ReactNode
+  params: { locale: string }
+}) {
+  const { locale } = await params
+  
+  // Validate locale
+  if (!routing.locales.includes(locale as any)) {
+    notFound()
+  }
+
+  // Get messages for the locale
+  const messages = await getMessages()
+
+  return (
+    <html suppressHydrationWarning className="!scroll-smooth" lang={locale}>
+      <body>
+        <NextIntlClientProvider messages={messages}>
+          <Providers>
+            <div className="isolate">
+              <Header />
+              {children}
+              <Footer />
+              <ScrollToTop />
+            </div>
+          </Providers>
+        </NextIntlClientProvider>
+      </body>
+    </html>
+  )
+}
