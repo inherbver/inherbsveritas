@@ -137,7 +137,7 @@ export interface HasId {
 }
 
 export function hasId(value: unknown): value is HasId {
-  return isObject(value) && isNonEmptyString(value.id);
+  return isObject(value) && isNonEmptyString(value['id']);
 }
 
 export interface HasTimestamps {
@@ -147,8 +147,8 @@ export interface HasTimestamps {
 
 export function hasTimestamps(value: unknown): value is HasTimestamps {
   return isObject(value) && 
-         isNonEmptyString(value.created_at) && 
-         isNonEmptyString(value.updated_at);
+         isNonEmptyString(value['created_at']) && 
+         isNonEmptyString(value['updated_at']);
 }
 
 // Product type guard

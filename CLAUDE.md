@@ -10,7 +10,7 @@ Ce fichier définit les **patterns de comportement obligatoires** que Claude doi
 
 ## 🎯 Contexte Projet
 
-- **Projet :** HerbisVeritas V2 - E-commerce cosmétique bio
+- **Projet :** inherbisveritas (aka HerbisVeritas V2) - E-commerce cosmétique bio
 - **Stack :** Next.js 15 + TypeScript + Supabase + next-intl 
 - **Architecture :** MVP 13 tables, 12 semaines de développement
 - **Objectif :** Launch-ready sous €125k budget
@@ -29,7 +29,7 @@ Avant TOUTE action, Claude DOIT lire dans cet ordre :
 ### 2. **Architecture MVP Stricte**
 - ✅ **UNIQUEMENT** les 13 tables validées
 - ✅ **UNIQUEMENT** les 7 labels HerbisVeritas définis
-- ✅ **UNIQUEMENT** FR/EN pour MVP (DE/ES → V2) - Architecture évolutive simple
+- ✅ **UNIQUEMENT** FR/EN pour MVP (DE/ES → V2)
 - ✅ **UNIQUEMENT** 3 rôles users (user/admin/dev)
 - ❌ **JAMAIS** ajouter de complexité non-MVP
 
@@ -41,89 +41,34 @@ Read → Edit/Write
 # TOUJOURS préserver les patterns existants
 ```
 
+### 3 bis Structure & Placement des Fichiers
+
+- ✅ Respecter la structure de dossiers définie dans `docs/PROJECT_STRUCTURE.md`.
+- ✅ Vérifier avant création qu’un fichier **de même nom ou rôle n’existe pas déjà** ailleurs.
+- ✅ Centraliser les composants génériques dans `src/components/`, les pages dans `app/`, et les tests dans `tests/`.
+- ✅ Les noms de fichiers doivent suivre la convention définie (`PascalCase` pour composants, `kebab-case` pour fichiers utilitaires).
+- ❌ Interdiction de créer un **doublon fonctionnel** (ex. `Cart.tsx` et `Cart/index.tsx`).
+- ❌ Interdiction de placer des fichiers **hors du dossier prévu** (ex. pas de composant dans `app/`).
+- ❌ Interdiction de créer de nouveaux dossiers sans validation (valider avec plan MVP).
+
+**Pattern obligatoire avant création :**
+1. 📂 Vérifier si le fichier existe déjà (`git grep`, recherche projet).
+2. 📖 Lire `docs/PROJECT_STRUCTURE.md` → identifier le bon dossier cible.
+3. ✅ Créer le fichier uniquement si non existant, au bon emplacement.
+---
+
 ### 4. **TodoWrite Obligatoire**
 - ✅ Créer todo AVANT de commencer une tâche multi-étapes
 - ✅ Marquer in_progress IMMÉDIATEMENT au début
 - ✅ Marquer completed DÈS que fini
 - ✅ Nettoyer la liste si obsolète
 
-### 5. **TypeScript Strict - Context7 Patterns**
-**🚫 INTERDICTION ABSOLUE du type `any` :**
-- ✅ **TOUJOURS** utiliser `unknown` puis type guards
-- ✅ **TOUJOURS** generic constraints `<T extends Something>`
-- ✅ **TOUJOURS** validation runtime avec Zod
-- ✅ **TOUJOURS** branded types pour domaine métier
-- ❌ **JAMAIS** `any`, `object`, ou types implicites
-- ❌ **JAMAIS** `as any` ou cast dangereux
-
-**Patterns Obligatoires :**
-```typescript
-// ✅ Type guards au lieu de any
-function isApiResponse(data: unknown): data is ApiResponse {
-  return typeof data === 'object' && data !== null && 'result' in data;
-}
-
-// ✅ Generic constraints
-function updateEntity<T extends HasId>(entity: T, updates: Partial<T>): T
-
-// ✅ Branded types pour sécurité domaine
-type ProductId = string & { readonly _brand: 'ProductId' };
-```
-
-### 6. **HTML Sémantique - Priorité aux Balises Natives**
-**🎯 RÈGLE D'OR : Balises sémantiques > div :**
-- ✅ `<main>`, `<section>`, `<article>`, `<aside>`, `<nav>`
-- ✅ `<header>`, `<footer>`, `<figure>`, `<figcaption>`
-- ✅ `<button>` au lieu de `<div onClick>`
-- ✅ `<form>`, `<fieldset>`, `<legend>` pour formulaires
-- ❌ **JAMAIS** `<div>` quand une balise sémantique existe
-- ❌ **JAMAIS** `<span onClick>` au lieu de `<button>`
-
-**Justification requise :** Chaque `<div>` doit avoir une raison valide ou être remplacé.
-
-### 7. **Commits - Convention Obligatoire**
-**🎯 EXIGENCE : Conventional Commits en français concis :**
-- ✅ **Format** : `type(scope): description courte`
-- ✅ **Types** : `feat`, `fix`, `refactor`, `docs`, `style`, `test`, `chore`
-- ✅ **Langue** : Français pour description
-- ✅ **Longueur** : Max 50 caractères pour titre
-- ✅ **Exemples** :
-  - `feat(products): ajout labels HerbisVeritas`
-  - `fix(auth): correction rôles utilisateur`
-  - `refactor(db): migration vers schéma 13 tables`
-
-**Justification requise :** Chaque commit doit être traçable et lié au plan MVP.
-
-### 8. **Hydration Mismatch - Prévention Obligatoire**
-**🚫 ZERO TOLERANCE pour les hydration mismatches :**
-- ✅ **TOUJOURS** `typeof window !== 'undefined'` pour browser APIs
-- ✅ **TOUJOURS** `useEffect` pour client-only logic
-- ✅ **TOUJOURS** `dynamic` avec `{ ssr: false }` pour composants client
-- ✅ **TOUJOURS** `suppressHydrationWarning` pour dates/times
-- ❌ **JAMAIS** `window`, `localStorage`, `Date.now()` au render initial
-- ❌ **JAMAIS** contenu différent server vs client
-
-**Patterns Anti-Hydration :**
-```typescript
-// ✅ Client-only component
-const ClientOnly = dynamic(() => import('./ClientComponent'), { ssr: false });
-
-// ✅ Safe browser API access  
-const [mounted, setMounted] = useState(false);
-useEffect(() => setMounted(true), []);
-if (!mounted) return <div>Loading...</div>;
-
-// ✅ Safe date rendering
-<time suppressHydrationWarning>{new Date().toLocaleString()}</time>
-```
-
-### 9. **Documentation Traçable**
+### 5. **Documentation Traçable**
 Chaque modification DOIT être :
 - 📝 Documentée avec raison business
 - 🏷️ Taguée avec version/date
 - 🔗 Liée au plan MVP
 - ✅ Validée contre l'architecture
-- 🔒 Typée strictement sans `any`
 
 ---
 
@@ -137,13 +82,6 @@ Chaque modification DOIT être :
 - Ignorer les 7 labels HerbisVeritas définis
 - Créer des features non-planifiées
 - Bypasser la documentation
-- **UTILISER `any` en TypeScript**
-- **Utiliser `<div>` quand balise sémantique existe**
-- **Omettre validation runtime (Zod)**
-- **Cast dangereux `as any` ou `as unknown as T`**
-- **Créer hydration mismatches (server ≠ client)**
-- **Accéder `window`/`localStorage` au render initial**
-- **Dates/times sans `suppressHydrationWarning`**
 
 ### ❌ **Ne JAMAIS oublier :**
 - Lire CLAUDE.md avant chaque action
