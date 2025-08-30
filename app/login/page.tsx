@@ -5,7 +5,7 @@
  * Intégration Supabase Auth + middleware
  */
 
-import Link from 'next/link'
+import { LoginForm } from '@/components/forms/login-form'
 
 // Composants UI temporaires
 function Card({ children, className }: { children: React.ReactNode, className?: string }) {
@@ -22,20 +22,6 @@ function CardDescription({ children }: { children: React.ReactNode }) {
 }
 function CardContent({ children, className }: { children: React.ReactNode, className?: string }) {
   return <div className={`p-6 pt-0 ${className || ''}`}>{children}</div>
-}
-function Button({ children, variant, asChild, ...props }: any) {
-  const Component = asChild ? 'div' : 'button'
-  const classes = `px-4 py-2 rounded-md text-sm font-medium ${
-    variant === 'outline' ? 'border border-gray-300 bg-white hover:bg-gray-50' : 
-    variant === 'ghost' ? 'hover:bg-gray-50' : 'bg-blue-600 text-white hover:bg-blue-700'
-  }`
-  return <Component className={classes} {...props}>{children}</Component>
-}
-function Input({ ...props }) {
-  return <input className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" {...props} />
-}
-function Label({ children, ...props }: any) {
-  return <label className="block text-sm font-medium text-gray-700 mb-1" {...props}>{children}</label>
 }
 
 interface LoginPageProps {
@@ -78,53 +64,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             </div>
           )}
           
-          <form className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="votre@email.com"
-                required 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
-              <Input 
-                id="password" 
-                type="password" 
-                placeholder="••••••••"
-                required 
-              />
-            </div>
-            
-            <Button type="submit" className="w-full">
-              Se connecter
-            </Button>
-          </form>
+          <LoginForm redirectTo={redirectedFrom} />
           
-          <div className="text-center text-sm">
-            <p className="text-gray-600 mb-2">Pas encore de compte ?</p>
-            <Button variant="outline" asChild className="w-full">
-              <Link href="/signup">Créer un compte</Link>
-            </Button>
-          </div>
-          
-          <div className="flex items-center justify-center pt-4 border-t">
-            <Button variant="ghost" asChild>
-              <Link href="/" className="flex items-center gap-2">
-                <span>←</span>
-                Retour à l&apos;accueil
-              </Link>
-            </Button>
-          </div>
-          
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-            <h4 className="font-semibold text-yellow-800 mb-1">🚧 Version MVP</h4>
-            <p className="text-xs text-yellow-700">
-              Fonctionnalité de connexion en cours de développement. 
-              Le middleware auth est configuré et fonctionnel.
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3 mt-4">
+            <h4 className="font-semibold text-green-800 mb-1">✅ Fonctionnel</h4>
+            <p className="text-xs text-green-700">
+              Connexion avec Supabase Auth intégrée. 
+              Middleware RBAC opérationnel avec protection des routes.
             </p>
           </div>
         </CardContent>

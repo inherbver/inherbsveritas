@@ -62,115 +62,173 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 
 ### Phase 1 : Foundation (Semaines 1-3)
 
-#### **Semaine 1 : Architecture & Base**
+#### **Semaine 1 : Architecture & Base + Tests Setup**
 - [ ] **Setup projet Next.js 15**
   - Configuration TypeScript strict
   - Installation Supabase + shadcn/ui
   - Configuration next-intl v3.22+
   - ESLint + Prettier + Husky
 
+- [ ] **Infrastructure Tests TDD**
+  - Configuration Jest + React Testing Library
+  - Configuration Playwright e2e
+  - Structure dossiers `tests/` (unit/integration/e2e)
+  - Scripts npm tests dans package.json
+  - Configuration couverture de code > 80%
+
 - [ ] **Migration base de données**
+  - **TDD** : Tests fixtures + seeds AVANT migration
   - Création des 13 tables MVP
   - Types Supabase générés
   - RLS policies de base
   - Seeds data initiales
 
 - [ ] **Types TypeScript finaux**
+  - **TDD** : Tests utilitaires types AVANT implémentation
   - Implémentation TYPESCRIPT_TYPES_MVP_FINAL.md
   - Patterns Context7 intégrés
   - Utilitaires CRUD génériques
 
-#### **Semaine 2 : Auth & Users**
+#### **Semaine 2 : Auth & Users (TDD First)**
 - [ ] **Authentification Supabase**
+  - **TDD** : Tests auth flows AVANT implémentation
+  - **TDD** : Tests 3 rôles permissions AVANT middleware
   - Login/Register flows
   - 3 rôles (user/admin/dev)
   - Middleware protection routes
   - Profile management
+  - **Tests** : Coverage auth > 90%
 
 - [ ] **Addresses système**
+  - **TDD** : Tests CRUD addresses AVANT API
+  - **TDD** : Tests validation Zod AVANT forms
   - CRUD addresses séparées
   - Shipping/billing types
   - Adresses par défaut
   - Validation forms Zod
+  - **Tests** : Coverage addresses > 85%
 
-#### **Semaine 3 : Products Foundation**
+#### **Semaine 3 : Products Foundation (TDD First)**
 - [ ] **Categories hiérarchiques**
+  - **TDD** : Tests hiérarchie categories AVANT CRUD
+  - **TDD** : Tests i18n JSONB AVANT admin
   - CRUD admin categories
   - i18n JSONB intégré
   - Navigation tree frontend
+  - **Tests** : Coverage categories > 85%
 
 - [ ] **Products de base**
+  - **TDD** : Tests labels HerbisVeritas AVANT enum
+  - **TDD** : Tests validation INCI AVANT forms
   - CRUD produits
   - Labels HerbisVeritas (7 types)
   - INCI list cosmétique
   - Upload images
+  - **Tests** : Coverage produits > 80%
 
-### Phase 2 : E-commerce Core (Semaines 4-7)
+### Phase 2 : E-commerce Core (Semaines 4-7) - TDD Intensive
 
-#### **Semaine 4 : Catalogue**
+#### **Semaine 4 : Catalogue (TDD First)**
 - [ ] **Frontend catalogue**
+  - **TDD** : Tests composants pages produits AVANT UI
+  - **TDD** : Tests filtres + recherche AVANT logique
+  - **E2E** : Tests parcours catalogue complet
   - Pages produits + détail
   - Filtres par catégorie/labels
   - Recherche textuelle
   - Responsive design
+  - **Tests** : Coverage catalogue > 85%
 
 - [ ] **i18n Frontend**
+  - **TDD** : Tests traductions FR/EN AVANT next-intl
+  - **TDD** : Tests switch langues AVANT UI
   - Traductions FR/EN
   - Switch langues
   - Fallback français
+  - **Tests** : Coverage i18n > 90%
 
-#### **Semaine 5 : Panier & Guest**
+#### **Semaine 5 : Panier & Guest (TDD First)**
 - [ ] **Système panier invité**
+  - **TDD** : Tests store Zustand AVANT state management
+  - **TDD** : Tests localStorage persistence AVANT hooks
+  - **TDD** : Tests merge cart guest→user AVANT auth
   - Store Zustand avec guest_id
   - Persistence localStorage
   - Merge cart guest→user
   - Debounce sync server
+  - **Tests** : Coverage panier store > 90%
 
 - [ ] **Cart UI/UX**
+  - **TDD** : Tests CartSheet composant AVANT UI
+  - **TDD** : Tests calculs totaux AVANT formules
+  - **E2E** : Tests parcours ajout panier complet
   - CartSheet composant
   - Add to cart depuis produits
   - Quantités, suppression
   - Calculs totaux temps réel
+  - **Tests** : Coverage cart UI > 85%
 
-#### **Semaine 6 : Commandes**
+#### **Semaine 6 : Commandes (TDD First)**
 - [ ] **Checkout flow**
+  - **TDD** : Tests validation Zod checkout AVANT forms
+  - **TDD** : Tests workflow checkout AVANT UI
+  - **E2E** : Tests checkout complet guest + user
   - Sélection adresses
   - Formulaire livraison/facturation
   - Récap commande
   - Validation Zod complète
+  - **Tests** : Coverage checkout > 85%
 
 - [ ] **États commandes**
+  - **TDD** : Tests machine états AVANT business logic
+  - **TDD** : Tests transitions AVANT admin interface
   - 4 états MVP (pending_payment → delivered)
   - Transitions métier
   - Interface admin statuts
+  - **Tests** : Coverage états commandes > 90%
 
-#### **Semaine 7 : Stripe Complet**
+#### **Semaine 7 : Stripe Complet (TDD Critical)**
 - [ ] **Intégration Stripe**
+  - **TDD** : Tests webhooks Stripe AVANT API routes
+  - **TDD** : Tests gestion erreurs AVANT retry logic
+  - **Integration** : Tests Stripe test mode complets
   - Checkout Session hosted
   - Webhooks payment_intent
   - Gestion erreurs paiement
   - Retry automatiques
+  - **Tests** : Coverage Stripe > 95% (critique paiement)
 
 - [ ] **Tracking Colissimo**
+  - **TDD** : Tests calcul prix AVANT business logic
+  - **TDD** : Tests notifications email AVANT templates
   - Prix fixe 4,90€
   - Numéros de suivi
   - URLs tracking automatiques
   - Notifications email
+  - **Tests** : Coverage shipping > 85%
 
-### Phase 3 : Content & Marketing (Semaines 8-10)
+### Phase 3 : Content & Marketing (Semaines 8-10) - TDD Content
 
-#### **Semaine 8 : Magazine TipTap**
+#### **Semaine 8 : Magazine TipTap (TDD First)**
 - [ ] **Articles CMS**
+  - **TDD** : Tests éditeur TipTap AVANT UI admin
+  - **TDD** : Tests workflow publish AVANT business logic
+  - **TDD** : Tests gestion images AVANT upload
   - Éditeur TipTap admin
   - Gestion images
   - Preview/publish workflow
   - Categories articles
+  - **Tests** : Coverage CMS articles > 80%
 
 - [ ] **Frontend magazine**
+  - **TDD** : Tests SEO meta tags AVANT génération
+  - **TDD** : Tests responsive AVANT CSS
+  - **E2E** : Tests parcours lecture magazine complet
   - Pages articles + détail  
   - Navigation categories
   - SEO meta tags
   - Responsive reading
+  - **Tests** : Coverage magazine frontend > 85%
 
 #### **Semaine 9 : Marketing Features**
 - [ ] **Partenaires**
@@ -198,35 +256,53 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
   - Ordre affichage
   - Images custom override
 
-### Phase 4 : Admin & Polish (Semaines 11-12)
+### Phase 4 : Admin & Polish (Semaines 11-12) - TDD Quality
 
-#### **Semaine 11 : Admin Dashboard**
+#### **Semaine 11 : Admin Dashboard (TDD First)**
 - [ ] **Interface admin complète**
+  - **TDD** : Tests permissions rôles AVANT middleware
+  - **TDD** : Tests CRUD operations AVANT UI admin
+  - **TDD** : Tests batch operations AVANT business logic
   - Dashboard analytics basiques
   - CRUD toutes entités
   - Permissions rôles
   - Batch operations
+  - **Tests** : Coverage admin > 85%
 
 - [ ] **Gestion commandes**
+  - **TDD** : Tests filtres commandes AVANT UI
+  - **TDD** : Tests changement statuts AVANT API
   - Liste commandes filtrable
   - Détail commande complet
   - Changement statuts
   - Export données
+  - **Tests** : Coverage gestion commandes > 90%
 
-#### **Semaine 12 : Launch Prep**
+#### **Semaine 12 : Launch Prep (TDD Performance)**
 - [ ] **Performance & SEO**
+  - **Tests** : Performance Core Web Vitals < 2s
+  - **Tests** : SEO meta tags validation
+  - **Tests** : Sitemap.xml génération
   - Core Web Vitals < 2s
   - Meta tags dynamiques
   - Sitemap.xml
   - Robots.txt
+  - **Tests** : Performance budget respecté
 
 - [ ] **Production ready**
+  - **Tests** : Error boundaries scenarios
+  - **Tests** : Variables environnement validation
+  - **Integration** : Tests monitoring Sentry
   - Variables environnement
   - Error boundaries
   - Monitoring Sentry
-  - Tests critiques
+  - **Suite complète** : Tests critiques passage
 
-- [ ] **Documentation finale**
+- [ ] **Tests finaux & Documentation**
+  - **Régression** : Suite tests complète > 80% coverage
+  - **E2E** : Tous parcours utilisateur validés
+  - **Performance** : Tests charge 1000 users simultanés
+  - **Security** : Tests sécurité + pentest automatisé
   - Guide admin
   - Procédures déploiement
   - Rollback plans
@@ -264,11 +340,14 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 - Demo vendredi
 - Retrospective
 
-**📊 KPIs Équipe**
-- Vélocité par sprint
-- Bug rate < 5%
-- Code coverage > 80%
+**📊 KPIs Équipe TDD**
+- Vélocité par sprint TDD (tests first)
+- Bug rate < 2% (amélioré grâce TDD)
+- Code coverage > 80% (obligatoire)
 - Performance budget respecté
+- **TDD compliance** : 100% code sous tests
+- **Red-Green-Refactor** : Cycles respectés
+- **Régression** : 0 tests qui échouent en production
 
 ---
 
@@ -286,14 +365,20 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 - Vercel Pro : 20€/mois × 12 = 240€
 - Domains + SSL : 200€
 - Design tools : 500€
+- **Testing tools** : 
+  - Jest + RTL : gratuit
+  - Playwright : gratuit
+  - Coverage tools : gratuit
+  - CI/CD GitHub Actions : 100€
 
-**📱 Testing & QA :**
+**📱 Testing & QA TDD :**
 - Testing devices : 1,000€
-- QA externe : 3,000€
+- **QA TDD externe** : 5,000€ (amélioré pour TDD)
+- **Formation TDD équipe** : 2,000€
 
-**💾 Contingence (15%) :** 13,455€
+**💾 Contingence (15%) :** 15,455€
 
-### **Total Budget MVP : 106,495€**
+### **Total Budget MVP TDD : 110,995€**
 
 ### Maintenance Post-Launch (6 mois)
 
@@ -302,17 +387,20 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 - Monitoring tools : 1,000€
 - **Total maintenance : 18,000€**
 
-### **Budget Global Année 1 : 124,495€**
+### **Budget Global Année 1 TDD : 128,995€**
 
 ---
 
 ## 🎯 Indicateurs de Succès MVP
 
-### Techniques
-- [ ] **Performance** : < 2s First Contentful Paint
-- [ ] **Availabilité** : 99.5% uptime
-- [ ] **Mobile** : Score Lighthouse > 90
-- [ ] **Security** : 0 vulnérabilités critiques
+### Techniques TDD
+- [ ] **Performance** : < 2s First Contentful Paint (validé par tests)
+- [ ] **Availabilité** : 99.5% uptime (monitoring automatisé)
+- [ ] **Mobile** : Score Lighthouse > 90 (tests automatisés)
+- [ ] **Security** : 0 vulnérabilités critiques (pentest automatisé)
+- [ ] **Code Quality** : > 80% test coverage (obligatoire)
+- [ ] **Bug Rate** : < 2% production (amélioré via TDD)
+- [ ] **Régression** : 0 bugs réintroduits (suite tests)
 
 ### Business
 - [ ] **Conversion** : 2%+ panier→commande
