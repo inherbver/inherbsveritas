@@ -151,7 +151,51 @@ Avant CHAQUE commit, Claude DOIT valider :
 
 **SI UNE SEULE VALIDATION ÉCHOUE → REGERERER LE MESSAGE**
 
-### 7. **Règles de Documentation**
+### 7. **Méthodologie TDD Obligatoire**
+**Test-Driven Development (TDD) Pattern Strict :**
+- 🔴 **RED** : Écrire test qui échoue AVANT le code
+- 🟢 **GREEN** : Écrire le minimum de code pour faire passer le test
+- 🔵 **REFACTOR** : Refactoriser en conservant les tests verts
+- ✅ **JAMAIS** de code sans test correspondant
+
+**Cycle TDD Application :**
+```bash
+# 1. Test unitaire AVANT implémentation
+npm run test:unit -- --watch
+# 2. Test intégration pour flows business
+npm run test:integration 
+# 3. Test e2e pour parcours utilisateur critiques
+npm run test:e2e
+```
+
+**Structure Tests Obligatoire :**
+```
+tests/
+├── unit/           # Jest + React Testing Library
+│   ├── components/ # Tests composants isolés
+│   ├── hooks/      # Tests hooks custom
+│   ├── utils/      # Tests fonctions pures
+├── integration/    # Tests API + Database
+│   ├── api/        # Tests routes API
+│   ├── auth/       # Tests auth flows
+│   ├── database/   # Tests queries Supabase
+├── e2e/           # Playwright + fixtures
+│   ├── user-flows/ # Parcours utilisateur complets
+│   ├── admin/      # Tests interface admin
+```
+
+**Validation TDD Pré-Commit :**
+```xml
+<tdd_validation>
+- COVERAGE: Couverture > 80% lignes ✓/✗
+- UNIT_TESTS: Tests unitaires pour chaque fonction/composant ✓/✗  
+- INTEGRATION: Tests flows business critiques ✓/✗
+- E2E: Tests parcours utilisateur MVP ✓/✗
+- PERFORMANCE: Tests < 2s Core Web Vitals ✓/✗
+</tdd_validation>
+```
+
+### 8. **Règles de Documentation**
 **Style obligatoire :**
 - ✅ Ton neutre, purement descriptif
 - ✅ Langage technique précis
@@ -184,6 +228,9 @@ Avant CHAQUE commit, Claude DOIT valider :
 - Documenter les changements
 - Maintenir la traçabilité
 - Respecter le budget temps/complexité
+- **Écrire les tests AVANT le code (TDD strict)**
+- **Valider couverture tests > 80%**
+- **Exécuter suite tests avant commit**
 
 ---
 
@@ -195,6 +242,9 @@ Avant CHAQUE modification importante :
 3. **Business** : Sert les objectifs de lancement ?
 4. **Simplicité** : Minimal viable ?
 5. **Documentation** : Traçable pour nouveaux devs ?
+6. **Tests TDD** : Tests écrits AVANT le code ?
+7. **Couverture** : > 80% des lignes testées ?
+8. **Performance** : Tests Core Web Vitals < 2s ?
 
 ---
 
@@ -297,6 +347,25 @@ Si **conflit** entre demande utilisateur et architecture MVP :
 - `src/types/database.ts` → Types TypeScript MVP
 - `supabase/migrations/001_mvp_schema.sql` → Schéma SQL
 - `package.json` scripts → Commandes npm
+- `jest.config.js` → Configuration tests unitaires
+- `playwright.config.ts` → Configuration tests e2e
+- `shortcuts.md` → Liste des raccourcis et aliases terminaux
+
+---
+
+## 🎮 Shortcuts Terminal Disponibles
+
+**Référence complète :** `shortcuts.md`
+
+**Shortcuts principaux :**
+- `cc` → Consulte CLAUDE.md et applique les patterns définis
+- `dp` → Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes
+- `orthodox` → Vérifie cohérence entre docs/DEVELOPMENT_PLAN_MVP.md, docs/DATABASE_SCHEMA_MVP.md et architecture 13 tables
+- `github` → Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote
+- `build` → Lance npm run build + vérification erreurs + rapport de performance + validation MVP
+- `c7` → Commençons la prochaine étape recommandée avec recherche Context7 + génération NEXT_STEP.md
+
+**Usage :** Taper le shortcut dans terminal, puis copier-coller dans Claude Code
 
 ---
 
