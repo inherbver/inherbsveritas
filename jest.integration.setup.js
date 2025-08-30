@@ -1,8 +1,8 @@
 // Integration tests setup
 // Real Supabase connection for integration tests
 
-// Load test environment variables
-require('dotenv').config({ path: '.env.test.local' })
+// Load test environment variables - dotenv désactivé temporairement
+// require('dotenv').config({ path: '.env.test.local' })
 
 // Global test utilities for integration tests
 global.testTimeout = 10000

@@ -18,11 +18,8 @@ const config = {
   ],
   
   // Module path mapping
-  moduleNameMap: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@/components/(.*)$': '<rootDir>/src/components/$1',
-    '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
-    '^@/types/(.*)$': '<rootDir>/src/types/$1',
   },
   
   // Longer timeout for integration tests
@@ -31,9 +28,9 @@ const config = {
   // Coverage for integration tests
   collectCoverage: false, // Usually disabled for integration tests
   
-  // Global setup/teardown for database
-  globalSetup: '<rootDir>/tests/integration/setup.ts',
-  globalTeardown: '<rootDir>/tests/integration/teardown.ts',
+  // Global setup/teardown désactivé temporairement
+  // globalSetup: '<rootDir>/tests/integration/setup.ts',
+  // globalTeardown: '<rootDir>/tests/integration/teardown.ts',
 }
 
 module.exports = createJestConfig(config)

@@ -195,7 +195,121 @@ tests/
 </tdd_validation>
 ```
 
-### 8. **Règles de Documentation**
+### **Règles d'Adaptation Tests/Code**
+
+#### 🔄 **Quand Adapter les Tests :**
+
+**✅ Exigence métier change :**
+- Nouvelle règle business → Met d'abord le test à jour, puis code
+- Cas d'usage ajouté/supprimé → Test d'abord, implémentation ensuite
+
+**✅ Test sur-spécifié :**
+- Détails d'implémentation → Assouplis vers contrat observable
+- Ordre non garanti, timestamps exacts, IDs → Focus comportement utilisateur
+- Exemple : `expect(users).toHaveLength(3)` au lieu de `expect(users[0].id).toBe('uuid-123')`
+
+**✅ Faux test identifié :**
+- Assertion erronée → Corrige le test, pas le code
+- Fixture invalide → Répare la donnée de test
+- Test flaky → Stabilise le test (mocks déterministes)
+
+**✅ Refactor API publique :**
+- Breaking change décidé → Réécris tests de contrat + migration
+- Garde compatibilité durant transition → Tests doubles temporaires
+
+**✅ Régression reproduite :**
+- Test rouge ajouté pour repro → Garde ce test, il devient cible du correctif
+
+#### 🔧 **Quand Adapter le Code :**
+
+**✅ Test rouge légitime :**
+- Contrat valide non respecté → Implémente solution minimale pour passer vert
+- Pas de sur-ingénierie → Juste assez pour satisfaire le test
+
+**✅ Étape Refactor (après vert) :**
+- Améliore lisibilité, factorise, injecte dépendances
+- SANS changer les tests existants
+- Si tests cassent durant refactor → Le refactor change trop le contrat
+
+**✅ Code difficile à tester :**
+- Couplage/side-effects → Introduis seams (ports/adapters)
+- Temps/UUID → Injecte horloge/générateur
+- I/O → Mock ou injecte dépendances
+- Exemple : `getUserById(id, db)` au lieu de `user.fetchFromDatabase()`
+
+**✅ Performance/robustesse :**
+- Mesurées par tests → Optimise en conservant assertions existantes
+- Tests performance séparés → Ne pas ralentir suite principale
+
+**✅ Bug confirmé :**
+- Repro par test → Corrige le code, test reste comme filet de sécurité
+
+#### ⚠️ **Garde-fous Critiques :**
+
+**❌ Ne JAMAIS :**
+- Modifier test "pour le faire passer" si règle métier inchangée
+- Tester structure interne au lieu de comportement observable
+- Supprimer test qui échoue sans comprendre pourquoi
+
+**✅ TOUJOURS :**
+- Nouveau correctif = nouveau test qui échouait avant
+- 90% tests unitaires, rapides, déterministes
+- I/O, temps, hasard → injectés ou mockés
+- Test doit pointer contrat réel (comportement utilisateur observable)
+
+#### 🎯 **Contrats vs Implémentation HerbisVeritas :**
+
+**✅ Test contrat observable :**
+```javascript
+// BON - Teste le comportement utilisateur
+expect(screen.getByText('Commande confirmée')).toBeInTheDocument()
+expect(mockStripeCharge).toHaveBeenCalledWith({ amount: 5390 })
+```
+
+**❌ Test implémentation interne :**
+```javascript
+// MAUVAIS - Teste détails internes
+expect(component.state.isLoading).toBe(false)
+expect(paymentService.internals.retryCount).toBe(3)
+```
+
+**✅ Fixtures déterministes :**
+```javascript
+// BON - Données prévisibles
+const mockUser = { id: 'user-123', email: 'test@herbisveritas.fr' }
+const mockDate = new Date('2025-01-01T10:00:00Z')
+```
+
+**❌ Données aléatoires :**
+```javascript
+// MAUVAIS - Non reproductible
+const mockUser = { id: generateUUID(), createdAt: new Date() }
+```
+
+### 8. **Workflow TDD Décisionnel**
+
+**🔄 Processus de décision Tests vs Code :**
+
+```mermaid
+flowchart TD
+    A[Test échoue] --> B{Règle métier changée?}
+    B -->|Oui| C[Adapter le test d'abord]
+    B -->|Non| D{Test sur-spécifié?}
+    D -->|Oui| E[Assouplir vers contrat observable]
+    D -->|Non| F{Faux test?}
+    F -->|Oui| G[Corriger test, pas code]
+    F -->|Non| H[Implémenter solution minimale]
+    
+    C --> I[Implémenter nouvelle règle]
+    E --> I
+    G --> J[Re-run tests]
+    H --> K[Tests verts?]
+    K -->|Oui| L[Refactor si nécessaire]
+    K -->|Non| H
+    L --> M[Commit]
+```
+
+### 9. **Règles de Documentation**
 **Style obligatoire :**
 - ✅ Ton neutre, purement descriptif
 - ✅ Langage technique précis

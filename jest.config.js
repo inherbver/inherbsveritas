@@ -16,10 +16,11 @@ const config = {
   // Test directories
   testMatch: [
     '<rootDir>/tests/unit/**/*.test.{js,jsx,ts,tsx}',
+    '<rootDir>/tests/integration/**/*.test.{js,jsx,ts,tsx}',
   ],
   
   // Module path mapping for absolute imports  
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   
