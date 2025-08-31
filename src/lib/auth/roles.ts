@@ -192,3 +192,21 @@ export function normalizeRole(supabaseRole?: string): UserRole {
       return USER_ROLES.GUEST
   }
 }
+
+/**
+ * Extraire rôle depuis user Supabase
+ * Cohérent avec middleware.ts
+ */
+import { type User } from '@supabase/supabase-js'
+
+export function getUserRole(user: User | null): UserRole | null {
+  if (!user) return null
+  
+  const role = user.app_metadata?.['role'] as UserRole
+  
+  if (role && ['user', 'admin', 'dev'].includes(role)) {
+    return role
+  }
+  
+  return 'user'
+}

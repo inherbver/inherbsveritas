@@ -418,6 +418,104 @@ Avant CHAQUE modification importante :
 
 ---
 
+## 🚥 Règles de Taille de Fichiers
+
+### **Limites Obligatoires par Type**
+
+#### **Composants UI** (`src/components/**`)
+- ✅ **< 150 lignes max** par fichier
+- ✅ **Responsabilité unique** : affichage + interactions basiques seulement
+- ✅ **Logique métier** → extraire dans hooks (`src/hooks/`) ou utilitaires (`src/lib/`)
+- ✅ **Sous-composants** → découper en fichiers séparés si complexité
+
+#### **Features Business** (`src/features/**`)
+- ✅ **< 200 lignes max** par fichier (inclut UI + logique spécifique feature)
+- ✅ **Périmètre** : UI + logique business d'une feature précise
+- ✅ **Composition** : utiliser composants génériques de `src/components/`
+- ✅ **État complexe** → hooks dédiés dans `src/hooks/use-[feature].ts`
+
+#### **Services & Utilitaires** (`src/lib/**`)
+- ✅ **< 300 lignes max** par fichier (services, utils, hooks, API clients)
+- ✅ **Granularité** : un service = un domaine (ex: `auth.ts`, `products.ts`, `cart.ts`)
+- ✅ **Réutilisabilité** : fonctions pures privilégiées
+- ✅ **Tests** : coverage > 90% obligatoire (logique critique)
+
+#### **Pages App Router** (`src/app/**`)
+- ✅ **< 100 lignes max** par page (hors imports et types)
+- ✅ **Composition pure** : assembly de composants + data fetching uniquement
+- ✅ **Logique métier interdite** → déplacer dans `src/lib/` ou hooks
+- ✅ **Layout** → utiliser composants layout de `src/components/layout/`
+
+### **Actions en Cas de Dépassement**
+
+#### **Stratégies de Refactoring**
+```bash
+# Composant > 150 lignes
+→ Extraire logique dans hook: src/hooks/use-[domain].ts
+→ Créer sous-composants: src/components/[domain]/[sub-component].tsx
+→ Séparer state management: context ou store Zustand
+
+# Feature > 200 lignes  
+→ Diviser en sous-features: src/features/[feature]/[sub-feature]/
+→ Extraire UI generique: src/components/ui/
+→ Créer hooks spécialisés: src/features/[feature]/hooks/
+
+# Service > 300 lignes
+→ Découper par domaine: auth.ts → auth/login.ts, auth/register.ts  
+→ Séparer types: src/types/[domain].ts
+→ Modulariser API calls: src/lib/api/[endpoint].ts
+
+# Page > 100 lignes
+→ Créer composant page: src/components/pages/[page-name].tsx
+→ Extraire data fetching: src/lib/queries/[domain].ts  
+→ Simplifier layout: src/components/layout/[layout-name].tsx
+```
+
+#### **Process de Refactoring Obligatoire**
+```bash
+# Si fichier > 400 lignes → REFACTOR IMMEDIAT
+1. 🛑 STOPPER le développement de features
+2. 📋 Créer task refactor: dans TodoWrite  
+3. 🧪 Tests d'abord: maintenir couverture existante
+4. ✂️ Découper selon responsabilités
+5. 📝 Commit: "refactor(scope): description détaillée"
+6. 🎯 Valider: aucune régression fonctionnelle
+```
+
+### **Exceptions Autorisées**
+- ✅ **Tests** (`*.test.tsx`): longueur libre, mais factoriser fixtures/builders
+- ✅ **Configuration** (`*.config.js`, `*.config.ts`): exemptés des règles  
+- ✅ **Types générés** (`src/types/database.ts`): auto-générés Supabase
+- ✅ **Migrations** (`supabase/migrations/*.sql`): logique SQL complète
+
+### **Validation Automatique**
+
+#### **Script de Vérification** (à ajouter)
+```json
+{
+  "scripts": {
+    "lint:file-length": "find src -name '*.tsx' -o -name '*.ts' | xargs wc -l | awk '$1 > 150 && $2 ~ /components/ { print \"❌ Component \" $2 \": \" $1 \" lignes (max 150)\" } $1 > 200 && $2 ~ /features/ { print \"❌ Feature \" $2 \": \" $1 \" lignes (max 200)\" } $1 > 300 && $2 ~ /lib/ { print \"❌ Service \" $2 \": \" $1 \" lignes (max 300)\" } $1 > 100 && $2 ~ /app.*page/ { print \"❌ Page \" $2 \": \" $1 \" lignes (max 100)\" }'",
+    "pre-commit": "npm run lint:file-length && npm run lint && npm run typecheck"
+  }
+}
+```
+
+#### **Intégration Git Hooks**
+```bash
+# .husky/pre-commit  
+npm run lint:file-length || exit 1
+# Bloque commit si dépassement des limites
+```
+
+### **Justification Architecture MVP**
+- 🚀 **Maintenabilité** : code facile à comprendre et modifier
+- 🧪 **Testabilité** : composants petits = tests focalisés  
+- 👥 **Collaboration** : revues de code rapides et efficaces
+- 📈 **Évolutivité** : ajout features sans casser l'existant
+- ⚡ **Performance** : bundle size maîtrisé, tree-shaking efficace
+
+---
+
 ## 🔄 Workflow Standard
 
 ```mermaid
