@@ -1,3 +1,5 @@
+import { ProductGrid } from '@/components/modules/boutique/components/product-grid'
+
 export default function Products() {
   return (
     <section className="py-16">
@@ -6,15 +8,11 @@ export default function Products() {
           Nos Produits Bio
         </h2>
         <p className="text-body-color dark:text-body-color-dark">
-          Découvrez notre gamme de cosmétiques bio artisanaux
+          Découvrez notre gamme de cosmétiques bio artisanaux aux labels HerbisVeritas
         </p>
       </header>
       
-      <article className="text-center">
-        <p className="text-body-color dark:text-body-color-dark">
-          Catalogue produits avec labels HerbisVeritas en cours d&apos;implémentation selon l&apos;architecture MVP 13 tables.
-        </p>
-      </article>
+      <ProductGrid />
     </section>
   );
 }

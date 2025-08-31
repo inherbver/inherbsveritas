@@ -1,143 +1,161 @@
 'use client'
 
-import * as React from "react"
-import { ProductCard } from "../product-card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { cn } from "@/lib/utils"
-import { Product, ProductFilters } from "@/types/product"
+import { useState } from 'react'
+import { ProductCard } from '../product-card'
+import { ProductFilters, Product } from '@/types/product'
+import { useProducts } from '@/hooks/use-products'
+import { Button } from '@/components/ui'
 
-export interface ProductGridProps {
-  /** Array of products to display */
-  products: Product[]
-  /** Loading state */
-  isLoading?: boolean
-  /** Error state */
-  error?: string | null
-  /** Callback when adding product to cart */
-  onAddToCart?: (product: Product) => Promise<void>
-  /** Callback when toggling product favorite */
-  onToggleFavorite?: (product: Product) => void
-  /** Custom className */
+interface ProductGridProps {
+  initialFilters?: ProductFilters
   className?: string
-  /** Grid columns configuration */
-  columns?: {
-    default: number
-    sm?: number
-    md?: number
-    lg?: number
-    xl?: number
-  }
-  /** Empty state message */
-  emptyMessage?: string
 }
 
-export function ProductGrid({
-  products,
-  isLoading = false,
-  error,
-  onAddToCart,
-  onToggleFavorite,
-  className,
-  columns = { default: 1, sm: 2, md: 3, lg: 4 },
-  emptyMessage = "Aucun produit trouvé"
-}: ProductGridProps) {
+export function ProductGrid({ initialFilters, className }: ProductGridProps) {
+  const [filters, setFilters] = useState<ProductFilters>(initialFilters || {})
+  const [page, setPage] = useState(1)
+
+  const { products, loading, error, pagination, refetch } = useProducts({
+    filters,
+    page,
+    limit: 12
+  })
+
+  const handleAddToCart = async (product: Product) => {
+    try {
+      // Mock implementation - in real app would use cart context/store
+      console.log('Adding to cart:', product)
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Show success message (would use toast system in real app)
+      alert(`${product.name} ajouté au panier !`)
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      alert('Erreur lors de l\'ajout au panier')
+    }
+  }
+
+  const handleToggleFavorite = (product: Product) => {
+    // Mock implementation - in real app would use favorites context/store
+    console.log('Toggling favorite:', product)
+    alert(`${product.name} ${Math.random() > 0.5 ? 'ajouté aux' : 'retiré des'} favoris`)
+  }
+
+  const handleLoadMore = () => {
+    setPage(prev => prev + 1)
+  }
+
+  const handleFilterChange = (newFilters: Partial<ProductFilters>) => {
+    setFilters(prev => ({ ...prev, ...newFilters }))
+    setPage(1) // Reset to first page when filters change
+  }
+
   if (error) {
     return (
-      <Alert variant="destructive" className={className}>
-        <AlertDescription>
-          {error}
-        </AlertDescription>
-      </Alert>
-    )
-  }
-
-  if (isLoading) {
-    return <ProductGridSkeleton columns={columns} className={className} />
-  }
-
-  if (products.length === 0) {
-    return (
-      <div className={cn("text-center py-12", className)}>
-        <div className="mx-auto w-24 h-24 bg-muted rounded-lg flex items-center justify-center mb-4">
-          <svg
-            className="w-8 h-8 text-muted-foreground"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-            />
-          </svg>
+      <div className="flex flex-col items-center justify-center py-16">
+        <div className="text-red-600 mb-4">
+          <p className="text-lg font-medium">Erreur de chargement</p>
+          <p className="text-sm">{error}</p>
         </div>
-        <h3 className="text-lg font-medium text-foreground mb-2">
-          {emptyMessage}
-        </h3>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          Essayez de modifier vos critères de recherche ou explorez nos autres catégories.
-        </p>
+        <Button onClick={refetch} variant="default">
+          Réessayer
+        </Button>
       </div>
     )
   }
 
-  const gridClasses = cn(
-    "grid gap-6",
-    // Responsive grid classes based on columns prop
-    `grid-cols-${columns.default}`,
-    columns.sm && `sm:grid-cols-${columns.sm}`,
-    columns.md && `md:grid-cols-${columns.md}`,
-    columns.lg && `lg:grid-cols-${columns.lg}`,
-    columns.xl && `xl:grid-cols-${columns.xl}`,
-    className
-  )
-
   return (
-    <div className={gridClasses}>
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onAddToCart={onAddToCart}
-          onToggleFavorite={onToggleFavorite}
+    <div className={`space-y-8 ${className || ''}`}>
+      {/* Filter Bar - Simple for now */}
+      <div className="flex flex-wrap gap-4 p-4 bg-gray-50 rounded-lg">
+        <input
+          type="text"
+          placeholder="Rechercher un produit..."
+          value={filters.search || ''}
+          onChange={(e) => handleFilterChange({ search: e.target.value })}
+          className="flex-1 min-w-[200px] px-3 py-2 border rounded-md"
         />
-      ))}
-    </div>
-  )
-}
+        <select
+          value={filters.category || ''}
+          onChange={(e) => handleFilterChange({ category: e.target.value || undefined })}
+          className="px-3 py-2 border rounded-md"
+        >
+          <option value="">Toutes catégories</option>
+          <option value="essential-oils">Huiles Essentielles</option>
+          <option value="soaps">Savons</option>
+          <option value="cosmetics">Cosmétiques</option>
+        </select>
+      </div>
 
-interface ProductGridSkeletonProps {
-  columns?: ProductGridProps['columns']
-  className?: string
-  count?: number
-}
+      {/* Loading State */}
+      {loading && page === 1 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <ProductCard 
+              key={`skeleton-${i}`}
+              product={{} as Product} 
+              isLoading={true} 
+            />
+          ))}
+        </div>
+      )}
 
-function ProductGridSkeleton({ 
-  columns = { default: 1, sm: 2, md: 3, lg: 4 }, 
-  className,
-  count = 8 
-}: ProductGridSkeletonProps) {
-  const gridClasses = cn(
-    "grid gap-6",
-    `grid-cols-${columns.default}`,
-    columns.sm && `sm:grid-cols-${columns.sm}`,
-    columns.md && `md:grid-cols-${columns.md}`,
-    columns.lg && `lg:grid-cols-${columns.lg}`,
-    columns.xl && `xl:grid-cols-${columns.xl}`,
-    className
-  )
+      {/* Products Grid */}
+      {!loading || page > 1 ? (
+        <>
+          {products.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                  onToggleFavorite={handleToggleFavorite}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <p className="text-gray-500 text-lg">
+                Aucun produit trouvé pour les critères sélectionnés.
+              </p>
+              <Button 
+                onClick={() => handleFilterChange({ search: '', category: undefined })}
+                variant="default"
+                className="mt-4"
+              >
+                Effacer les filtres
+              </Button>
+            </div>
+          )}
 
-  return (
-    <div className={gridClasses}>
-      {Array.from({ length: count }).map((_, index) => (
-        <ProductCard
-          key={`skeleton-${index}`}
-          product={{} as Product}
-          isLoading={true}
-        />
-      ))}
+          {/* Pagination */}
+          {pagination.hasMore && (
+            <div className="flex justify-center">
+              <Button
+                onClick={handleLoadMore}
+                disabled={loading}
+                variant="default"
+              >
+                {loading ? 'Chargement...' : 'Charger plus de produits'}
+              </Button>
+            </div>
+          )}
+
+          {/* Results Summary */}
+          <div className="text-center text-gray-500 text-sm">
+            {pagination.total > 0 && (
+              <p>
+                {products.length} sur {pagination.total} produit{pagination.total > 1 ? 's' : ''}
+                {filters.search && ` pour "${filters.search}"`}
+                {filters.category && ` dans la catégorie sélectionnée`}
+              </p>
+            )}
+          </div>
+        </>
+      ) : null}
     </div>
   )
 }

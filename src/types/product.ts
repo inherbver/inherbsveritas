@@ -36,7 +36,13 @@ export interface Product {
   status: string
   is_active: boolean
   is_new?: boolean
+  is_on_promotion?: boolean
   
+  // Champs détaillés ProductDetail
+  properties?: string
+  compositionText?: string
+  usageInstructions?: string
+
   // i18n JSONB
   translations?: Record<string, {
     name?: string

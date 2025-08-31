@@ -1,1 +1,1 @@
-export { ProductGrid, type ProductGridProps } from './product-grid'
+export { ProductGrid } from "./product-grid"

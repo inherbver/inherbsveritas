@@ -28,6 +28,7 @@ jest.mock('@/lib/supabase/server', () => ({
 // API handlers to test
 import { GET as getProducts, POST as createProduct } from '@/app/api/products/route'
 import { GET as getProduct, PUT as updateProduct } from '@/app/api/products/[id]/route'
+import { addToCart, getCartTotal } from '@/lib/api/products'
 
 describe('Products API Integration', () => {
   beforeEach(() => {

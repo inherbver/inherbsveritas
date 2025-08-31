@@ -22,7 +22,8 @@
       "mcp__supabase__execute_sql",
       "Bash(git commit:*)",
       "Bash(npx shadcn@latest add:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []
