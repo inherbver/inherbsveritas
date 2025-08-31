@@ -7,7 +7,7 @@ export type Locale = (typeof locales)[number];
 
 // Locale par défaut
 export const defaultLocale: Locale = "fr";
-export const localePrefix = "always"; // Options: 'as-needed', 'always', 'never'
+export const localePrefix = "as-needed"; // Options: 'as-needed', 'always', 'never'
 
 // Définition des pathnames pour le routage localisé
 export const pathnames = {
