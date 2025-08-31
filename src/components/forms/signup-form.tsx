@@ -9,7 +9,7 @@
 "use client"
 
 import { useState } from 'react'
-import { useAuth } from '@/lib/auth/hooks'
+import { useAuthActions } from '@/lib/auth/hooks'
 import Link from 'next/link'
 
 // Composants UI temporaires - À remplacer par shadcn/ui
@@ -74,7 +74,7 @@ interface SignupFormProps {
 }
 
 export function SignupForm({ onSuccess }: SignupFormProps) {
-  const { signUp, loading, error, clearError } = useAuth()
+  const { signUp, loading, error, clearError } = useAuthActions()
   const [formData, setFormData] = useState({
     email: '',
     password: '',

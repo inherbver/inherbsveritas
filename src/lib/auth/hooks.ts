@@ -83,9 +83,9 @@ export function useAuthState(): AuthState {
 }
 
 /**
- * Hook actions authentification
+ * Hook actions authentification  
  */
-export function useAuth() {
+export function useAuthActions() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -216,6 +216,68 @@ export function useAuth() {
     loading,
     error,
     clearError: () => setError(null)
+  }
+}
+
+/**
+ * Hook principal compatible tests TDD
+ * Combine state + interface attendue par tests
+ */
+export function useAuth() {
+  const authState = useAuthState()
+  
+  return {
+    user: authState.user,
+    role: authState.role,
+    isLoading: authState.loading,
+    isAuthenticated: !!authState.user && !authState.loading,
+    error: authState.error
+  }
+}
+
+/**
+ * Hook utilisateur simplifié - Compatible tests
+ */
+export function useAuthUser() {
+  const { user, role, loading } = useAuthState()
+  
+  if (loading || !user) return null
+  
+  return {
+    id: user.id,
+    email: user.email,
+    role: role || 'user'
+  }
+}
+
+/**
+ * Hook redirection auth required - Compatible tests TDD
+ */
+export function useRequireAuth(allowedRoles?: UserRole[]) {
+  const { user, role, isLoading } = useAuth()
+  const router = useRouter()
+  
+  useEffect(() => {
+    if (isLoading) return
+    
+    // Pas d'utilisateur = redirection login
+    if (!user) {
+      router.push('/login')
+      return
+    }
+    
+    // Vérifier rôles si spécifiés
+    if (allowedRoles && role && !allowedRoles.includes(role)) {
+      router.push('/unauthorized')
+      return
+    }
+  }, [user, role, isLoading, allowedRoles, router])
+  
+  return {
+    user,
+    role,
+    isLoading,
+    isAuthorized: !!user && (!allowedRoles || (role && allowedRoles.includes(role)))
   }
 }
 

@@ -83,8 +83,19 @@ export function canModifyProduct(userRole: UserRole): boolean {
 /**
  * Vérifier consultation détails commande
  */
-export function canViewOrderDetails(userRole: UserRole): boolean {
-  return hasPermission(userRole, 'orders:read') || canAccess(userRole, 'admin')
+export function canViewOrderDetails(userRole: UserRole, userId?: string, order?: { user_id: string }): boolean {
+  // Admin/dev peuvent voir toutes les commandes
+  if (canAccess(userRole, 'admin')) {
+    return true
+  }
+  
+  // User peut voir seulement ses propres commandes
+  if (userRole === 'user' && userId && order) {
+    return order.user_id === userId
+  }
+  
+  // Fallback: vérifier permission générale
+  return hasPermission(userRole, 'orders:read')
 }
 
 /**
@@ -95,12 +106,50 @@ export function getPermissionsForRole(userRole: UserRole): string[] {
 }
 
 /**
- * Valider accès ressource spécifique
+ * Valider accès ressource spécifique - Version simple
  */
 export function validateResourceAccess(
   userRole: UserRole, 
   resource: string, 
   action: string
-): boolean {
-  return hasPermission(userRole, `${resource}:${action}`)
+): boolean
+
+/**
+ * Valider accès ressource spécifique - Version avec ownership
+ */
+export function validateResourceAccess(
+  userRole: UserRole, 
+  userId: string,
+  resourceData: { type: string; owner_id: string }
+): { allowed: boolean; reason?: string }
+
+export function validateResourceAccess(
+  userRole: UserRole, 
+  resourceOrUserId: string,
+  actionOrResourceData: string | { type: string; owner_id: string }
+): boolean | { allowed: boolean; reason?: string } {
+  // Version simple: validateResourceAccess('admin', 'orders', 'admin')
+  if (typeof actionOrResourceData === 'string') {
+    return hasPermission(userRole, `${resourceOrUserId}:${actionOrResourceData}`)
+  }
+  
+  // Version avec ownership: validateResourceAccess('user', 'user-123', { type: 'order', owner_id: 'user-123' })
+  const userId = resourceOrUserId
+  const resourceData = actionOrResourceData
+  
+  // Admin/dev peuvent tout faire
+  if (canAccess(userRole, 'admin')) {
+    return { allowed: true }
+  }
+  
+  // User ne peut accéder qu'à ses propres ressources
+  if (userRole === 'user') {
+    if (resourceData.owner_id === userId) {
+      return { allowed: true }
+    } else {
+      return { allowed: false, reason: 'Insufficient permissions' }
+    }
+  }
+  
+  return { allowed: false, reason: 'Insufficient permissions' }
 }

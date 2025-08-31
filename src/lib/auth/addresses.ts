@@ -16,15 +16,15 @@ export type AddressType = z.infer<typeof AddressTypeSchema>
 
 export const CreateAddressSchema = z.object({
   user_id: z.string().uuid(),
-  type: AddressTypeSchema,
+  address_type: AddressTypeSchema,
   first_name: z.string().min(1, 'Prénom requis').max(50),
   last_name: z.string().min(1, 'Nom requis').max(50),
-  street_address: z.string().min(1, 'Adresse requise').max(255),
-  street_address_2: z.string().max(255).optional(),
+  address_line1: z.string().min(1, 'Adresse requise').max(255),
+  address_line2: z.string().max(255).optional(),
   city: z.string().min(1, 'Ville requise').max(100),
   postal_code: z.string().min(3, 'Code postal requis').max(20),
-  country: z.string().min(1, 'Pays requis').max(100).default('France'),
-  phone: z.string().max(20).optional(),
+  country_code: z.string().min(2).max(3).default('FR'),
+  phone_number: z.string().max(20).optional(),
   is_default: z.boolean().default(false)
 })
 
@@ -79,7 +79,7 @@ export async function createAddress(addressData: CreateAddressData): Promise<Add
         .from('addresses')
         .update({ is_default: false })
         .eq('user_id', validatedData.user_id)
-        .eq('type', validatedData.type)
+        .eq('address_type', validatedData.address_type)
     }
 
     // Créer la nouvelle adresse
@@ -164,7 +164,7 @@ export async function updateAddress(addressId: string, updateData: UpdateAddress
     if (validatedData.is_default) {
       const { data: addressInfo } = await supabase
         .from('addresses')
-        .select('user_id, type')
+        .select('user_id, address_type')
         .eq('id', addressId)
         .single()
 
@@ -173,7 +173,7 @@ export async function updateAddress(addressId: string, updateData: UpdateAddress
           .from('addresses')
           .update({ is_default: false })
           .eq('user_id', addressInfo.user_id)
-          .eq('type', addressInfo.type)
+          .eq('address_type', addressInfo.address_type)
           .neq('id', addressId)
       }
     }
@@ -286,7 +286,7 @@ export async function setDefaultAddress(addressId: string, userId: string): Prom
     // Vérifier que l'adresse appartient à l'utilisateur
     const { data: addressInfo, error: selectError } = await supabase
       .from('addresses')
-      .select('id, user_id, type')
+      .select('id, user_id, address_type')
       .eq('id', addressId)
       .single()
 
@@ -309,7 +309,7 @@ export async function setDefaultAddress(addressId: string, userId: string): Prom
       .from('addresses')
       .update({ is_default: false })
       .eq('user_id', userId)
-      .eq('type', addressInfo.type)
+      .eq('address_type', addressInfo.address_type)
       .neq('id', addressId)
 
     // Set cette adresse comme par défaut
@@ -354,7 +354,7 @@ export async function getDefaultAddress(userId: string, type: AddressType): Prom
       .from('addresses')
       .select('*')
       .eq('user_id', userId)
-      .eq('type', type)
+      .eq('address_type', type)
       .eq('is_default', true)
       .single()
 
@@ -387,7 +387,7 @@ export function validateAddressData(addressData: Partial<CreateAddressData>): {
   const errors: string[] = []
 
   // Validation code postal français
-  if (addressData.country === 'France' && addressData.postal_code) {
+  if (addressData.country_code === 'FR' && addressData.postal_code) {
     const frenchPostalRegex = /^[0-9]{5}$/
     if (!frenchPostalRegex.test(addressData.postal_code)) {
       errors.push('Code postal français invalide (format: 12345)')
@@ -395,9 +395,9 @@ export function validateAddressData(addressData: Partial<CreateAddressData>): {
   }
 
   // Validation numéro de téléphone français
-  if (addressData.phone && addressData.country === 'France') {
+  if (addressData.phone_number && addressData.country_code === 'FR') {
     const frenchPhoneRegex = /^(\+33|0)[1-9](\d{8})$/
-    if (!frenchPhoneRegex.test(addressData.phone.replace(/\s/g, ''))) {
+    if (!frenchPhoneRegex.test(addressData.phone_number.replace(/\s/g, ''))) {
       errors.push('Numéro de téléphone français invalide')
     }
   }

@@ -28,9 +28,11 @@ export interface RouteProtection {
   redirectTo?: string
 }
 
-// Permissions par rôle (aligné avec 002_auth_rbac_security.sql)
+// Permissions par rôle (aligné avec tests TDD)
 export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   user: [
+    'profile:read',
+    'profile:update',
     'users:read_own',
     'users:update_own', 
     'products:read_active',
@@ -41,8 +43,15 @@ export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   ],
   admin: [
     'users:admin',
-    'products:admin', 
+    'users:delete',
+    'users:read',
+    'products:admin',
+    'products:create',
+    'products:read',
+    'products:update',
+    'products:delete',
     'orders:admin',
+    'orders:read',
     'articles:admin',
     'categories:admin',
     'partners:admin',
@@ -50,8 +59,11 @@ export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   ],
   dev: [
     'users:admin',
+    'users:delete',
     'products:admin',
-    'orders:admin', 
+    'products:create',
+    'orders:admin',
+    'orders:read',
     'articles:admin',
     'categories:admin',
     'partners:admin',
@@ -61,7 +73,9 @@ export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
     'carts:admin',
     'cart_items:admin',
     'order_items:admin',
-    'next_events:admin'
+    'next_events:admin',
+    'debug:access',
+    'logs:read'
   ]
 }
 

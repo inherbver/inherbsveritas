@@ -86,8 +86,8 @@ export default async function AddressesPage() {
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-                          <span>{address.type === 'billing' ? '💳' : '📦'}</span>
-                          {address.type === 'billing' ? 'Facturation' : 'Livraison'}
+                          <span>{address.address_type === 'billing' ? '💳' : '📦'}</span>
+                          {address.address_type === 'billing' ? 'Facturation' : 'Livraison'}
                         </h3>
                         {address.is_default && (
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1">
@@ -116,16 +116,16 @@ export default async function AddressesPage() {
                       <p className="font-medium">
                         {address.first_name} {address.last_name}
                       </p>
-                      <p>{address.street_address}</p>
-                      {address.street_address_2 && (
-                        <p>{address.street_address_2}</p>
+                      <p>{address.address_line1}</p>
+                      {address.address_line2 && (
+                        <p>{address.address_line2}</p>
                       )}
                       <p>
                         {address.postal_code} {address.city}
                       </p>
-                      <p>{address.country}</p>
-                      {address.phone && (
-                        <p className="text-sm">📞 {address.phone}</p>
+                      <p>{address.country_code}</p>
+                      {address.phone_number && (
+                        <p className="text-sm">📞 {address.phone_number}</p>
                       )}
                     </div>
 
