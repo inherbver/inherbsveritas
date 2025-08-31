@@ -1,6 +1,6 @@
 /**
  * Tests unitaires pour utils/auth
- * Tests fonctions utilitaires auth
+ * Tests fonctions utilitaires auth basiques (placeholder implementation)
  */
 
 import { 
@@ -10,17 +10,6 @@ import {
   validateSessionToken,
   extractUserFromJWT
 } from '@/utils/auth'
-
-// Mock bcrypt et jwt si utilisés
-jest.mock('bcrypt', () => ({
-  hash: jest.fn().mockResolvedValue('hashed-password'),
-  compare: jest.fn().mockResolvedValue(true)
-}))
-
-jest.mock('jsonwebtoken', () => ({
-  sign: jest.fn().mockReturnValue('mock-jwt-token'),
-  verify: jest.fn().mockReturnValue({ userId: 'user-123', role: 'user' })
-}))
 
 describe('utils/auth', () => {
   describe('password hashing', () => {

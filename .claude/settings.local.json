@@ -15,7 +15,11 @@
       "mcp__context7__get-library-docs",
       "Bash(npm run typecheck:*)",
       "Bash(npm run test:unit:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "mcp__supabase__apply_migration",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__list_migrations",
+      "mcp__supabase__execute_sql"
     ],
     "deny": [],
     "ask": []
