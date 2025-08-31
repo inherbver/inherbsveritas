@@ -8,7 +8,7 @@ import nodemailer from 'nodemailer'
 
 // Mock nodemailer
 jest.mock('nodemailer', () => ({
-  createTransporter: jest.fn().mockReturnValue({
+  createTransport: jest.fn().mockReturnValue({
     sendMail: jest.fn().mockResolvedValue({ messageId: 'test-message-id' })
   })
 }))
@@ -17,19 +17,19 @@ const mockTransporter = {
   sendMail: jest.fn().mockResolvedValue({ messageId: 'test-message-id' })
 }
 
-const mockCreateTransporter = nodemailer.createTransporter as jest.MockedFunction<typeof nodemailer.createTransporter>
-mockCreateTransporter.mockReturnValue(mockTransporter as any)
+const mockCreateTransport = nodemailer.createTransport as jest.MockedFunction<typeof nodemailer.createTransport>
+mockCreateTransport.mockReturnValue(mockTransporter as any)
 
 describe('utils/email', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     
     // Mock environment variables
-    process.env.EMAIL_SERVER_HOST = 'smtp.test.com'
-    process.env.EMAIL_SERVER_PORT = '587'
-    process.env.EMAIL_SERVER_USER = 'test@herbisveritas.fr'
-    process.env.EMAIL_SERVER_PASSWORD = 'test-password'
-    process.env.EMAIL_FROM = 'noreply@herbisveritas.fr'
+    process.env['EMAIL_SERVER_HOST'] = 'smtp.test.com'
+    process.env['EMAIL_SERVER_PORT'] = '587'
+    process.env['EMAIL_SERVER_USER'] = 'test@herbisveritas.fr'
+    process.env['EMAIL_SERVER_PASSWORD'] = 'test-password'
+    process.env['EMAIL_FROM'] = 'noreply@herbisveritas.fr'
   })
 
   describe('sendEmail', () => {
@@ -73,7 +73,7 @@ describe('utils/email', () => {
 
       await sendEmail(emailData)
 
-      expect(mockCreateTransporter).toHaveBeenCalledWith({
+      expect(mockCreateTransport).toHaveBeenCalledWith({
         host: 'smtp.test.com',
         port: 587,
         secure: false,
@@ -85,7 +85,7 @@ describe('utils/email', () => {
     })
 
     it('should use default port if not specified', async () => {
-      delete process.env.EMAIL_SERVER_PORT
+      delete process.env['EMAIL_SERVER_PORT']
 
       const emailData = {
         to: 'test@example.com',
@@ -95,7 +95,7 @@ describe('utils/email', () => {
 
       await sendEmail(emailData)
 
-      expect(mockCreateTransporter).toHaveBeenCalledWith({
+      expect(mockCreateTransport).toHaveBeenCalledWith({
         host: 'smtp.test.com',
         port: 2525, // default port
         secure: false,

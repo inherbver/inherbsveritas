@@ -5,7 +5,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { validateEmail } from '@/utils/validateEmail'
-import { AUTH_MESSAGES, formatAuthMessage, parseSupabaseError, type AuthMessage } from '@/lib/messages/auth-messages'
+import { AUTH_MESSAGES, parseSupabaseError, type AuthMessage } from '@/lib/messages/auth-messages'
 import { USER_ROLES, type UserRole, getRoleRedirect, normalizeRole } from '@/lib/auth/roles'
 
 // Types pour les actions auth avec messages structurés

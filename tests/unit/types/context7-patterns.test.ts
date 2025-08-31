@@ -8,7 +8,6 @@ import type {
   AuthPattern,
   DataPattern,
   UIPattern,
-  SecurityPattern,
   PatternCategory,
   PatternConfig,
   ValidationRule
@@ -20,102 +19,100 @@ describe('types/context7-patterns', () => {
       const authPattern: AuthPattern = {
         id: 'auth-login',
         name: 'Login Pattern',
-        category: 'authentication',
-        implementation: {
-          middleware: true,
-          validation: ['email', 'password'],
-          errors: {
-            invalidCredentials: 'INVALID_CREDENTIALS',
-            accountLocked: 'ACCOUNT_LOCKED'
-          }
-        },
-        security: {
-          rateLimiting: true,
-          encryption: 'bcrypt'
-        }
+        description: 'Authentication pattern for login',
+        category: 'auth',
+        implementation: 'middleware with validation',
+        examples: ['email/password login', 'oauth2 flow'],
+        permissions: ['read', 'write'],
+        roles: ['user', 'admin']
       }
       
       expect(authPattern.id).toBe('auth-login')
-      expect(authPattern.category).toBe('authentication')
-      expect(authPattern.implementation.middleware).toBe(true)
-      expect(authPattern.security.rateLimiting).toBe(true)
+      expect(authPattern.category).toBe('auth')
+      expect(authPattern.permissions).toContain('read')
+      expect(authPattern.roles).toContain('user')
     })
 
     it('should validate DataPattern structure', () => {
       const dataPattern: DataPattern = {
         id: 'data-products',
         name: 'Products Data Pattern',
+        description: 'Data pattern for products',
         category: 'data',
+        implementation: 'PostgreSQL with Supabase',
+        examples: ['SELECT queries', 'INSERT operations'],
         schema: {
           table: 'products',
           columns: ['id', 'name', 'price'],
           relationships: ['categories', 'labels']
         },
-        queries: {
-          findAll: 'SELECT * FROM products',
-          findById: 'SELECT * FROM products WHERE id = $1'
-        },
-        validation: {
-          required: ['name', 'price'],
-          types: {
-            price: 'number',
-            name: 'string'
+        validations: [
+          {
+            field: 'name',
+            type: 'string',
+            required: true
+          },
+          {
+            field: 'price',
+            type: 'number',
+            required: true
           }
-        }
+        ]
       }
       
-      expect(dataPattern.schema.table).toBe('products')
-      expect(dataPattern.queries.findAll).toContain('SELECT')
-      expect(dataPattern.validation.required).toContain('name')
+      expect(dataPattern.schema['table']).toBe('products')
+      expect(dataPattern.validations[0].field).toBe('name')
+      expect(dataPattern.validations[0].required).toBe(true)
     })
 
     it('should validate UIPattern structure', () => {
       const uiPattern: UIPattern = {
         id: 'ui-button',
         name: 'Button Component Pattern',
-        category: 'component',
-        component: {
-          props: ['variant', 'size', 'disabled'],
-          variants: ['primary', 'secondary', 'destructive'],
-          accessibility: {
-            role: 'button',
-            keyboard: true
-          }
-        },
+        description: 'Reusable button component',
+        category: 'ui',
+        implementation: 'React with TypeScript',
+        examples: ['<Button variant="primary" />', '<Button size="large" />'],
+        components: ['Button', 'IconButton', 'LinkButton'],
         styling: {
           framework: 'tailwind',
-          responsive: true
+          responsive: true,
+          variants: ['primary', 'secondary', 'destructive']
         }
       }
       
-      expect(uiPattern.component.variants).toContain('primary')
-      expect(uiPattern.component.accessibility.role).toBe('button')
-      expect(uiPattern.styling.framework).toBe('tailwind')
+      expect(uiPattern.components).toContain('Button')
+      expect(uiPattern.styling['framework']).toBe('tailwind')
+      expect(uiPattern.category).toBe('ui')
     })
   })
 
   describe('pattern configuration', () => {
     it('should validate PatternConfig structure', () => {
       const config: PatternConfig = {
-        environment: 'development',
-        features: {
-          authentication: true,
-          ecommerce: true,
-          analytics: false
-        },
-        database: {
-          provider: 'supabase',
-          migrations: true
-        },
-        api: {
-          version: 'v1',
-          rateLimit: 100
+        enabled: true,
+        priority: 1,
+        settings: {
+          environment: 'development',
+          features: {
+            authentication: true,
+            ecommerce: true,
+            analytics: false
+          },
+          database: {
+            provider: 'supabase',
+            migrations: true
+          },
+          api: {
+            version: 'v1',
+            rateLimit: 100
+          }
         }
       }
       
-      expect(config.environment).toBe('development')
-      expect(config.features.authentication).toBe(true)
-      expect(config.database.provider).toBe('supabase')
+      expect(config.enabled).toBe(true)
+      expect(config.priority).toBe(1)
+      expect(config.settings['environment']).toBe('development')
     })
   })
 
@@ -125,14 +122,16 @@ describe('types/context7-patterns', () => {
         field: 'email',
         type: 'string',
         required: true,
-        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        message: 'Email invalide'
+        constraints: {
+          pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+          message: 'Email invalide'
+        }
       }
       
       expect(rule.field).toBe('email')
       expect(rule.required).toBe(true)
-      expect(rule.pattern).toBeInstanceOf(RegExp)
-      expect(rule.message).toContain('Email')
+      expect(rule.constraints?.['pattern']).toBeInstanceOf(RegExp)
+      expect(rule.constraints?.['message']).toContain('Email')
     })
 
     it('should handle optional validation rules', () => {
@@ -143,19 +142,19 @@ describe('types/context7-patterns', () => {
       }
       
       expect(rule.required).toBe(false)
-      expect(rule.pattern).toBeUndefined()
-      expect(rule.message).toBeUndefined()
+      expect(rule.constraints?.['pattern']).toBeUndefined()
+      expect(rule.constraints?.['message']).toBeUndefined()
     })
   })
 
   describe('pattern categories', () => {
     it('should have valid pattern categories', () => {
       const categories: PatternCategory[] = [
-        'authentication',
+        'auth',
         'data',
-        'component',
-        'api',
-        'security'
+        'ui',
+        'security',
+        'performance'
       ]
       
       categories.forEach(category => {
@@ -171,14 +170,15 @@ describe('types/context7-patterns', () => {
       const pattern: Context7Pattern = {
         id: 'test-pattern',
         name: 'Test Pattern',
-        category: 'component',
-        version: '1.0.0',
-        description: 'Test description'
+        description: 'Test description',
+        category: 'ui',
+        implementation: 'React component',
+        examples: ['<TestComponent />']
       }
       
       expect(pattern.id).toBe('test-pattern')
-      expect(pattern.category).toBe('component')
-      expect(typeof pattern.version).toBe('string')
+      expect(pattern.category).toBe('ui')
+      expect(pattern.description).toBe('Test description')
     })
   })
 })

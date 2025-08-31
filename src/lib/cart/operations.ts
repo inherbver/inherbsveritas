@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 
 export interface AddToCartResult {
   success: boolean
-  data?: any
+  data?: unknown
   error?: string
 }
 
@@ -13,7 +13,7 @@ export async function addToCart(
   userId?: string | null
 ): Promise<AddToCartResult> {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     
     const cartData = {
       product_id: productId,
@@ -41,7 +41,7 @@ export async function addToCart(
 
 export async function removeFromCart(cartItemId: string): Promise<AddToCartResult> {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     
     const { data, error } = await supabase
       .from('cart_items')
@@ -67,7 +67,7 @@ export async function updateCartQuantity(
   quantity: number
 ): Promise<AddToCartResult> {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     
     if (quantity === 0) {
       return await removeFromCart(cartItemId)
@@ -94,7 +94,7 @@ export async function updateCartQuantity(
 
 export async function getCartTotal(sessionId?: string, userId?: string): Promise<number> {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     
     let query = supabase
       .from('cart_items')
@@ -115,8 +115,9 @@ export async function getCartTotal(sessionId?: string, userId?: string): Promise
       return 0
     }
 
-    return data.reduce((total, item) => {
-      return total + (item.quantity * (item.products as any).price)
+    return data.reduce((total: number, item: unknown) => {
+      const typedItem = item as { quantity: number; products: { price: number } }
+      return total + (typedItem.quantity * typedItem.products.price)
     }, 0)
   } catch (error) {
     return 0

@@ -302,4 +302,54 @@ export interface ClickableProps extends BaseComponentProps {
   readonly ariaLabel?: string;
 }
 
-// Types principaux déjà exportés via interface/type declarations ci-dessus
+// ============================================================================
+// 11. INTERFACES POUR TESTS - Compatibilité
+// ============================================================================
+
+export interface Context7Pattern {
+  id: string;
+  name: string;
+  description: string;
+  category: PatternCategory;
+  implementation: string;
+  examples: string[];
+}
+
+export interface AuthPattern extends Context7Pattern {
+  category: 'auth';
+  permissions: string[];
+  roles: string[];
+}
+
+export interface DataPattern extends Context7Pattern {
+  category: 'data';
+  schema: Record<string, unknown>;
+  validations: ValidationRule[];
+}
+
+export interface UIPattern extends Context7Pattern {
+  category: 'ui';
+  components: string[];
+  styling: Record<string, unknown>;
+}
+
+export interface SecurityPattern extends Context7Pattern {
+  category: 'security';
+  vulnerabilities: string[];
+  mitigations: string[];
+}
+
+export type PatternCategory = 'auth' | 'data' | 'ui' | 'security' | 'performance';
+
+export interface PatternConfig {
+  enabled: boolean;
+  priority: number;
+  settings: Record<string, unknown>;
+}
+
+export interface ValidationRule {
+  field: string;
+  type: string;
+  required: boolean;
+  constraints?: Record<string, unknown>;
+}

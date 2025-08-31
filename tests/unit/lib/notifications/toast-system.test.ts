@@ -201,7 +201,7 @@ describe('Toast System Integration', () => {
       const onSuccess = jest.fn()
       const mockPromise = Promise.resolve('data')
       
-      mockSonnerToast.promise.mockResolvedValue('data')
+      // Pas besoin de mock pour promise car on attend la vraie promise
       
       await toastSystem.promise(mockPromise, {
         loading: 'Loading...',

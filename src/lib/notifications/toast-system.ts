@@ -22,6 +22,7 @@ export interface ToastMessage {
     onClick: () => void
   }
   icon?: React.ReactNode
+  persistent?: boolean
 }
 
 export interface BusinessToastOptions {
@@ -37,7 +38,7 @@ export interface BusinessToastOptions {
   
   // Callbacks
   onSuccess?: () => void
-  onError?: (error: any) => void
+  onError?: (error: unknown) => void
   onDismiss?: () => void
 }
 
@@ -63,6 +64,7 @@ class ToastSystem {
             message.type === 'success' ? 'success' :
             message.type === 'warning' ? 'warning' : 'info',
       title: formattedMessage,
+      description: '',
       duration: this.defaultDuration[message.type === 'error' ? 'error' : 'success']
     }, options)
   }
@@ -76,7 +78,7 @@ class ToastSystem {
       duration: message.persistent ? Infinity : (message.duration || this.defaultDuration[message.type]),
       position: options?.position || 'bottom-right',
       closeButton: options?.showCloseButton || false,
-      onDismiss: options?.onDismiss,
+      ...(options?.onDismiss && { onDismiss: (_toast) => options.onDismiss!() }),
       icon: message.icon,
       action: message.action ? {
         label: message.action.label,
@@ -90,15 +92,15 @@ class ToastSystem {
     // Dispatch selon le type
     switch (message.type) {
       case 'success':
-        return sonnerToast.success(message.title, toastOptions)
+        return String(sonnerToast.success(message.title, toastOptions))
       case 'error':
-        return sonnerToast.error(message.title, toastOptions)
+        return String(sonnerToast.error(message.title, toastOptions))
       case 'warning':
-        return sonnerToast.warning(message.title, toastOptions) 
+        return String(sonnerToast.warning(message.title, toastOptions)) 
       case 'loading':
-        return sonnerToast.loading(message.title, toastOptions)
+        return String(sonnerToast.loading(message.title, toastOptions))
       default:
-        return sonnerToast(message.title, toastOptions)
+        return String(sonnerToast(message.title, toastOptions))
     }
   }
 
@@ -110,24 +112,19 @@ class ToastSystem {
     messages: {
       loading: string
       success: string | ((data: T) => string)
-      error: string | ((error: any) => string)
+      error: string | ((error: unknown) => string)
     },
     options?: BusinessToastOptions
   ): Promise<T> {
-    const toastOptions: ExternalToast = {
-      position: options?.position || 'bottom-right',
-      onDismiss: options?.onDismiss
-    }
-
-    const result = sonnerToast.promise(promise, messages, toastOptions)
+    sonnerToast.promise(promise, messages)
     
     // Callbacks business
-    result.then(
-      (data) => options?.onSuccess?.(),
-      (error) => options?.onError?.(error)
+    promise.then(
+      (_data: T) => options?.onSuccess?.(),
+      (error: unknown) => options?.onError?.(error)
     )
 
-    return result
+    return promise
   }
 
   /**
@@ -147,8 +144,9 @@ class ToastSystem {
   /**
    * Update toast existant
    */
-  update(toastId: string, message: ToastMessage, options?: BusinessToastOptions): void {
-    this.show(message, { ...options, position: undefined }) // Re-use existing position
+  update(_toastId: string, message: ToastMessage, options?: BusinessToastOptions): void {
+    // Re-show with same ID (sonner will replace)
+    this.show(message, { ...options, position: undefined })
   }
 
   private trackBusinessAction(type: ToastType, action?: string, userRole?: UserRole): void {
@@ -388,15 +386,13 @@ export function useToast() {
     showAuthMessage: (message: AuthMessage, options?: BusinessToastOptions) => 
       toastSystem.fromAuthMessage(message, options),
     showSuccess: (title: string, description?: string) => 
-      toastSystem.show({ type: 'success', title, description }),
+      toastSystem.show({ type: 'success', title, description: description || '' }),
     showError: (title: string, description?: string) => 
-      toastSystem.show({ type: 'error', title, description }),
+      toastSystem.show({ type: 'error', title, description: description || '' }),
     showInfo: (title: string, description?: string) => 
-      toastSystem.show({ type: 'info', title, description }),
+      toastSystem.show({ type: 'info', title, description: description || '' }),
     showLoading: (title: string) => 
-      toastSystem.show({ type: 'loading', title })
+      toastSystem.show({ type: 'loading', title, description: '' })
   }
 }
 
-// === TYPES EXPORT ===
-export type { ToastMessage, BusinessToastOptions }

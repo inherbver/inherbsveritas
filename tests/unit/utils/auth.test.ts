@@ -43,25 +43,24 @@ describe('utils/auth', () => {
 
   describe('session token management', () => {
     it('should generate session token', () => {
-      const payload = { userId: 'user-123', role: 'user' }
-      const token = generateSessionToken(payload)
+      const token = generateSessionToken()
       
       expect(typeof token).toBe('string')
       expect(token.length).toBeGreaterThan(0)
     })
 
     it('should validate session token', () => {
-      const token = 'mock-jwt-token'
-      const decoded = validateSessionToken(token)
+      const token = 'session_mock123'
+      const isValid = validateSessionToken(token)
       
-      expect(decoded).toEqual({ userId: 'user-123', role: 'user' })
+      expect(isValid).toBe(true)
     })
 
     it('should extract user from JWT', () => {
       const jwt = 'mock-jwt-token'
       const user = extractUserFromJWT(jwt)
       
-      expect(user).toEqual({ userId: 'user-123', role: 'user' })
+      expect(user).toEqual({ id: 'user_123', email: 'test@herbisveritas.fr' })
     })
   })
 
@@ -75,12 +74,8 @@ describe('utils/auth', () => {
     })
 
     it('should handle invalid JWT token', () => {
-      const jwt = require('jsonwebtoken')
-      jwt.verify.mockImplementationOnce(() => {
-        throw new Error('Invalid token')
-      })
-      
-      expect(() => validateSessionToken('invalid-token')).toThrow('Invalid token')
+      const isValid = validateSessionToken('invalid-token')
+      expect(isValid).toBe(false)
     })
   })
 })

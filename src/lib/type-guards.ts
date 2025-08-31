@@ -250,13 +250,13 @@ export function isApiError<T>(response: ApiResponse<T>): response is ApiErrorRes
 // ============================================================================
 
 // Zod schemas pour validation runtime
-export const ProductLabelSchema = z.enum(VALID_PRODUCT_LABELS);
-export const UserRoleSchema = z.enum(VALID_USER_ROLES);
-export const OrderStatusSchema = z.enum(VALID_ORDER_STATUSES);
-export const PaymentStatusSchema = z.enum(VALID_PAYMENT_STATUSES);
-export const AddressTypeSchema = z.enum(VALID_ADDRESS_TYPES);
-export const ArticleStatusSchema = z.enum(VALID_ARTICLE_STATUSES);
-export const FeaturedTypeSchema = z.enum(VALID_FEATURED_TYPES);
+export const ProductLabelSchema = z.enum(['recolte_main', 'bio', 'origine_occitanie', 'partenariat_producteurs', 'rituel_bien_etre', 'rupture_recolte', 'essence_precieuse']);
+export const UserRoleSchema = z.enum(['user', 'admin', 'dev']);
+export const OrderStatusSchema = z.enum(['pending_payment', 'processing', 'shipped', 'delivered']);
+export const PaymentStatusSchema = z.enum(['pending', 'succeeded', 'failed', 'refunded']);
+export const AddressTypeSchema = z.enum(['billing', 'shipping']);
+export const ArticleStatusSchema = z.enum(['draft', 'published', 'archived']);
+export const FeaturedTypeSchema = z.enum(['product', 'article', 'partner']);
 
 // Schema pour UUID validation
 export const UUIDSchema = z.string().uuid();
@@ -374,4 +374,39 @@ export function validateWithSchema<T>(
       : 'Validation failed';
     return { success: false, error: message };
   }
+}
+
+// ============================================================================
+// 9. ADDITIONAL VALIDATION FUNCTIONS FOR TESTS
+// ============================================================================
+
+export function isValidRole(value: unknown): value is UserRole {
+  return isUserRole(value);
+}
+
+export function isValidLanguage(value: unknown): value is 'fr' | 'en' {
+  return isString(value) && (value === 'fr' || value === 'en');
+}
+
+export function isValidProductLabel(value: unknown): value is ProductLabel {
+  return isProductLabel(value);
+}
+
+export function isValidEmail(value: unknown): value is string {
+  const result = EmailSchema.safeParse(value);
+  return result.success;
+}
+
+export function isValidPassword(value: unknown): value is string {
+  return isString(value) && value.length >= 8;
+}
+
+export function isUUID(value: unknown): value is string {
+  const result = UUIDSchema.safeParse(value);
+  return result.success;
+}
+
+export function isValidPhoneNumber(value: unknown): value is string {
+  const phoneRegex = /^(\+33|0)[1-9](\d{8})$/;
+  return isString(value) && phoneRegex.test(value);
 }

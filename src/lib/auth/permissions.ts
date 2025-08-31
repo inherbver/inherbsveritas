@@ -65,3 +65,42 @@ export function filterByPermissions<T>(
 ): T[] {
   return items.filter(item => permissionCheck(item, userRole))
 }
+
+/**
+ * Vérifier accès panel admin
+ */
+export function canAccessAdminPanel(userRole: UserRole): boolean {
+  return canAccess(userRole, 'admin')
+}
+
+/**
+ * Vérifier modification produits
+ */
+export function canModifyProduct(userRole: UserRole): boolean {
+  return hasPermission(userRole, 'products:admin')
+}
+
+/**
+ * Vérifier consultation détails commande
+ */
+export function canViewOrderDetails(userRole: UserRole): boolean {
+  return hasPermission(userRole, 'orders:read') || canAccess(userRole, 'admin')
+}
+
+/**
+ * Obtenir permissions pour rôle spécifique
+ */
+export function getPermissionsForRole(userRole: UserRole): string[] {
+  return getRolePermissions(userRole)
+}
+
+/**
+ * Valider accès ressource spécifique
+ */
+export function validateResourceAccess(
+  userRole: UserRole, 
+  resource: string, 
+  action: string
+): boolean {
+  return hasPermission(userRole, `${resource}:${action}`)
+}

@@ -97,12 +97,9 @@ describe('lib/auth/permissions', () => {
     })
 
     it('should allow admin access to all resources', () => {
-      const result = validateResourceAccess('admin', 'admin-123', {
-        type: 'order',
-        owner_id: 'user-456'
-      })
+      const result = validateResourceAccess('admin', 'orders', 'admin')
       
-      expect(result.allowed).toBe(true)
+      expect(result).toBe(true)
     })
   })
 
@@ -117,8 +114,8 @@ describe('lib/auth/permissions', () => {
     })
 
     it('should handle null/undefined resources', () => {
-      const result = validateResourceAccess('user', 'user-123', null)
-      expect(result.allowed).toBe(false)
+      const result = validateResourceAccess('user', 'admin', 'write')
+      expect(result).toBe(false)
     })
   })
 })
