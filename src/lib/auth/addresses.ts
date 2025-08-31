@@ -30,6 +30,8 @@ export const CreateAddressSchema = z.object({
 
 export const UpdateAddressSchema = CreateAddressSchema.partial().omit(['user_id'])
 
+// Note: Tests utilisent le nouveau schema avec address_type
+
 export type CreateAddressData = z.infer<typeof CreateAddressSchema>
 export type UpdateAddressData = z.infer<typeof UpdateAddressSchema>
 
@@ -161,7 +163,7 @@ export async function updateAddress(addressId: string, updateData: UpdateAddress
     const validatedData = validationResult.data
 
     // Si is_default = true, récupérer l'adresse pour unset les autres
-    if (validatedData.is_default) {
+    if ('is_default' in validatedData && validatedData.is_default) {
       const { data: addressInfo } = await supabase
         .from('addresses')
         .select('user_id, address_type')
@@ -237,11 +239,12 @@ export async function deleteAddress(addressId: string): Promise<{ success: boole
     }
 
     // Protection: empêcher suppression si c'est la seule adresse par défaut
-    if (existingAddress[0].is_default) {
+    const firstAddress = existingAddress[0]
+    if (firstAddress && firstAddress.is_default) {
       const { data: userAddresses } = await supabase
         .from('addresses')
-        .select('id')
-        .eq('user_id', (existingAddress[0] as any).user_id)
+        .select('id, user_id')
+        .eq('user_id', (firstAddress as any).user_id)
 
       if (userAddresses && userAddresses.length === 1) {
         return {

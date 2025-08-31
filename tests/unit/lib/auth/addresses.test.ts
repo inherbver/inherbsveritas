@@ -55,13 +55,13 @@ describe('lib/auth/addresses (TDD)', () => {
       // Arrange
       const addressData: CreateAddressData = {
         user_id: 'user-123',
-        type: 'billing',
+        address_type: 'billing' as const,
         first_name: 'Jean',
         last_name: 'Dupont',
-        street_address: '123 rue de la Paix',
+        address_line1: '123 rue de la Paix',
         city: 'Paris',
         postal_code: '75001',
-        country: 'France',
+        country_code: 'FR',
         is_default: true
       }
 
@@ -94,7 +94,7 @@ describe('lib/auth/addresses (TDD)', () => {
       // Arrange
       const invalidAddressData = {
         user_id: 'user-123',
-        type: 'billing',
+        address_type: 'billing' as const,
         // Missing required fields
       } as CreateAddressData
 
@@ -114,7 +114,7 @@ describe('lib/auth/addresses (TDD)', () => {
         type: 'shipping',
         first_name: 'Jane',
         last_name: 'Smith',
-        street_address: '456 Main St',
+        address_line1: '456 Main St',
         city: 'Lyon',
         postal_code: '69000',
         country: 'France'
@@ -138,13 +138,13 @@ describe('lib/auth/addresses (TDD)', () => {
       // Arrange
       const addressData: CreateAddressData = {
         user_id: 'user-123',
-        type: 'billing',
+        address_type: 'billing' as const,
         first_name: 'Jean',
         last_name: 'Dupont',
-        street_address: '123 rue de la Paix',
+        address_line1: '123 rue de la Paix',
         city: 'Paris',
         postal_code: '75001',
-        country: 'France',
+        country_code: 'FR',
         is_default: true
       }
 
@@ -172,13 +172,13 @@ describe('lib/auth/addresses (TDD)', () => {
         {
           id: 'addr-1',
           user_id: userId,
-          type: 'billing',
+          address_type: 'billing' as const,
           first_name: 'Jean',
           last_name: 'Dupont',
-          street_address: '123 rue de la Paix',
+          address_line1: '123 rue de la Paix',
           city: 'Paris',
           postal_code: '75001',
-          country: 'France',
+          country_code: 'FR',
           is_default: true,
           created_at: '2025-01-01T10:00:00.000Z',
           updated_at: '2025-01-01T10:00:00.000Z'
@@ -186,13 +186,13 @@ describe('lib/auth/addresses (TDD)', () => {
         {
           id: 'addr-2',
           user_id: userId,
-          type: 'shipping',
+          address_type: 'shipping',
           first_name: 'Jane',
           last_name: 'Smith',
-          street_address: '456 Main St',
+          address_line1: '456 Main St',
           city: 'Lyon',
           postal_code: '69000',
-          country: 'France',
+          country_code: 'FR',
           is_default: false,
           created_at: '2025-01-01T11:00:00.000Z',
           updated_at: '2025-01-01T11:00:00.000Z'
@@ -256,7 +256,7 @@ describe('lib/auth/addresses (TDD)', () => {
       // Arrange
       const addressId = 'addr-123'
       const updateData: UpdateAddressData = {
-        street_address: '789 New Street',
+        address_line1: '789 New Street',
         city: 'Marseille',
         postal_code: '13000'
       }
@@ -264,13 +264,13 @@ describe('lib/auth/addresses (TDD)', () => {
       const expectedUpdatedAddress: Address = {
         id: addressId,
         user_id: 'user-123',
-        type: 'billing',
+        address_type: 'billing' as const,
         first_name: 'Jean',
         last_name: 'Dupont',
-        street_address: '789 New Street',
+        address_line1: '789 New Street',
         city: 'Marseille',
         postal_code: '13000',
-        country: 'France',
+        country_code: 'FR',
         is_default: true,
         created_at: '2025-01-01T10:00:00.000Z',
         updated_at: '2025-01-01T12:00:00.000Z'

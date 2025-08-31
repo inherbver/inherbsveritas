@@ -23,7 +23,7 @@ export default async function middleware(request: NextRequest) {
   
   if (isAdminRoute || isProfileRoute) {
     try {
-      const supabase = await createMiddlewareClient(request)
+      const { supabase, response } = await createMiddlewareClient(request)
       const { data: { session }, error } = await supabase.auth.getSession()
       
       if (error || !session) {
@@ -35,12 +35,15 @@ export default async function middleware(request: NextRequest) {
       // Protection admin spécifique
       if (isAdminRoute) {
         const { data: userData } = await supabase.auth.getUser()
-        const userRole = userData.user?.user_metadata?.role || 'user'
+        const userRole = userData.user?.user_metadata?.['role'] || 'user'
         
         if (userRole !== 'admin' && userRole !== 'dev') {
           return NextResponse.redirect(new URL('/unauthorized', request.url))
         }
       }
+      
+      // Retourner la response avec les cookies Supabase
+      return response
     } catch (error) {
       console.error('Middleware auth error:', error)
       return NextResponse.redirect(new URL('/login', request.url))

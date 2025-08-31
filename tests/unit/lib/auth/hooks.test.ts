@@ -3,7 +3,7 @@
  * TDD pour les hooks d'authentification
  */
 
-import { renderHook, waitFor, act } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 import { useAuth, useAuthUser, useRequireAuth } from '@/lib/auth/hooks'
 
 // Mock des dépendances
