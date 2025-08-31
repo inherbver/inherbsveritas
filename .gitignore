@@ -48,6 +48,9 @@ secrets*
 
 # Claude Code - Local Settings
 .claude/settings.local.json
+
+# Backup files from refactoring
+*.backup
 .claude/config.json
 .claude/logs/
 .claude/cache/
