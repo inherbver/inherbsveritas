@@ -3,10 +3,11 @@
 ## Configuration Technique
 
 ### Framework
-- **next-intl v3.26.5** : Solution d'internationalisation pour Next.js 15
-- **Architecture** : App Router avec structure `[locale]`
+- **next-intl v3.22.4** : Solution d'internationalisation pour Next.js 15
+- **Architecture** : App Router avec structure `[locale]`  
 - **Locales MVP** : `fr` (défaut), `en`
 - **Locales V2** : `de`, `es` (reportées)
+- **Statut** : ✅ Configuration routing implémentée
 
 ### Structure Fichiers
 
@@ -27,9 +28,10 @@ src/
 
 ### Configuration Routes
 
-#### Pathnames Localisés
+#### Pathnames Localisés (✅ Implémenté)
 ```typescript
 pathnames: {
+  '/': '/',
   '/products': { fr: '/produits', en: '/products' },
   '/cart': { fr: '/panier', en: '/cart' },
   '/checkout': { fr: '/commande', en: '/checkout' },
@@ -40,27 +42,51 @@ pathnames: {
 }
 ```
 
-#### Middleware
+#### Middleware (✅ Configuration prête)
 - Redirection automatique vers locale
-- Support URLs sans préfixe pour français
+- Support URLs sans préfixe pour français (mode 'always' avec prefixes)
 - Détection navigateur pour locale initiale
+- Alternate links SEO activés
 
 ### Messages Disponibles
 
-#### Navigation
+#### 📋 Statut MVP : À Implémenter (Semaine 4)
+Selon le plan MVP, l'implémentation i18n frontend est prévue en **Semaine 4**.
+
+#### Navigation (📋 À implémenter)
 - Liens principaux (boutique, produits, panier, etc.)
 - Actions utilisateur (connexion, déconnexion, inscription)
 
-#### E-commerce
+#### E-commerce (📋 À implémenter)
 - Produits (titre, description, labels, actions)
 - Panier (états, actions, messages)
 - Commande (étapes, formulaires, validation)
 
-#### Contenu
+#### Contenu (📋 À implémenter)
 - Articles (catégories, navigation)
 - Partenaires (types, informations)
 - Authentification (formulaires, messages)
 - Footer (liens, newsletter, légal)
+
+## Planning MVP Intégration
+
+### ✅ Phase 1 Complétée
+- Configuration next-intl v3.22.4
+- Structure routing (`src/i18n/routing.ts`, `src/i18n/request.ts`)
+- Pathnames localisés configurés
+- Types TypeScript exportés
+
+### 📋 Phase 2 : Semaine 4 (À venir)
+- Création fichiers messages (`src/messages/fr.json`, `src/messages/en.json`)
+- Implémentation middleware.ts
+- Layout [locale] avec next-intl
+- Tests i18n avec couverture > 90%
+
+### 📋 Phase 3 : Semaines 5-12 (Progressive)
+- Traductions composants UI au fur et mesure
+- Messages d'erreur et validation localisés
+- Tests e2e multilingues
+- SEO multilingue complet
 
 ## Utilisation Développeur
 
@@ -146,3 +172,25 @@ npm run dev
 - Messages chargés côté serveur
 - Pas de surcharge client
 - SSG compatible multilingue
+
+## Statut Actuel MVP
+
+### ✅ Implémenté (Semaine 2)
+- Configuration next-intl v3.22.4 installée
+- Routing configuration dans `src/i18n/routing.ts`
+- Types TypeScript Locale et Pathnames
+- Pathnames localisés FR/EN définis
+- Request configuration prête
+
+### 📋 Prochaines Actions (Semaine 4)
+1. **TDD First** : Tests i18n avant implémentation
+2. Création middleware.ts pour routage automatique
+3. Implémentation layout [locale] 
+4. Fichiers messages fr.json/en.json
+5. Tests couverture i18n > 90%
+
+### Architecture Respectée
+- Strictement FR/EN pour MVP (DE/ES reportés V2)
+- Français par défaut (URLs sans préfixe)
+- SEO multilingue avec alternate links
+- Compatible avec architecture 13 tables MVP

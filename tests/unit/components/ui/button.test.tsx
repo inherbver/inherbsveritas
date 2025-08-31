@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 import { Button } from '@/components/ui/button'
 
-describe('Button Component MVP → V2', () => {
-  describe('Basic functionality (MVP)', () => {
+describe('Button Component shadcn/ui', () => {
+  describe('Basic functionality', () => {
     it('renders children correctly', () => {
       render(<Button>Click me</Button>)
       expect(screen.getByRole('button')).toHaveTextContent('Click me')
@@ -32,44 +32,55 @@ describe('Button Component MVP → V2', () => {
     })
   })
 
-  describe('Loading state (MVP)', () => {
-    it('shows loading state correctly', () => {
-      render(<Button loading>Loading</Button>)
-      
-      expect(screen.getByRole('button')).toBeDisabled()
-      expect(screen.getByTestId('spinner')).toBeInTheDocument()
+  describe('Variants', () => {
+    it('renders default variant', () => {
+      render(<Button>Default</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-primary')
     })
 
-    it('disables button when loading', () => {
-      render(<Button loading onClick={jest.fn()}>Loading</Button>)
-      expect(screen.getByRole('button')).toBeDisabled()
+    it('renders secondary variant', () => {
+      render(<Button variant="secondary">Secondary</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-secondary')
+    })
+
+    it('renders outline variant', () => {
+      render(<Button variant="outline">Outline</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('border')
+    })
+
+    it('renders ghost variant', () => {
+      render(<Button variant="ghost">Ghost</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('hover:bg-accent')
     })
   })
 
-  describe('Variants (V2 ready)', () => {
-    it.each(['primary', 'secondary', 'ghost', 'danger'])(
-      'supports %s variant',
-      (variant) => {
-        render(<Button variant={variant as any}>Test</Button>)
-        expect(screen.getByRole('button')).toHaveClass(`btn-${variant}`)
-      }
-    )
-
-    it('defaults to primary variant', () => {
+  describe('Sizes', () => {
+    it('renders default size', () => {
       render(<Button>Default</Button>)
-      expect(screen.getByRole('button')).toHaveClass('btn-primary')
-    })
-  })
-
-  describe('Sizes (V2 ready)', () => {
-    it.each(['sm', 'md', 'lg'])('supports %s size', (size) => {
-      render(<Button size={size as any}>Test</Button>)
-      expect(screen.getByRole('button')).toHaveClass(`btn-${size}`)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('h-10', 'px-4', 'py-2')
     })
 
-    it('defaults to md size', () => {
-      render(<Button>Default</Button>)
-      expect(screen.getByRole('button')).toHaveClass('btn-md')
+    it('renders small size', () => {
+      render(<Button size="sm">Small</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('h-9', 'px-3')
+    })
+
+    it('renders large size', () => {
+      render(<Button size="lg">Large</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('h-11', 'px-8')
+    })
+
+    it('renders icon size', () => {
+      render(<Button size="icon">×</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('h-10', 'w-10')
     })
   })
 
@@ -90,6 +101,20 @@ describe('Button Component MVP → V2', () => {
       
       await user.tab()
       expect(screen.getByRole('button')).toHaveFocus()
+    })
+  })
+
+  describe('AsChild prop', () => {
+    it('renders as child element when asChild is true', () => {
+      render(
+        <Button asChild>
+          <a href="/test">Link Button</a>
+        </Button>
+      )
+      
+      const link = screen.getByRole('link')
+      expect(link).toHaveAttribute('href', '/test')
+      expect(link).toHaveTextContent('Link Button')
     })
   })
 })
