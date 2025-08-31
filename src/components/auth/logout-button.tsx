@@ -145,3 +145,5 @@ export function SimpleLogoutButton({ children = 'Se déconnecter', className = '
     </Button>
   )
 }
+
+export default LogoutButton

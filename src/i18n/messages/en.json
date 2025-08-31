@@ -1,0 +1,18 @@
+{
+  "title": "About In Herbis Veritas",
+  "hero": {
+    "title": "Our Roots",
+    "subtitle": "Cultivating wellness, one plant at a time.",
+    "imageAlt": "Background of the About hero section",
+    "ctaLabel": "Discover our commitments"
+  },
+  "navigation": {
+    "title": "About",
+    "shop": "Shop", 
+    "products": "Products"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for does not exist."
+  }
+}

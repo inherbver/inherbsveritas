@@ -6,15 +6,14 @@
 import { 
   getPathname,
   redirect,
-  permanentRedirect,
   Link,
   useRouter,
   usePathname
-} from '@/i18n/routing'
+} from '@/navigation'
 
-// Mock next-intl
-jest.mock('next-intl/routing', () => ({
-  createLocalizedPathnamesNavigation: jest.fn(() => ({
+// Mock next-intl (nouveau système)
+jest.mock('next-intl/navigation', () => ({
+  createNavigation: jest.fn(() => ({
     Link: 'MockedLink',
     redirect: jest.fn(),
     useRouter: jest.fn(),
@@ -35,10 +34,6 @@ describe('i18n/routing', () => {
       expect(typeof redirect).toBe('function')
     })
 
-    it('should provide permanentRedirect function', () => {
-      expect(permanentRedirect).toBeDefined()
-      expect(typeof permanentRedirect).toBe('function')
-    })
   })
 
   describe('router hooks', () => {
@@ -75,6 +70,7 @@ describe('i18n/routing', () => {
     it('should have pathnames configuration for main routes', () => {
       const expectedPaths = [
         '/',
+        '/shop',
         '/products',
         '/profile',
         '/cart',
@@ -93,6 +89,7 @@ describe('i18n/routing', () => {
   describe('route generation', () => {
     it('should handle French routes correctly', () => {
       const frenchPaths = {
+        '/shop': '/boutique',
         '/products': '/produits',
         '/cart': '/panier',
         '/profile': '/profil'
@@ -107,6 +104,7 @@ describe('i18n/routing', () => {
 
     it('should handle English routes correctly', () => {
       const englishPaths = [
+        '/shop',
         '/products',
         '/cart',
         '/profile',

@@ -21,8 +21,9 @@ import {
  * Fonction principale middleware Supabase SSR
  * CRITIQUE: Retourner supabaseResponse inchangé (Context7 pattern)
  */
-export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
+export async function updateSession(request: NextRequest, response?: NextResponse) {
+  // Utiliser response fournie (i18n) ou créer nouvelle si aucune
+  let supabaseResponse = response || NextResponse.next({
     request,
   })
 

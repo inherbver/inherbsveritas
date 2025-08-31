@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
 import { ProductDetail } from '@/components/modules/boutique/components/product-detail'
 import { Spinner } from '@/components/ui/spinner'
+import { type ProductLabel } from '@/types/product'
 
 // Mock fonction pour récupérer un produit par slug
 // TODO: Remplacer par l'API Supabase réelle
@@ -24,7 +25,7 @@ async function getProductBySlug(slug: string) {
       'Limonene',
       'Geraniol'
     ],
-    labels: ['bio', 'recolte_main', 'origine_occitanie'] as const,
+    labels: ['bio', 'recolte_main', 'origine_occitanie'] as ProductLabel[],
     status: 'active',
     is_active: true,
     is_new: false,

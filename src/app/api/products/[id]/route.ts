@@ -6,10 +6,10 @@ interface RouteContext {
   params: { id: string }
 }
 
-export async function GET(request: NextRequest, { params }: RouteContext) {
+export async function GET(_request: NextRequest, { params }: RouteContext) {
   try {
     const { id } = params
-    const supabase = createClient()
+    const supabase = await createClient()
 
     const { data: product, error } = await supabase
       .from('products')
@@ -69,12 +69,12 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     const { id } = params
     const body = await request.json()
     
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // Vérifier que le produit existe
     const { data: existingProduct, error: fetchError } = await supabase
       .from('products')
-      .select('id')
+      .select('id, translations')
       .eq('id', id)
       .single()
 
@@ -194,10 +194,10 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: RouteContext) {
+export async function DELETE(_request: NextRequest, { params }: RouteContext) {
   try {
     const { id } = params
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // Soft delete: marquer comme inactif
     const { data: product, error } = await supabase

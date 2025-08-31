@@ -1,0 +1,13 @@
+{
+  "addToCart": "Add to cart",
+  "outOfStock": "Out of stock",
+  "limitedStock": "Limited stock ({count} remaining)",
+  "price": {
+    "from": "From",
+    "per": "per {unit}"
+  },
+  "certifications": "Certifications",
+  "producer": "Producer",
+  "origin": "Origin",
+  "viewDetails": "View details"
+}

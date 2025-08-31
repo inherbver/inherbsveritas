@@ -1,0 +1,29 @@
+{
+  "NotFound": {
+    "title": "Page non trouvée",
+    "description": "La page que vous recherchez n'existe pas."
+  },
+  "Navigation": {
+    "shop": "Boutique",
+    "products": "Produits",
+    "cart": "Panier",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "register": "Inscription"
+  },
+  "Common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "success": "Succès !",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "close": "Fermer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "search": "Rechercher",
+    "filter": "Filtrer"
+  }
+}

@@ -109,9 +109,9 @@ export const PROTECTED_ROUTES: RouteProtection[] = [
 // Routes publiques (pas de auth requise)
 export const PUBLIC_ROUTES = [
   '/',
-  '/boutique',
-  '/boutique/categories',
-  '/boutique/produits',
+  '/shop',
+  '/shop/categories',
+  '/shop/produits',
   '/magazine',
   '/magazine/articles', 
   '/partenaires',

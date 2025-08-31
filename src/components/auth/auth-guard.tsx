@@ -197,3 +197,5 @@ export function useAuthState() {
 
   return authState
 }
+
+export default AuthGuard

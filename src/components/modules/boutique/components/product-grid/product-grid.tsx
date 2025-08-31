@@ -6,7 +6,7 @@ import { ProductFilters, Product } from '@/types/product'
 import { useProducts } from '@/hooks/use-products'
 import { Button, ProductGridSkeleton } from '@/components/ui'
 
-interface ProductGridProps {
+export interface ProductGridProps {
   initialFilters?: ProductFilters
   className?: string
 }

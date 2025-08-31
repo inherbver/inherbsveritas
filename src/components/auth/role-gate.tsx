@@ -90,3 +90,5 @@ export function AdminOrDev({ children, fallback }: { children: React.ReactNode; 
     </RoleGate>
   )
 }
+
+export default RoleGate

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { Product, ProductLabel, LABEL_DISPLAY } from '@/types/product'
+import { ProductLabel } from '@/types/product'
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const labelsParam = searchParams.get('labels')
     const search = searchParams.get('search')
     
-    const supabase = createClient()
+    const supabase = await createClient()
     
     let query = supabase
       .from('products')
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // Générer le slug à partir du nom français
     const slug = body.name.fr
