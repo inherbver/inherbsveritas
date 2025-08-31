@@ -10,7 +10,7 @@
 "use client"
 
 import { useState } from 'react'
-import { useAuthActions } from '@/lib/auth/hooks'
+import { useAuthActions } from '@/lib/auth/hooks/use-auth-actions'
 import Link from 'next/link'
 
 // Composants UI temporaires - À remplacer par shadcn/ui

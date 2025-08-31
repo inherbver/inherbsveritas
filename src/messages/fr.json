@@ -119,5 +119,10 @@
     "newsletterDescription": "Inscrivez-vous pour recevoir nos actualités",
     "subscribe": "S'abonner",
     "followUs": "Suivez-nous"
+  },
+  "NotFound": {
+    "title": "Page non trouvée",
+    "description": "La page que vous cherchez n'existe pas.",
+    "backHome": "Retour à l'accueil"
   }
 }

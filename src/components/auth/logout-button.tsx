@@ -9,7 +9,7 @@
 "use client"
 
 import { useState } from 'react'
-import { useAuth } from '@/lib/auth/hooks'
+import { useAuthActions } from '@/lib/auth/hooks/use-auth-actions'
 
 interface LogoutButtonProps {
   children?: React.ReactNode
@@ -44,7 +44,7 @@ export function LogoutButton({
   variant = 'ghost',
   showConfirmation = true 
 }: LogoutButtonProps) {
-  const { signOut, loading } = useAuth()
+  const { signOut, loading } = useAuthActions()
   const [showConfirm, setShowConfirm] = useState(false)
 
   const handleClick = () => {
@@ -121,7 +121,7 @@ export function LogoutButton({
 
 // Version simple sans confirmation
 export function SimpleLogoutButton({ children = 'Se déconnecter', className = '', variant = 'ghost' }: LogoutButtonProps) {
-  const { signOut, loading } = useAuth()
+  const { signOut, loading } = useAuthActions()
 
   const handleLogout = async () => {
     await signOut()
