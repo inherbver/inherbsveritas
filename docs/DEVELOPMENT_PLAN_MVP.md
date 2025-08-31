@@ -108,64 +108,115 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
   - Validation forms Zod
   - **Tests** : Coverage addresses > 85%
 
-#### **Semaine 3 : Products Foundation (TDD First)**
+#### **Semaine 3 : Infrastructure UI + Products Foundation (TDD First)**
+
+**🎯 NOUVEAU : Infrastructure Composants Évolutive**
+- [ ] **Design System Foundation**
+  - **TDD** : Tests composants UI AVANT implémentation
+  - Setup shadcn/ui + Tailwind avec CSS variables
+  - Structure `/src/components/` progressive
+  - Integration messages centralisés dans composants
+  - **Tests** : Coverage composants base > 90%
+
+- [ ] **Composants Base MVP (Phase 1)**
+  - **TDD** : Tests Button 2 variants AVANT UI
+  - **TDD** : Tests Input validation AVANT forms
+  - **TDD** : Tests Card container AVANT layout
+  - Button (primary/secondary uniquement)
+  - Input (text, email, password avec validation intégrée)
+  - Card container simple
+  - Alert/Toast avec AuthMessage support
+  - **Tests** : Coverage UI base > 85%
+
 - [ ] **Categories hiérarchiques**
   - **TDD** : Tests hiérarchie categories AVANT CRUD
   - **TDD** : Tests i18n JSONB AVANT admin
-  - CRUD admin categories
+  - CRUD admin categories avec composants UI
   - i18n JSONB intégré
-  - Navigation tree frontend
+  - Navigation tree frontend avec Card components
   - **Tests** : Coverage categories > 85%
 
 - [ ] **Products de base**
   - **TDD** : Tests labels HerbisVeritas AVANT enum
-  - **TDD** : Tests validation INCI AVANT forms
-  - CRUD produits
+  - **TDD** : Tests ProductCard simple AVANT UI
+  - CRUD produits avec composants UI standardisés
   - Labels HerbisVeritas (7 types)
   - INCI list cosmétique
-  - Upload images
+  - Upload images avec composants réutilisables
   - **Tests** : Coverage produits > 80%
 
 ### Phase 2 : E-commerce Core (Semaines 4-7) - TDD Intensive
 
-#### **Semaine 4 : Catalogue (TDD First)**
+#### **Semaine 4 : Composants Business + Catalogue (TDD First)**
+
+**🎯 Composants Business MVP (Phase 2)**
+- [ ] **ProductCard Évolutif**
+  - **TDD** : Tests ProductCard MVP simple AVANT UI
+  - **TDD** : Tests props extensibles AVANT V2 prep
+  - ProductCard monolithe simple (image, title, price, button)
+  - Props extensibles pour évolution V2
+  - Integration avec messages centralisés
+  - Lazy loading images intégré
+  - **Tests** : Coverage ProductCard > 90%
+
+- [ ] **Forms Composants avec Messages**
+  - **TDD** : Tests AuthForms AVANT UI
+  - **TDD** : Tests validation + messages AVANT integration
+  - LoginForm/SignupForm avec AuthMessage system
+  - FormWrapper réutilisable avec gestion erreurs
+  - Input validation temps réel
+  - Loading states intégrés
+  - **Tests** : Coverage forms > 85%
+
 - [ ] **Frontend catalogue**
-  - **TDD** : Tests composants pages produits AVANT UI
+  - **TDD** : Tests layout composants AVANT UI
   - **TDD** : Tests filtres + recherche AVANT logique
   - **E2E** : Tests parcours catalogue complet
-  - Pages produits + détail
-  - Filtres par catégorie/labels
-  - Recherche textuelle
-  - Responsive design
+  - ProductList avec ProductCard standardisés
+  - Filtres par catégorie/labels avec composants UI
+  - Recherche textuelle avec Input component
+  - Layout responsive avec components système
   - **Tests** : Coverage catalogue > 85%
 
 - [ ] **i18n Frontend**
   - **TDD** : Tests traductions FR/EN AVANT next-intl
   - **TDD** : Tests switch langues AVANT UI
-  - Traductions FR/EN
-  - Switch langues
-  - Fallback français
+  - Traductions FR/EN avec messages centralisés
+  - Switch langues avec composants UI
+  - Fallback français intégré
   - **Tests** : Coverage i18n > 90%
 
-#### **Semaine 5 : Panier & Guest (TDD First)**
-- [ ] **Système panier invité**
-  - **TDD** : Tests store Zustand AVANT state management
+#### **Semaine 5 : Panier Évolutif & Layout (TDD First)**
+
+**🎯 State Management Évolutif**
+- [ ] **Store Zustand MVP→V2**
+  - **TDD** : Tests store simple AVANT state management
   - **TDD** : Tests localStorage persistence AVANT hooks
   - **TDD** : Tests merge cart guest→user AVANT auth
-  - Store Zustand avec guest_id
-  - Persistence localStorage
+  - Store Zustand simple MVP (préparé pour slices V2)
+  - Persistence localStorage avec middleware prep
   - Merge cart guest→user
-  - Debounce sync server
+  - Architecture évolutive vers slices pattern
   - **Tests** : Coverage panier store > 90%
 
-- [ ] **Cart UI/UX**
-  - **TDD** : Tests CartSheet composant AVANT UI
+**🎯 Composants Layout MVP (Phase 3)**
+- [ ] **Layout Components**
+  - **TDD** : Tests Header responsive AVANT UI
+  - **TDD** : Tests Footer links AVANT content
+  - Header avec nav simple + auth state display
+  - Footer avec links essentiels
+  - PageLayout container responsive
+  - Sidebar basique (préparé pour collapsible V2)
+  - **Tests** : Coverage layout > 85%
+
+- [ ] **Cart UI Évolutif**
+  - **TDD** : Tests CartSheet slide-over AVANT UI
   - **TDD** : Tests calculs totaux AVANT formules
   - **E2E** : Tests parcours ajout panier complet
-  - CartSheet composant
-  - Add to cart depuis produits
-  - Quantités, suppression
-  - Calculs totaux temps réel
+  - CartSheet slide-over avec composants UI
+  - CartSummary avec Card components
+  - Add to cart avec Button + loading states
+  - Quantités avec Input + validation
   - **Tests** : Coverage cart UI > 85%
 
 #### **Semaine 6 : Commandes (TDD First)**
@@ -351,56 +402,66 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 
 ---
 
-## 💰 Budget Estimation MVP
+## 👥 Organisation Équipe MVP
 
-### Développement (12 semaines)
+### Rôles Recommandés
 
-**👥 Équipe :**
-- Lead Dev : 80€/h × 40h × 12 sem = 38,400€
-- Frontend Dev : 70€/h × 40h × 12 sem = 33,600€  
-- Admin Dev : 70€/h × 20h × 12 sem = 16,800€
+**👤 Lead Developer (1 FTE)**
+- Architecture générale
+- Backend Supabase + RLS
+- Infrastructure composants évolutive
+- Code review
 
-**🛠️ Outils & Services :**
-- Supabase Pro : 25€/mois × 12 = 300€
-- Vercel Pro : 20€/mois × 12 = 240€
-- Domains + SSL : 200€
-- Design tools : 500€
-- **Testing tools** : 
-  - Jest + RTL : gratuit
-  - Playwright : gratuit
-  - Coverage tools : gratuit
-  - CI/CD GitHub Actions : 100€
+**👤 Frontend Developer (1 FTE)**  
+- Components React/Next.js avec shadcn/ui
+- UI/UX implementation + messages centralisés
+- Mobile responsive
+- Performance optimization
 
-**📱 Testing & QA TDD :**
-- Testing devices : 1,000€
-- **QA TDD externe** : 5,000€ (amélioré pour TDD)
-- **Formation TDD équipe** : 2,000€
+**👤 CMS/Admin Developer (0.5 FTE)**
+- Interface admin avec composants standardisés
+- TipTap integration
+- CRUD operations
+- Data management
 
-**💾 Contingence (15%) :** 15,455€
+### Outils & Technologies
 
-### **Total Budget MVP TDD : 110,995€**
+**🛠️ Stack Technique :**
+- Next.js 15 + TypeScript
+- Supabase Pro
+- Vercel Pro
+- shadcn/ui + Tailwind CSS
+- Radix UI Components
 
-### Maintenance Post-Launch (6 mois)
+**🧪 Testing Infrastructure :**
+- Jest + React Testing Library
+- Playwright (e2e)
+- Coverage tools
+- CI/CD GitHub Actions
 
-- Support développement : 15,000€
-- Hébergement scaling : 2,000€
-- Monitoring tools : 1,000€
-- **Total maintenance : 18,000€**
-
-### **Budget Global Année 1 TDD : 128,995€**
+**🎨 Design System :**
+- shadcn/ui (MIT License)
+- Design tokens workflow
+- UI Testing infrastructure
+- Messages centralisés system
 
 ---
 
 ## 🎯 Indicateurs de Succès MVP
 
-### Techniques TDD
+### Techniques TDD + Infrastructure UI
 - [ ] **Performance** : < 2s First Contentful Paint (validé par tests)
+- [ ] **Bundle Size** : < 150kb initial (avec shadcn/ui optimisé)
 - [ ] **Availabilité** : 99.5% uptime (monitoring automatisé)
 - [ ] **Mobile** : Score Lighthouse > 90 (tests automatisés)
 - [ ] **Security** : 0 vulnérabilités critiques (pentest automatisé)
 - [ ] **Code Quality** : > 80% test coverage (obligatoire)
+- [ ] **UI Components** : > 85% test coverage composants
+- [ ] **Messages System** : 100% AuthMessage integration
+- [ ] **Design System** : 0 breaking changes vers V2
 - [ ] **Bug Rate** : < 2% production (amélioré via TDD)
 - [ ] **Régression** : 0 bugs réintroduits (suite tests)
+- [ ] **Évolutivité** : Backward compatibility 100% vers V2
 
 ### Business
 - [ ] **Conversion** : 2%+ panier→commande

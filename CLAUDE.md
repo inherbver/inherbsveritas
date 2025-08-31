@@ -107,10 +107,11 @@ find src/ -name "*" | sort | uniq -i -c | sort -nr | head -5
 
 ### 5. **Documentation Traçable**
 Chaque modification DOIT être :
-- 📝 Documentée avec raison business
+- 📝 Documentée
 - 🏷️ Taguée avec version/date
 - 🔗 Liée au plan MVP
 - ✅ Validée contre l'architecture
+- ✅ desvriptive (pas d'emphase, pas d"émojis", pas de signature Claude)
 
 ### 6. **Règles de Commit Strictes**
 Format obligatoire : Conventional Commits en français

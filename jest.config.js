@@ -31,22 +31,43 @@ const config = {
     'app/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/types/database.ts', // Generated file
+    '!src/components/ui/**', // shadcn/ui external components
     '!**/*.stories.{js,jsx,ts,tsx}',
     '!**/node_modules/**',
+    '!src/**/*.config.{js,ts}',
+    '!src/middleware.ts', // Next.js middleware
   ],
   
-  coverageReporters: ['text', 'lcov', 'html'],
+  coverageReporters: ['text', 'lcov', 'html', ['text', {skipFull: true}]],
   coverageDirectory: 'coverage',
   
-  // Coverage thresholds (MVP requirement > 80%) - Désactivé temporairement pour setup
-  // coverageThreshold: {
-  //   global: {
-  //     branches: 80,
-  //     functions: 80,
-  //     lines: 80,
-  //     statements: 80,
-  //   },
-  // },
+  // Coverage thresholds MVP activés selon CLAUDE.md
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 85,
+      lines: 80,
+      statements: 80
+    },
+    './src/lib/': {
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: 90
+    },
+    './src/components/': {
+      branches: 85,
+      functions: 85,
+      lines: 85,
+      statements: 85
+    },
+    './app/': {
+      branches: 75,
+      functions: 80,
+      lines: 75,
+      statements: 75
+    }
+  },
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
