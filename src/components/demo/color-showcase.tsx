@@ -5,6 +5,7 @@ import { ThemeSwitcher, SimpleThemeToggle } from '@/components/theme/theme-switc
 import { ColorPalette } from './color-showcase/color-palette'
 import { ButtonVariants } from './color-showcase/button-variants'
 import { TypographyTokens } from './color-showcase/typography-tokens'
+import { NeutralScale } from './color-showcase/neutral-scale'
 
 // Demo component pour showcase du design system HerbisVeritas
 export function ColorShowcase() {
@@ -76,23 +77,7 @@ export function ColorShowcase() {
           <CardDescription>Échelle neutre pour textes et arrière-plans</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-5 gap-2">
-            {Array.from({ length: 10 }, (_, i) => {
-              const shade = i === 0 ? 50 : i * 100;
-              const isLight = shade <= 300;
-              const textColor = isLight ? 'text-gray-800' : 'text-white';
-              const borderClass = shade === 50 ? 'border' : '';
-              
-              return (
-                <div
-                  key={shade}
-                  className={`bg-hv-neutral-${shade} ${borderClass} p-4 rounded text-center text-xs ${textColor}`}
-                >
-                  {shade}
-                </div>
-              );
-            })}
-          </div>
+          <NeutralScale />
         </CardContent>
       </Card>
 

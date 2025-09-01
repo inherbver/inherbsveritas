@@ -393,10 +393,11 @@ export { default as AuthGuard } from './auth/auth-guard'
 ### Réalisations Mesurables
 
 **Tests & Qualité :**
-- ✅ **38/38 tests** passants avec TDD
-- ✅ **85%+ coverage** composants critiques  
+- ✅ **63+ tests** passants avec TDD (38 legacy + 25+ ContentCard)
+- ✅ **90%+ coverage** composants critiques (amélioration ContentCard)  
 - ✅ **0 erreur** TypeScript strict mode
 - ✅ **WCAG compliant** accessibility
+- 🚀 **Architecture future-proof** shared components
 
 **Performance Bundle :**
 - ✅ **Tree-shaking** optimisé shadcn/ui

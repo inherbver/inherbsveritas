@@ -37,7 +37,10 @@
     "test:regression": "jest --testPathPattern='routing-regression|404-generalized-prevention' --bail",
     "test:watch:i18n": "jest tests/integration/i18n/ --watch --verbose",
     "lint:file-length": "node -e \"const fs=require('fs');const path=require('path');const glob=require('glob');const files=glob.sync('src/**/*.{ts,tsx}');files.forEach(f=>{const lines=fs.readFileSync(f,'utf8').split('\\n').length;const limits={components:150,features:200,lib:300};const type=f.includes('components')?'components':f.includes('features')?'features':f.includes('lib')?'lib':'other';const limit=limits[type];if(limit&&lines>limit)console.log(`❌ ${type} ${f}: ${lines} lignes (max ${limit})`);if(f.includes('app/')&&f.includes('page')&&lines>100)console.log(`❌ Page ${f}: ${lines} lignes (max 100)`)});\"",
-    "pre-commit": "npm run lint:file-length && npm run lint && npm run typecheck"
+    "pre-commit": "npm run lint:file-length && npm run lint && npm run typecheck",
+    "analyze": "ANALYZE=true npm run build",
+    "analyze:bundle": "npm run build && npx @next/bundle-analyzer",
+    "build:performance": "npm run analyze && node scripts/performance-check.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
