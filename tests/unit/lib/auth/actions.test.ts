@@ -17,17 +17,7 @@ import {
 } from '@/lib/auth/actions'
 import { AUTH_MESSAGES } from '@/lib/messages/auth-messages'
 
-// Mock Supabase client
-jest.mock('@/lib/supabase/client', () => ({
-  createClient: jest.fn(() => ({
-    auth: {
-      signInWithPassword: jest.fn(),
-      signOut: jest.fn(),
-      getUser: jest.fn(),
-      signUp: jest.fn()
-    }
-  }))
-}))
+// Utilise les mocks centralisés
 
 // Mock validateEmail
 jest.mock('@/utils/validateEmail', () => ({
@@ -41,8 +31,10 @@ describe('auth/actions', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     
+    // Utilise factory centralisée
+    mockSupabase = global.createMockSupabaseClient()
     const { createClient } = require('@/lib/supabase/client')
-    mockSupabase = createClient()
+    ;(createClient as jest.Mock).mockReturnValue(mockSupabase)
     
     const { validateEmail } = require('@/utils/validateEmail')
     mockValidateEmail = validateEmail

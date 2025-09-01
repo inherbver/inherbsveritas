@@ -58,6 +58,62 @@ describe('Button Component shadcn/ui', () => {
     })
   })
 
+  describe('HerbisVeritas Variants', () => {
+    it('renders hv-primary variant', () => {
+      render(<Button variant="hv-primary">HV Primary</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-hv-primary', 'text-white')
+    })
+
+    it('renders hv-secondary variant', () => {
+      render(<Button variant="hv-secondary">HV Secondary</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-hv-secondary', 'text-white')
+    })
+
+    it('renders hv-accent variant', () => {
+      render(<Button variant="hv-accent">HV Accent</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-hv-accent', 'text-white')
+    })
+
+    it('renders hv-primary-outline variant', () => {
+      render(<Button variant="hv-primary-outline">HV Outline</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('border-2', 'border-hv-primary', 'text-hv-primary', 'bg-transparent')
+    })
+
+    it('renders hv-primary-ghost variant', () => {
+      render(<Button variant="hv-primary-ghost">HV Ghost</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('text-hv-primary', 'hover:bg-hv-primary-50')
+    })
+
+    it('renders hv-success semantic variant', () => {
+      render(<Button variant="hv-success">Success</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-hv-success', 'text-white')
+    })
+
+    it('renders hv-warning semantic variant', () => {
+      render(<Button variant="hv-warning">Warning</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-hv-warning', 'text-hv-neutral-900')
+    })
+
+    it('renders hv-error semantic variant', () => {
+      render(<Button variant="hv-error">Error</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-hv-error', 'text-white')
+    })
+
+    it('renders hv-info semantic variant', () => {
+      render(<Button variant="hv-info">Info</Button>)
+      const button = screen.getByRole('button')
+      expect(button).toHaveClass('bg-hv-info', 'text-white')
+    })
+  })
+
   describe('Sizes', () => {
     it('renders default size', () => {
       render(<Button>Default</Button>)

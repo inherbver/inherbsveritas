@@ -6,15 +6,7 @@
 import { renderHook, waitFor } from '@testing-library/react'
 import { useAuth, useAuthUser, useRequireAuth } from '@/lib/auth/hooks'
 
-// Mock des dépendances
-jest.mock('@/lib/supabase/client', () => ({
-  createClient: jest.fn(() => ({
-    auth: {
-      getUser: jest.fn(),
-      onAuthStateChange: jest.fn(() => ({ data: { subscription: { unsubscribe: jest.fn() } } }))
-    }
-  }))
-}))
+// Utilise les mocks centralisés pour Supabase
 
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(() => ({
@@ -30,8 +22,10 @@ describe('auth/hooks (TDD)', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     
+    // Utilise factory centralisée
+    mockSupabase = global.createMockSupabaseClient()
     const { createClient } = require('@/lib/supabase/client')
-    mockSupabase = createClient()
+    ;(createClient as jest.Mock).mockReturnValue(mockSupabase)
     
     const { useRouter } = require('next/navigation')
     mockRouter = useRouter()

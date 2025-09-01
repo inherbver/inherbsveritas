@@ -52,9 +52,17 @@ export async function updateSession(request: NextRequest, response?: NextRespons
   // Un bug simple peut causer des déconnexions aléatoires
 
   // OBLIGATOIRE: Refresh session pour Server Components
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  let user = null
+  try {
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser()
+    user = authUser
+  } catch (error) {
+    // En cas d'erreur Supabase, traiter comme non-authentifié
+    console.error('Auth middleware error:', error)
+    user = null
+  }
 
   const pathname = request.nextUrl.pathname
 
@@ -153,6 +161,14 @@ function redirectToUnauthorized(request: NextRequest, customRedirect?: string) {
   const url = request.nextUrl.clone()
   url.pathname = customRedirect || '/unauthorized'
   return NextResponse.redirect(url)
+}
+
+/**
+ * Wrapper pour tests - compatible avec ancienne signature
+ * @deprecated Utiliser updateSession directement
+ */
+export async function auth(request: NextRequest) {
+  return await updateSession(request)
 }
 
 /**

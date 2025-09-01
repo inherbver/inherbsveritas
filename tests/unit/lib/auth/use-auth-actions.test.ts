@@ -14,26 +14,18 @@ jest.mock('next/navigation', () => ({
   useRouter: jest.fn()
 }))
 
-// Mock Supabase client
-jest.mock('@/lib/supabase/client', () => ({
-  createClient: jest.fn()
-}))
+// Utilise les mocks centralisés
 
 describe('useAuthActions', () => {
   const mockPush = jest.fn()
-  const mockSupabaseAuth = {
-    signInWithPassword: jest.fn(),
-    signUp: jest.fn(),
-    signOut: jest.fn(),
-    resetPasswordForEmail: jest.fn()
-  }
-  const mockSupabaseClient = {
-    auth: mockSupabaseAuth
-  }
+  let mockSupabaseClient: any
 
   beforeEach(() => {
     jest.clearAllMocks()
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
+    
+    // Utilise factory centralisée
+    mockSupabaseClient = global.createMockSupabaseClient()
     ;(createClient as jest.Mock).mockReturnValue(mockSupabaseClient)
   })
 
@@ -57,7 +49,7 @@ describe('useAuthActions', () => {
 
   describe('signIn', () => {
     it('should sign in successfully and redirect', async () => {
-      mockSupabaseAuth.signInWithPassword.mockResolvedValue({ error: null })
+      mockSupabaseClient.auth.signInWithPassword.mockResolvedValue({ error: null })
 
       const { result } = renderHook(() => useAuthActions())
 
@@ -66,7 +58,7 @@ describe('useAuthActions', () => {
         authResult = await result.current.signIn('test@example.com', 'password123')
       })
 
-      expect(mockSupabaseAuth.signInWithPassword).toHaveBeenCalledWith({
+      expect(mockSupabaseClient.auth.signInWithPassword).toHaveBeenCalledWith({
         email: 'test@example.com',
         password: 'password123'
       })
@@ -76,7 +68,7 @@ describe('useAuthActions', () => {
 
     it('should handle sign in error', async () => {
       const errorMessage = 'Invalid credentials'
-      mockSupabaseAuth.signInWithPassword.mockResolvedValue({ 
+      mockSupabaseClient.auth.signInWithPassword.mockResolvedValue({ 
         error: { message: errorMessage } 
       })
 
@@ -93,7 +85,7 @@ describe('useAuthActions', () => {
     })
 
     it('should redirect to custom redirectTo path', async () => {
-      mockSupabaseAuth.signInWithPassword.mockResolvedValue({ error: null })
+      mockSupabaseClient.auth.signInWithPassword.mockResolvedValue({ error: null })
 
       const { result } = renderHook(() => useAuthActions())
 
@@ -105,7 +97,7 @@ describe('useAuthActions', () => {
     })
 
     it('should set loading state during sign in', async () => {
-      mockSupabaseAuth.signInWithPassword.mockImplementation(() => 
+      mockSupabaseClient.auth.signInWithPassword.mockImplementation(() => 
         new Promise(resolve => setTimeout(() => resolve({ error: null }), 100))
       )
 
@@ -125,7 +117,7 @@ describe('useAuthActions', () => {
 
   describe('signUp', () => {
     it('should sign up successfully with immediate session', async () => {
-      mockSupabaseAuth.signUp.mockResolvedValue({
+      mockSupabaseClient.auth.signUp.mockResolvedValue({
         data: { user: { id: 'user-123' }, session: { access_token: 'token' } },
         error: null
       })
@@ -137,7 +129,7 @@ describe('useAuthActions', () => {
         authResult = await result.current.signUp('test@example.com', 'password123')
       })
 
-      expect(mockSupabaseAuth.signUp).toHaveBeenCalledWith({
+      expect(mockSupabaseClient.auth.signUp).toHaveBeenCalledWith({
         email: 'test@example.com',
         password: 'password123'
       })
@@ -146,7 +138,7 @@ describe('useAuthActions', () => {
     })
 
     it('should handle sign up requiring email confirmation', async () => {
-      mockSupabaseAuth.signUp.mockResolvedValue({
+      mockSupabaseClient.auth.signUp.mockResolvedValue({
         data: { user: { id: 'user-123' }, session: null },
         error: null
       })
@@ -166,7 +158,7 @@ describe('useAuthActions', () => {
     })
 
     it('should sign up with metadata', async () => {
-      mockSupabaseAuth.signUp.mockResolvedValue({
+      mockSupabaseClient.auth.signUp.mockResolvedValue({
         data: { user: { id: 'user-123' }, session: { access_token: 'token' } },
         error: null
       })
@@ -179,7 +171,7 @@ describe('useAuthActions', () => {
         await result.current.signUp('test@example.com', 'password123', metadata)
       })
 
-      expect(mockSupabaseAuth.signUp).toHaveBeenCalledWith({
+      expect(mockSupabaseClient.auth.signUp).toHaveBeenCalledWith({
         email: 'test@example.com',
         password: 'password123',
         options: { data: metadata }
@@ -188,7 +180,7 @@ describe('useAuthActions', () => {
 
     it('should handle sign up error', async () => {
       const errorMessage = 'Email already exists'
-      mockSupabaseAuth.signUp.mockResolvedValue({ 
+      mockSupabaseClient.auth.signUp.mockResolvedValue({ 
         data: null,
         error: { message: errorMessage } 
       })
@@ -207,7 +199,7 @@ describe('useAuthActions', () => {
 
   describe('signOut', () => {
     it('should sign out successfully', async () => {
-      mockSupabaseAuth.signOut.mockResolvedValue({ error: null })
+      mockSupabaseClient.auth.signOut.mockResolvedValue({ error: null })
 
       const { result } = renderHook(() => useAuthActions())
 
@@ -216,13 +208,13 @@ describe('useAuthActions', () => {
         authResult = await result.current.signOut()
       })
 
-      expect(mockSupabaseAuth.signOut).toHaveBeenCalled()
+      expect(mockSupabaseClient.auth.signOut).toHaveBeenCalled()
       expect(authResult).toEqual({ success: true })
       expect(mockPush).toHaveBeenCalledWith('/')
     })
 
     it('should redirect to custom path after sign out', async () => {
-      mockSupabaseAuth.signOut.mockResolvedValue({ error: null })
+      mockSupabaseClient.auth.signOut.mockResolvedValue({ error: null })
 
       const { result } = renderHook(() => useAuthActions())
 
@@ -235,7 +227,7 @@ describe('useAuthActions', () => {
 
     it('should handle sign out error', async () => {
       const errorMessage = 'Sign out failed'
-      mockSupabaseAuth.signOut.mockResolvedValue({ 
+      mockSupabaseClient.auth.signOut.mockResolvedValue({ 
         error: { message: errorMessage } 
       })
 
@@ -253,7 +245,7 @@ describe('useAuthActions', () => {
 
   describe('resetPassword', () => {
     it('should reset password successfully', async () => {
-      mockSupabaseAuth.resetPasswordForEmail.mockResolvedValue({ error: null })
+      mockSupabaseClient.auth.resetPasswordForEmail.mockResolvedValue({ error: null })
 
       // Mock window.location.origin
       delete (window as any).location
@@ -266,7 +258,7 @@ describe('useAuthActions', () => {
         authResult = await result.current.resetPassword('test@example.com')
       })
 
-      expect(mockSupabaseAuth.resetPasswordForEmail).toHaveBeenCalledWith(
+      expect(mockSupabaseClient.auth.resetPasswordForEmail).toHaveBeenCalledWith(
         'test@example.com',
         expect.objectContaining({ 
           redirectTo: expect.stringContaining('/auth/reset-password') 
@@ -277,7 +269,7 @@ describe('useAuthActions', () => {
 
     it('should handle reset password error', async () => {
       const errorMessage = 'Email not found'
-      mockSupabaseAuth.resetPasswordForEmail.mockResolvedValue({ 
+      mockSupabaseClient.auth.resetPasswordForEmail.mockResolvedValue({ 
         error: { message: errorMessage } 
       })
 
@@ -296,7 +288,7 @@ describe('useAuthActions', () => {
   describe('clearError', () => {
     it('should clear error state', async () => {
       // Set an error first
-      mockSupabaseAuth.signInWithPassword.mockResolvedValue({ 
+      mockSupabaseClient.auth.signInWithPassword.mockResolvedValue({ 
         error: { message: 'Test error' } 
       })
 
@@ -318,7 +310,7 @@ describe('useAuthActions', () => {
 
   describe('Error handling', () => {
     it('should handle network errors gracefully', async () => {
-      mockSupabaseAuth.signInWithPassword.mockRejectedValue(
+      mockSupabaseClient.auth.signInWithPassword.mockRejectedValue(
         new Error('Network error')
       )
 
@@ -335,7 +327,7 @@ describe('useAuthActions', () => {
     })
 
     it('should handle unknown errors', async () => {
-      mockSupabaseAuth.signInWithPassword.mockRejectedValue('Unknown error')
+      mockSupabaseClient.auth.signInWithPassword.mockRejectedValue('Unknown error')
 
       const { result } = renderHook(() => useAuthActions())
 

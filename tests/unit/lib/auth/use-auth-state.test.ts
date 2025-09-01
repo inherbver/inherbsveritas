@@ -8,32 +8,25 @@ import { renderHook, act } from '@testing-library/react'
 import { useAuthState } from '@/lib/auth/hooks/use-auth-state'
 import { createClient } from '@/lib/supabase/client'
 
-// Mock Supabase client
-jest.mock('@/lib/supabase/client', () => ({
-  createClient: jest.fn()
-}))
+// Utilise les mocks centralisés - pas de mock local nécessaire
 
 describe('useAuthState', () => {
-  const mockSupabaseAuth = {
-    getUser: jest.fn(),
-    onAuthStateChange: jest.fn()
-  }
-  const mockSupabaseClient = {
-    auth: mockSupabaseAuth
-  }
+  let mockSupabaseClient: any
 
   beforeEach(() => {
     jest.clearAllMocks()
+    // Utilise la factory centralisée avec overrides spécifiques
+    mockSupabaseClient = global.createMockSupabaseClient()
     ;(createClient as jest.Mock).mockReturnValue(mockSupabaseClient)
   })
 
   describe('Hook initialization', () => {
     it('should return initial auth state', () => {
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: null }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockReturnValue({
+      mockSupabaseClient.auth.onAuthStateChange.mockReturnValue({
         data: { subscription: { unsubscribe: jest.fn() } }
       })
 
@@ -49,18 +42,18 @@ describe('useAuthState', () => {
     })
 
     it('should initialize auth listener on mount', () => {
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: null }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockReturnValue({
+      mockSupabaseClient.auth.onAuthStateChange.mockReturnValue({
         data: { subscription: { unsubscribe: jest.fn() } }
       })
 
       renderHook(() => useAuthState())
 
-      expect(mockSupabaseAuth.onAuthStateChange).toHaveBeenCalled()
-      expect(mockSupabaseAuth.getUser).toHaveBeenCalled()
+      expect(mockSupabaseClient.auth.onAuthStateChange).toHaveBeenCalled()
+      expect(mockSupabaseClient.auth.getUser).toHaveBeenCalled()
     })
   })
 
@@ -72,11 +65,11 @@ describe('useAuthState', () => {
         user_metadata: { role: 'admin' }
       }
 
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: mockUser }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         setTimeout(() => callback('SIGNED_IN', { user: mockUser }), 0)
         return { data: { subscription: { unsubscribe: jest.fn() } } }
       })
@@ -100,11 +93,11 @@ describe('useAuthState', () => {
         user_metadata: { role: 'dev' }
       }
 
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: mockUser }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         setTimeout(() => callback('SIGNED_IN', { user: mockUser }), 0)
         return { data: { subscription: { unsubscribe: jest.fn() } } }
       })
@@ -120,11 +113,11 @@ describe('useAuthState', () => {
     })
 
     it('should handle unauthenticated user', async () => {
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: null }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         setTimeout(() => callback('SIGNED_OUT', { user: null }), 0)
         return { data: { subscription: { unsubscribe: jest.fn() } } }
       })
@@ -148,11 +141,11 @@ describe('useAuthState', () => {
         user_metadata: {}
       }
 
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: mockUser }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         setTimeout(() => callback('SIGNED_IN', { user: mockUser }), 0)
         return { data: { subscription: { unsubscribe: jest.fn() } } }
       })
@@ -175,11 +168,11 @@ describe('useAuthState', () => {
         user_metadata: { role: 'admin' }
       }
 
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: mockUser }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         setTimeout(() => callback('SIGNED_IN', { user: mockUser }), 0)
         return { data: { subscription: { unsubscribe: jest.fn() } } }
       })
@@ -201,11 +194,11 @@ describe('useAuthState', () => {
         user_metadata: { role: 'user' }
       }
 
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: mockUser }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         setTimeout(() => callback('SIGNED_IN', { user: mockUser }), 0)
         return { data: { subscription: { unsubscribe: jest.fn() } } }
       })
@@ -227,11 +220,11 @@ describe('useAuthState', () => {
         user_metadata: { role: 'dev' }
       }
 
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: mockUser }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         setTimeout(() => callback('SIGNED_IN', { user: mockUser }), 0)
         return { data: { subscription: { unsubscribe: jest.fn() } } }
       })
@@ -256,13 +249,13 @@ describe('useAuthState', () => {
         user_metadata: { role: 'user' }
       }
 
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: null }, 
         error: null 
       })
 
       let authCallback: any
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         authCallback = callback
         return { data: { subscription: { unsubscribe: jest.fn() } } }
       })
@@ -287,13 +280,13 @@ describe('useAuthState', () => {
         user_metadata: { role: 'user' }
       }
 
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: mockUser }, 
         error: null 
       })
 
       let authCallback: any
-      mockSupabaseAuth.onAuthStateChange.mockImplementation((callback) => {
+      mockSupabaseClient.auth.onAuthStateChange.mockImplementation((callback) => {
         authCallback = callback
         // Initial sign in
         setTimeout(() => callback('SIGNED_IN', { user: mockUser }), 0)
@@ -321,11 +314,11 @@ describe('useAuthState', () => {
   describe('Cleanup', () => {
     it('should unsubscribe on unmount', () => {
       const mockUnsubscribe = jest.fn()
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: null }, 
         error: null 
       })
-      mockSupabaseAuth.onAuthStateChange.mockReturnValue({
+      mockSupabaseClient.auth.onAuthStateChange.mockReturnValue({
         data: { subscription: { unsubscribe: mockUnsubscribe } }
       })
 
@@ -339,11 +332,11 @@ describe('useAuthState', () => {
 
   describe('Error handling', () => {
     it('should handle getUser error gracefully', async () => {
-      mockSupabaseAuth.getUser.mockResolvedValue({ 
+      mockSupabaseClient.auth.getUser.mockResolvedValue({ 
         data: { user: null }, 
         error: { message: 'Failed to get user' } 
       })
-      mockSupabaseAuth.onAuthStateChange.mockReturnValue({
+      mockSupabaseClient.auth.onAuthStateChange.mockReturnValue({
         data: { subscription: { unsubscribe: jest.fn() } }
       })
 
