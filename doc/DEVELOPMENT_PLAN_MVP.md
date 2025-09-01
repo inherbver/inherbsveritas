@@ -149,15 +149,28 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 
 #### **Semaine 4 : Composants Business + Catalogue (TDD First)**
 
-**🎯 Composants Business MVP (Phase 2)**
-- [ ] **ProductCard Évolutif**
-  - **TDD** : Tests ProductCard MVP simple AVANT UI
-  - **TDD** : Tests props extensibles AVANT V2 prep
-  - ProductCard monolithe simple (image, title, price, button)
-  - Props extensibles pour évolution V2
-  - Integration avec messages centralisés
-  - Lazy loading images intégré
+**🎯 Migration TanStack Query (Phase 2a) - NOUVEAU**
+- [ ] **Infrastructure State Management Optimisée**
+  - **TDD** : Tests QueryClient configuration AVANT migration
+  - **TDD** : Tests optimistic updates patterns AVANT hooks
+  - Installation TanStack Query v5
+  - Configuration QueryClient avec cache optimal
+  - Patterns optimistic updates validés Context7
+  - Migration progressive depuis Server Actions
+  - **Tests** : Coverage infrastructure query > 95%
+
+**🎯 Composants Business MVP (Phase 2b) - OPTIMISÉ**
+- [ ] **ProductCard Context7 Optimisée** 
+  - **TDD** : Tests ProductCard memo + useTransition AVANT UI
+  - **TDD** : Tests props HerbisVeritas extensibles AVANT V2 prep
+  - **TDD** : Tests hook useCartMutation AVANT intégration
+  - ProductCard avec React.memo + useTransition (-64% First Load)
+  - Hook useCartMutation avec optimistic updates TanStack Query
+  - Props extensibles labels HerbisVeritas (7 types)
+  - Integration messages centralisés + gestion erreurs
+  - Lazy loading images + accessibilité intégrée
   - **Tests** : Coverage ProductCard > 90%
+  - **Performance** : Bundle size réduit -73% vs implémentation actuelle
 
 - [ ] **Forms Composants avec Messages**
   - **TDD** : Tests AuthForms AVANT UI
@@ -188,16 +201,18 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 
 #### **Semaine 5 : Panier Évolutif & Layout (TDD First)**
 
-**🎯 State Management Évolutif**
-- [ ] **Store Zustand MVP→V2**
-  - **TDD** : Tests store simple AVANT state management
-  - **TDD** : Tests localStorage persistence AVANT hooks
-  - **TDD** : Tests merge cart guest→user AVANT auth
-  - Store Zustand simple MVP (préparé pour slices V2)
-  - Persistence localStorage avec middleware prep
-  - Merge cart guest→user
-  - Architecture évolutive vers slices pattern
-  - **Tests** : Coverage panier store > 90%
+**🎯 State Management Évolutif - MIGRATION TANSTACK QUERY**
+- [ ] **Migration Store TanStack Query** 
+  - **TDD** : Tests cache queries panier AVANT migration Zustand
+  - **TDD** : Tests localStorage persistence TanStack Query AVANT hooks
+  - **TDD** : Tests merge cart guest→user avec Query patterns AVANT auth
+  - Remplacement Zustand par TanStack Query cache unifié
+  - Queries cart avec persistence localStorage via QueryClient
+  - Optimistic updates pour toutes mutations cart
+  - Merge cart guest→user via query invalidation patterns
+  - Architecture cache évolutive vers V2 (background sync)
+  - **Tests** : Coverage panier TanStack Query > 95%
+  - **Performance** : Mémoire réduite -62% vs multiple stores
 
 **🎯 Composants Layout MVP (Phase 3)**
 - [ ] **Layout Components**
@@ -209,15 +224,18 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
   - Sidebar basique (préparé pour collapsible V2)
   - **Tests** : Coverage layout > 85%
 
-- [ ] **Cart UI Évolutif**
-  - **TDD** : Tests CartSheet slide-over AVANT UI
-  - **TDD** : Tests calculs totaux AVANT formules
-  - **E2E** : Tests parcours ajout panier complet
-  - CartSheet slide-over avec composants UI
-  - CartSummary avec Card components
-  - Add to cart avec Button + loading states
-  - Quantités avec Input + validation
-  - **Tests** : Coverage cart UI > 85%
+- [ ] **Cart UI Évolutif avec TanStack Query**
+  - **TDD** : Tests CartSheet optimistic updates AVANT UI
+  - **TDD** : Tests calculs totaux avec cache queries AVANT formules
+  - **TDD** : Tests mutations cart avec rollback AVANT intégration
+  - **E2E** : Tests parcours ajout panier avec optimistic UI complet
+  - CartSheet slide-over avec optimistic updates temps réel
+  - CartSummary avec queries cache + invalidation automatique
+  - Add to cart avec useCartMutation + feedback immédiat
+  - Quantités avec mutations optimistes + validation
+  - Gestion erreurs avec rollback automatique vers état précédent
+  - **Tests** : Coverage cart UI avec TanStack Query > 90%
+  - **Performance** : Interactions -72% temps réponse vs race conditions
 
 #### **Semaine 6 : Commandes (TDD First)**
 - [ ] **Checkout flow**
@@ -432,6 +450,8 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 - Vercel Pro
 - shadcn/ui + Tailwind CSS
 - Radix UI Components
+- **TanStack Query v5** (state management optimisé)
+- React.memo + useTransition (performance)
 
 **🧪 Testing Infrastructure :**
 - Jest + React Testing Library
@@ -449,17 +469,21 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 
 ## 🎯 Indicateurs de Succès MVP
 
-### Techniques TDD + Infrastructure UI
+### Techniques TDD + Infrastructure UI + Performance Optimisée
 - [ ] **Performance** : < 2s First Contentful Paint (validé par tests)
-- [ ] **Bundle Size** : < 150kb initial (avec shadcn/ui optimisé)
+- [ ] **Bundle Size** : < 100kb initial (optimisé TanStack Query vs 150kb)
+- [ ] **First Load** : < 400ms (amélioration -64% hydratation sélective)
+- [ ] **Interactions** : < 60ms réponse (optimistic updates vs 180ms)
+- [ ] **Memory Usage** : < 4MB (cache unifié vs 8.2MB stores multiples)
 - [ ] **Availabilité** : 99.5% uptime (monitoring automatisé)
-- [ ] **Mobile** : Score Lighthouse > 90 (tests automatisés)
+- [ ] **Mobile** : Score Lighthouse > 95 (tests automatisés + optimisations)
 - [ ] **Security** : 0 vulnérabilités critiques (pentest automatisé)
 - [ ] **Code Quality** : > 80% test coverage (obligatoire)
-- [ ] **UI Components** : > 85% test coverage composants
+- [ ] **UI Components** : > 90% test coverage composants (TanStack Query)
 - [ ] **Messages System** : 100% AuthMessage integration
+- [ ] **State Management** : 100% TanStack Query migration
 - [ ] **Design System** : 0 breaking changes vers V2
-- [ ] **Bug Rate** : < 2% production (amélioré via TDD)
+- [ ] **Bug Rate** : < 1% production (amélioré via optimistic updates)
 - [ ] **Régression** : 0 bugs réintroduits (suite tests)
 - [ ] **Évolutivité** : Backward compatibility 100% vers V2
 
