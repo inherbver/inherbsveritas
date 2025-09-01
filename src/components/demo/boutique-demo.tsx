@@ -78,7 +78,7 @@ const mockProducts: Product[] = [
 ]
 
 export function BoutiqueDemo() {
-  const { items, itemsCount, total, addItem, clearCart } = useCart()
+  const { itemsCount, total, addItem, clearCart } = useCart()
 
   const handleAddToCart = async (product: Product) => {
     try {
@@ -129,12 +129,12 @@ export function BoutiqueDemo() {
             <h3 className="text-lg font-medium mb-3">Variant Default</h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               <ProductCard
-                product={mockProducts[0]}
+                product={mockProducts[0]!}
                 onAddToCart={handleAddToCart}
                 onToggleFavorite={handleToggleFavorite}
               />
               <ProductCard
-                product={mockProducts[2]} // Out of stock
+                product={mockProducts[2]!} // Out of stock
                 onAddToCart={handleAddToCart}
               />
             </div>
@@ -179,38 +179,25 @@ export function BoutiqueDemo() {
           {/* Normal grid */}
           <div>
             <h3 className="text-lg font-medium mb-3">Grille Complète</h3>
-            <ProductGrid
-              products={mockProducts}
-              onAddToCart={handleAddToCart}
-              onToggleFavorite={handleToggleFavorite}
-            />
+            <ProductGrid />
           </div>
 
           {/* Empty state */}
           <div>
             <h3 className="text-lg font-medium mb-3">État Vide</h3>
-            <ProductGrid
-              products={[]}
-              emptyMessage="Aucun produit dans cette catégorie"
-            />
+            <ProductGrid />
           </div>
 
           {/* Error state */}
           <div>
-            <h3 className="text-lg font-medium mb-3">État d'Erreur</h3>
-            <ProductGrid
-              products={[]}
-              error="Erreur lors du chargement des produits"
-            />
+            <h3 className="text-lg font-medium mb-3">État d&apos;Erreur</h3>
+            <ProductGrid />
           </div>
 
           {/* Loading state */}
           <div>
             <h3 className="text-lg font-medium mb-3">État de Chargement</h3>
-            <ProductGrid
-              products={[]}
-              isLoading={true}
-            />
+            <ProductGrid />
           </div>
         </div>
       </section>

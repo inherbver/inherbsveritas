@@ -15,7 +15,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { 
-  InciIngredient,
   getInciCommonName,
   getInciFunctions,
   validateInciList,

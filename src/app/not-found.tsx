@@ -1,12 +1,12 @@
-import Breadcrumb from "@/components/Common/Breadcrumb";
-import NotFound from "@/components/NotFound";
+import Breadcrumb from "@/components/common/Breadcrumb";
+import NotFound from "@/components/not-found";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "404 Page | Play SaaS Starter Kit and Boilerplate for Next.js",
+  title: "404 Page | HerbisVeritas - Cosmétiques Bio Naturels",
 };
 
-const ErrorPage = () => {
+const ErrorPage = (): JSX.Element => {
   return (
     <>
       <Breadcrumb pageName="404 Page" />

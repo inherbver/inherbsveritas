@@ -4,9 +4,10 @@ import { locales } from './i18n-config'
 
 export default getRequestConfig(async ({ locale }) => {
   // Validate that the locale is supported
-  if (!locales.includes(locale as any)) notFound()
+  if (!locale || !locales.includes(locale as any)) notFound()
 
   return {
+    locale: locale as string,
     messages: (await import(`./i18n/messages/${locale}.json`)).default
   }
 })

@@ -18,11 +18,11 @@ export default async function AddressesPage() {
   const addresses = addressesResult.success ? (addressesResult.data || []) : []
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <main className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-sm p-8">
+        <article className="bg-white rounded-lg shadow-sm p-8">
           {/* Header */}
-          <div className="border-b pb-6 mb-8 flex justify-between items-start">
+          <header className="border-b pb-6 mb-8 flex justify-between items-start">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                 <span>📍</span>
@@ -32,18 +32,20 @@ export default async function AddressesPage() {
                 Gérez vos adresses de livraison et de facturation
               </p>
             </div>
-            <Link 
-              href="/profile" 
-              className="text-blue-600 hover:text-blue-800 font-medium"
-            >
-              ← Retour au profil
-            </Link>
-          </div>
+            <nav>
+              <Link 
+                href="/profile" 
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                ← Retour au profil
+              </Link>
+            </nav>
+          </header>
 
           {/* États selon les addresses */}
           {addresses.length === 0 ? (
             // Aucune adresse
-            <div className="text-center py-12">
+            <section className="text-center py-12">
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 max-w-md mx-auto">
                 <h3 className="font-semibold text-blue-800 mb-4">🏠 Aucune adresse enregistrée</h3>
                 <p className="text-blue-700 mb-6">
@@ -56,11 +58,11 @@ export default async function AddressesPage() {
                   + Ajouter une adresse (Bientôt)
                 </button>
               </div>
-            </div>
+            </section>
           ) : (
             // Liste des addresses
-            <div className="space-y-6">
-              <div className="flex justify-between items-center">
+            <section className="space-y-6">
+              <header className="flex justify-between items-center">
                 <h2 className="text-lg font-semibold text-gray-900">
                   {addresses.length} adresse{addresses.length > 1 ? 's' : ''} enregistrée{addresses.length > 1 ? 's' : ''}
                 </h2>
@@ -70,11 +72,11 @@ export default async function AddressesPage() {
                 >
                   + Ajouter une adresse
                 </button>
-              </div>
+              </header>
 
               <div className="grid gap-6 md:grid-cols-2">
                 {addresses.map((address) => (
-                  <div 
+                  <article 
                     key={address.id} 
                     className={`border rounded-lg p-6 ${
                       address.is_default 
@@ -83,7 +85,7 @@ export default async function AddressesPage() {
                     }`}
                   >
                     {/* Header adresse */}
-                    <div className="flex justify-between items-start mb-4">
+                    <header className="flex justify-between items-start mb-4">
                       <div>
                         <h3 className="font-semibold text-gray-900 flex items-center gap-2">
                           <span>{address.address_type === 'billing' ? '💳' : '📦'}</span>
@@ -95,7 +97,7 @@ export default async function AddressesPage() {
                           </span>
                         )}
                       </div>
-                      <div className="flex gap-2">
+                      <nav className="flex gap-2">
                         <button 
                           className="text-blue-600 hover:text-blue-800 text-sm"
                           disabled
@@ -108,11 +110,11 @@ export default async function AddressesPage() {
                         >
                           Supprimer
                         </button>
-                      </div>
-                    </div>
+                      </nav>
+                    </header>
 
                     {/* Contenu adresse */}
-                    <div className="text-gray-700 space-y-1">
+                    <address className="text-gray-700 space-y-1 not-italic">
                       <p className="font-medium">
                         {address.first_name} {address.last_name}
                       </p>
@@ -127,41 +129,41 @@ export default async function AddressesPage() {
                       {address.phone_number && (
                         <p className="text-sm">📞 {address.phone_number}</p>
                       )}
-                    </div>
+                    </address>
 
                     {/* Actions */}
                     {!address.is_default && (
-                      <div className="mt-4 pt-4 border-t border-gray-200">
+                      <footer className="mt-4 pt-4 border-t border-gray-200">
                         <button 
                           className="text-sm text-green-600 hover:text-green-800"
                           disabled
                         >
                           Définir par défaut
                         </button>
-                      </div>
+                      </footer>
                     )}
-                  </div>
+                  </article>
                 ))}
               </div>
-            </div>
+            </section>
           )}
 
           {/* Section développement */}
-          <div className="mt-12 pt-8 border-t">
+          <aside className="mt-12 pt-8 border-t">
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-6">
               <h3 className="font-semibold text-amber-800 mb-3">🚧 Fonctionnalités en développement</h3>
-              <div className="text-sm text-amber-700 space-y-2">
-                <p>• Formulaire d'ajout/modification d'adresse</p>
-                <p>• Validation en temps réel des codes postaux</p>
-                <p>• Intégration API d'adresses françaises</p>
-                <p>• Gestion des adresses multiples par type</p>
-                <p>• Import/export d'adresses</p>
-              </div>
+              <ul className="text-sm text-amber-700 space-y-2 list-disc list-inside">
+                <li>Formulaire d&apos;ajout/modification d&apos;adresse</li>
+                <li>Validation en temps réel des codes postaux</li>
+                <li>Intégration API d&apos;adresses françaises</li>
+                <li>Gestion des adresses multiples par type</li>
+                <li>Import/export d&apos;adresses</li>
+              </ul>
             </div>
-          </div>
+          </aside>
 
           {/* Debug section */}
-          <div className="mt-8 pt-6 border-t">
+          <aside className="mt-8 pt-6 border-t">
             <details className="group">
               <summary className="cursor-pointer text-blue-600 hover:text-blue-800 mb-2 font-medium">
                 Afficher les données addresses (debug)
@@ -169,7 +171,7 @@ export default async function AddressesPage() {
               <div className="bg-gray-100 p-4 rounded-lg">
                 <div className="text-sm text-gray-700 space-y-2">
                   <p><strong>Utilisateur ID:</strong> {user.id}</p>
-                  <p><strong>Nombre d'adresses:</strong> {addresses.length}</p>
+                  <p><strong>Nombre d&apos;adresses:</strong> {addresses.length}</p>
                   <p><strong>Status requête:</strong> {addressesResult.success ? '✅ Succès' : '❌ Erreur'}</p>
                   {!addressesResult.success && (
                     <p><strong>Erreur:</strong> {addressesResult.error}</p>
@@ -180,9 +182,9 @@ export default async function AddressesPage() {
                 </pre>
               </div>
             </details>
-          </div>
-        </div>
+          </aside>
+        </article>
       </div>
-    </div>
+    </main>
   )
 }

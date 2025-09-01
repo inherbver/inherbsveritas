@@ -47,7 +47,7 @@ export function useAuthState(): AuthState {
         const role = getUserRole(user)
         setState({
           user,
-          role,
+          role: role as any,
           loading: false,
           error: null
         })
@@ -67,7 +67,7 @@ export function useAuthState(): AuthState {
           const role = getUserRole(session.user)
           setState({
             user: session.user,
-            role,
+            role: role as any,
             loading: false,
             error: null
           })
@@ -83,7 +83,7 @@ export function useAuthState(): AuthState {
           setState(prev => ({
             ...prev,
             user: session.user,
-            role,
+            role: role as any,
             error: null
           }))
         }

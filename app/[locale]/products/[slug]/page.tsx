@@ -44,14 +44,15 @@ async function getProductBySlug(slug: string) {
 }
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     slug: string
     locale: string
-  }
+  }>
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const product = await getProductBySlug(params.slug)
+  const resolvedParams = await params
+  const product = await getProductBySlug(resolvedParams.slug)
 
   if (!product) {
     notFound()
@@ -83,7 +84,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
 }
 
 export async function generateMetadata({ params }: ProductPageProps) {
-  const product = await getProductBySlug(params.slug)
+  const resolvedParams = await params
+  const product = await getProductBySlug(resolvedParams.slug)
 
   if (!product) {
     return {

@@ -12,7 +12,7 @@ export default function TypographyShowcase() {
           Système Typographique HerbisVeritas
         </Heading>
         <Text size="lg" variant="muted">
-          Playfair Display pour l'élégance, Montserrat pour la lisibilité
+          Playfair Display pour l&apos;élégance, Montserrat pour la lisibilité
         </Text>
       </div>
 
@@ -50,7 +50,7 @@ export default function TypographyShowcase() {
           </div>
 
           <div className="space-y-2">
-            <Heading level="h5">H5 - Labels (ex: "Ingrédients")</Heading>
+            <Heading level="h5">H5 - Labels (ex: &quot;Ingrédients&quot;)</Heading>
             <Text size="xs" variant="muted">
               Montserrat SemiBold • 16px mobile → 18px desktop
             </Text>
@@ -94,24 +94,24 @@ export default function TypographyShowcase() {
         
         <div className="prose prose-neutral max-w-none">
           <Text size="lg" weight="medium" className="mb-4">
-            Paragraphe d'introduction avec taille large et poids medium. 
+            Paragraphe d&apos;introduction avec taille large et poids medium. 
             Utilisé pour mettre en avant les informations importantes.
           </Text>
           
           <Text className="mb-4">
             Paragraphe standard avec Montserrat Regular 16-18px. Interlignage de 1.65 
             pour un confort de lecture optimal. Idéal pour les descriptions produits 
-            et le contenu magazine d'HerbisVeritas.
+            et le contenu magazine d&apos;HerbisVeritas.
           </Text>
           
           <Text size="sm" variant="muted" className="mb-6">
             Petit paragraphe 14-15px pour les légendes et informations complémentaires. 
-            Couleur muted pour hiérarchiser l'information.
+            Couleur muted pour hiérarchiser l&apos;information.
           </Text>
 
           <Quote size="base" variant="primary">
-            "La beauté naturelle révèle l'essence authentique de chaque être. 
-            Nos produits bio célèbrent cette vérité universelle."
+            &quot;La beauté naturelle révèle l&apos;essence authentique de chaque être. 
+            Nos produits bio célèbrent cette vérité universelle.&quot;
           </Quote>
           
           <Text size="xs" variant="muted" className="text-right mt-2">
@@ -126,7 +126,7 @@ export default function TypographyShowcase() {
         
         <div className="bg-gradient-to-br from-hv-primary-50 to-hv-secondary-50 p-8 rounded-xl text-center space-y-6">
           <Slogan variant="gradient" size="hero">
-            L'Authentique Beauté Naturelle
+            L&apos;Authentique Beauté Naturelle
           </Slogan>
           
           <Slogan variant="primary" size="large">
@@ -213,7 +213,7 @@ export default function TypographyShowcase() {
 
       {/* Guide d'usage */}
       <section className="bg-hv-neutral-50 p-8 rounded-xl space-y-6">
-        <Heading level="h2" variant="primary">Guide d'Usage Rapide</Heading>
+        <Heading level="h2" variant="primary">Guide d&apos;Usage Rapide</Heading>
         
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-4">

@@ -27,7 +27,7 @@ export const CreateAddressSchema = z.object({
   is_default: z.boolean().default(false)
 })
 
-export const UpdateAddressSchema = CreateAddressSchema.partial().omit(['user_id'])
+export const UpdateAddressSchema = CreateAddressSchema.partial().omit({ user_id: true })
 
 export const AddressQuerySchema = z.object({
   user_id: z.string().uuid(),

@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import Breadcrumb from "@/components/Common/Breadcrumb";
-import Products from "@/components/Products";
-import { Loader } from "@/components/Common/Loader";
+import Breadcrumb from "@/components/common/Breadcrumb";
+import { ProductGrid } from "@/components/modules/boutique/components/product-grid";
+import { Loader } from "@/components/common/Loader";
 
 export const metadata = {
   title: "Nos Produits | HerbisVeritas",
@@ -18,7 +18,7 @@ export default function ProductsPage() {
       <main className="pb-[120px] pt-[120px]">
         <section className="container">
           <Suspense fallback={<Loader />}>
-            <Products />
+            <ProductGrid />
           </Suspense>
         </section>
       </main>

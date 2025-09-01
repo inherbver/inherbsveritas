@@ -13,11 +13,11 @@ export * from './enums';
 export * from './entities';
 export * from './api';
 export * from './zod-schemas';
-export * from './utils';
+// export * from './utils';
 
 // ============================================================================
 // BACKWARD COMPATIBILITY ALIASES
 // ============================================================================
 
 // Maintain compatibility with existing code
-export { isValidEmailAddress as isValidEmail } from './utils';
+// export { isValidEmailAddress as isValidEmail } from './utils';

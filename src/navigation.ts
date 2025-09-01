@@ -3,7 +3,7 @@ import {
   locales,
   defaultLocale,
   localePrefix,
-  localeDetection,
+  // localeDetection,
   pathnames,
   type Locale,
 } from "./i18n-config";

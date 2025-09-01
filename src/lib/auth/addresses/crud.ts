@@ -7,12 +7,12 @@
 import { createClient } from '@/lib/supabase/client'
 import { 
   CreateAddressData, 
-  UpdateAddressData, 
+  // UpdateAddressData, 
   Address, 
   AddressResult, 
   AddressListResult,
   CreateAddressSchema,
-  UpdateAddressSchema
+  // UpdateAddressSchema
 } from './schemas'
 
 /**

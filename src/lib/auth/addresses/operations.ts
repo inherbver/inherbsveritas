@@ -10,7 +10,7 @@ import {
   Address, 
   AddressResult,
   UpdateAddressSchema,
-  AddressType,
+  // AddressType,
   DefaultAddressUpdate
 } from './schemas'
 

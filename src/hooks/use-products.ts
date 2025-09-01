@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Product, ProductFilters } from '@/types/product'
 
 interface UseProductsResult {
@@ -35,7 +35,7 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsResult
 
   const { filters, page = 1, limit = 12 } = options
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -80,11 +80,11 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsResult
     } finally {
       setLoading(false)
     }
-  }
+  }, [filters, page, limit])
 
   useEffect(() => {
     fetchProducts()
-  }, [filters?.category, filters?.labels, filters?.search, page, limit])
+  }, [fetchProducts])
 
   return {
     products,

@@ -18,7 +18,7 @@ export { businessToasts } from './business-patterns';
 export { useToast, useAsyncToast } from './hooks';
 
 // Default instance
-export { ToastSystem } from './toast-core';
+// export { ToastSystem } from './toast-core';
 
 // Create and export default instance
 import { ToastSystem } from './toast-core';

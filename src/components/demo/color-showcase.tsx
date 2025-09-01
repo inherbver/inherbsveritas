@@ -216,7 +216,7 @@ export function ColorShowcase() {
 
             {/* Spacing Scale */}
             <div className="space-y-4">
-              <h4 className="font-semibold">Échelle d'espacement (4px base)</h4>
+              <h4 className="font-semibold">Échelle d&apos;espacement (4px base)</h4>
               <div className="space-y-2">
                 <div className="flex items-center gap-4">
                   <div className="bg-hv-primary w-2xs h-4 rounded"></div>
