@@ -133,6 +133,104 @@ const config: Config = {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
+
+                // === 🔤 Typography Tokens ===
+                fontFamily: {
+                  display: 'var(--font-display)',
+                  sans: 'var(--font-sans)',
+                  mono: 'var(--font-mono)',
+                },
+                fontWeight: {
+                  regular: 'var(--weight-regular)',
+                  medium: 'var(--weight-medium)',
+                  semibold: 'var(--weight-semibold)',
+                  bold: 'var(--weight-bold)',
+                },
+                fontSize: {
+                  xs: 'var(--fs-xs)',     // ~12-14px - H6, tags, labels
+                  sm: 'var(--fs-sm)',     // ~14-15px - petits paragraphes, légendes  
+                  base: 'var(--fs-md)',   // ~16-18px - paragraphe standard, H5
+                  lg: 'var(--fs-lg)',     // ~18-22px - H4, titres cartes produit
+                  xl: 'var(--fs-xl)',     // ~22-28px - H3, sous-sections
+                  '2xl': 'var(--fs-2xl)', // ~28-36px - H2 sections majeures
+                  '3xl': 'var(--fs-3xl)', // ~36-48px - H1 Hero, titres principaux
+                  '4xl': 'var(--fs-4xl)', // ~40-64px - H1 desktop hero
+                },
+                lineHeight: {
+                  tight: 'var(--leading-tight)',
+                  normal: 'var(--leading-normal)',
+                  relaxed: 'var(--leading-relaxed)',
+                },
+                letterSpacing: {
+                  tight: 'var(--tracking-tight)',
+                  normal: 'var(--tracking-normal)',
+                  wide: 'var(--tracking-wide)',
+                },
+
+                // === 🧱 Spacing Tokens ===
+                spacing: {
+                  '2xs': 'var(--space-2xs)',  // 4px
+                  xs: 'var(--space-xs)',       // 8px
+                  sm: 'var(--space-sm)',       // 12px
+                  md: 'var(--space-md)',       // 16px
+                  lg: 'var(--space-lg)',       // 24px
+                  xl: 'var(--space-xl)',       // 32px
+                  '2xl': 'var(--space-2xl)',  // 48px
+                  '3xl': 'var(--space-3xl)',  // 64px
+                  
+                  // Aliases UX sémantiques
+                  'card-gap': 'var(--gap-card)',         // 24px
+                  'section-gap': 'var(--gap-section)',   // 48px
+                  'card-pad': 'var(--pad-card)',         // 24px
+                  'page-pad': 'var(--pad-page)',         // 48px
+                },
+
+                // === 🪞 Elevation & Border ===
+                boxShadow: {
+                  sm: 'var(--shadow-sm)',
+                  DEFAULT: 'var(--shadow-md)',
+                  md: 'var(--shadow-md)',
+                  lg: 'var(--shadow-lg)',
+                  ring: 'var(--ring-focus)',
+                },
+                borderWidth: {
+                  DEFAULT: 'var(--border-1)',
+                  2: 'var(--border-2)',
+                },
+
+                // === 📐 Layout Containers ===
+                maxWidth: {
+                  'container-sm': 'var(--container-sm)',
+                  'container-md': 'var(--container-md)',
+                  'container-lg': 'var(--container-lg)',
+                  'container-xl': 'var(--container-xl)',
+                },
+
+                // === 🎛️ Motion Tokens ===
+                transitionDuration: {
+                  fast: 'var(--dur-fast)',
+                  base: 'var(--dur-base)',
+                  slow: 'var(--dur-slow)',
+                },
+                transitionTimingFunction: {
+                  standard: 'var(--ease-standard)',
+                  entrance: 'var(--ease-entrance)',
+                  exit: 'var(--ease-exit)',
+                },
+
+                // === 🌫️ Z-index & Opacity ===
+                zIndex: {
+                  base: 'var(--z-base)',
+                  header: 'var(--z-header)',
+                  overlay: 'var(--z-overlay)',
+                  modal: 'var(--z-modal)',
+                  toast: 'var(--z-toast)',
+                },
+                opacity: {
+                  disabled: 'var(--opacity-disabled)',
+                  dim: 'var(--opacity-dim)',
+                },
+
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

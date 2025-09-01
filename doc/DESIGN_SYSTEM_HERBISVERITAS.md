@@ -251,16 +251,18 @@ npm install lucide-react @radix-ui/react-dropdown-menu
 ```
 src/
 ├── styles/
-│   └── index.css                 # CSS Variables + @layer base
+│   └── index.css                 # CSS Variables + @layer base (Playfair + Montserrat)
 ├── hooks/
 │   └── use-theme.ts             # Hook theme management
 ├── components/
 │   ├── ui/
-│   │   └── button.tsx           # Button avec variants HV
+│   │   ├── button.tsx           # Button avec variants HV
+│   │   └── typography.tsx       # Composants typographiques HerbisVeritas
 │   ├── theme/
 │   │   └── theme-switcher.tsx   # Composants switch theme
 │   └── demo/
-│       └── color-showcase.tsx   # Demo design system
+│       ├── color-showcase.tsx   # Demo couleurs design system
+│       └── typography-showcase.tsx # Demo typographie complète
 └── lib/
     └── utils.ts                 # cn() helper function
 ```
@@ -394,6 +396,327 @@ const componentVariants = cva("base-classes", {
 - [ ] Éviter plus de 3 couleurs par écran (sauf cas spéciaux)
 - [ ] Prévoir les adaptations dark mode dès la conception
 - [ ] Valider l'accessibilité avec les outils de contraste
+
+### Pour Typographie HerbisVeritas
+
+- [ ] **Playfair Display** uniquement pour H1-H2 (éviter surcharge)
+- [ ] **Montserrat** pour tout le reste (interface, corps de texte)
+- [ ] **Hiérarchie respectée** : H1 hero → H6 tags sans sauts
+- [ ] **Contraste minimum 4.5:1** pour le texte standard
+- [ ] **Responsive automatique** : utiliser les tokens clamp() existants
+- [ ] **Poids cohérents** : Regular (400) → Medium (500) → SemiBold (600) → Bold (700)
+- [ ] **Citations en Playfair Italic** pour l'élégance éditoriale
+- [ ] **Labels en Montserrat Bold** avec uppercase et letter-spacing
+
+---
+
+## 🧱 Tokens d'Espacement (Standards 2025)
+
+### Échelle Base 4px
+
+```css
+--space-2xs: 4px;    /* 1 Tailwind unit */
+--space-xs:  8px;    /* 2 */
+--space-sm:  12px;   /* 3 */
+--space-md:  16px;   /* 4 */
+--space-lg:  24px;   /* 6 */
+--space-xl:  32px;   /* 8 */
+--space-2xl: 48px;   /* 12 */
+--space-3xl: 64px;   /* 16 */
+```
+
+### Aliases UX Sémantiques
+
+```css
+--gap-card: var(--space-lg);         /* 24px - espacement entre cartes */
+--gap-section: var(--space-2xl);     /* 48px - espacement entre sections */
+--pad-card: var(--space-lg);         /* 24px - padding interne cartes */
+--pad-page: var(--space-2xl);        /* 48px - padding pages */
+```
+
+### Usage Tailwind
+
+```tsx
+// Espacement standard
+<div className="p-lg gap-md">          // padding 24px, gap 16px
+<div className="space-y-xl">           // vertical spacing 32px
+
+// Espacement sémantique
+<div className="p-card-pad">           // padding carte 24px
+<div className="space-y-section-gap">  // espacement section 48px
+```
+
+---
+
+## 🔤 Tokens Typographiques HerbisVeritas
+
+### Familles de Polices (Mise à Jour 2025)
+
+```css
+--font-display: "Playfair Display", ui-serif, serif;        /* Titres H1-H2 élégants */
+--font-sans: "Montserrat", system-ui, -apple-system, sans-serif; /* Corps de texte, interface */
+--font-mono: ui-monospace, SFMono-Regular, monospace;       /* Code */
+```
+
+**Philosophie Typographique HerbisVeritas :**
+- **Playfair Display** : Élégance éditoriale pour les titres principaux (H1-H2)
+- **Montserrat** : Lisibilité optimale pour l'interface et le contenu
+
+### Poids de Police
+
+```css
+--weight-regular: 400;    /* Corps de texte normal */
+--weight-medium: 500;     /* Emphase légère */
+--weight-semibold: 600;   /* Sous-titres */
+--weight-bold: 700;       /* Titres principaux */
+```
+
+### Hiérarchie Typographique HerbisVeritas
+
+| Élément | Police | Taille (desktop) | Taille (mobile) | Usage Spécifique |
+|---------|--------|------------------|-----------------|------------------|
+| **H1** | Playfair Display Bold | 64px | 40px | Hero, titres pages principales |
+| **H2** | Playfair Display SemiBold | 40px | 28px | Sections majeures, catégories produits |
+| **H3** | Montserrat Medium | 28px | 22px | Sous-sections, blocs secondaires |
+| **H4** | Montserrat Medium | 22px | 18px | Titres cartes produit, sous-titres article |
+| **H5** | Montserrat SemiBold | 18px | 16px | Labels ("Ingrédients", "Témoignages") |
+| **H6** | Montserrat Bold | 16px | 14px | Petits titres, encarts, tags |
+
+### Tailles Fluides avec clamp() (Responsive Automatique)
+
+```css
+/* Tailles fluides selon hiérarchie HerbisVeritas */
+--fs-xs:  clamp(.78rem, .72rem + .2vw, .85rem);     /* ~12-14px - H6, tags, labels */
+--fs-sm:  clamp(.88rem, .82rem + .2vw, .95rem);     /* ~14-15px - petits paragraphes, légendes */
+--fs-md:  clamp(1rem,   .95rem + .3vw, 1.125rem);   /* ~16-18px - paragraphe standard, H5 */
+--fs-lg:  clamp(1.125rem, 1.02rem + .6vw, 1.375rem); /* ~18-22px - H4, titres cartes produit */
+--fs-xl:  clamp(1.375rem, 1.2rem + .8vw, 1.75rem);  /* ~22-28px - H3, sous-sections */
+--fs-2xl: clamp(1.75rem, 1.5rem + 1vw,  2.25rem);   /* ~28-36px - H2 sections majeures */
+--fs-3xl: clamp(2.25rem, 1.8rem + 1.6vw, 3rem);     /* ~36-48px - H1 Hero, titres principaux */
+--fs-4xl: clamp(2.5rem, 2rem + 2.5vw, 4rem);        /* ~40-64px - H1 desktop hero */
+```
+
+### Composants Typographiques React
+
+Le design system inclut des composants React prêts à l'emploi avec toutes les variantes :
+
+```tsx
+import { Heading, Text, Quote, Slogan, Label, Link } from '@/components/ui/typography'
+
+// Hiérarchie des titres avec variantes
+<Heading level="h1" variant="primary">Titre Principal HerbisVeritas</Heading>
+<Heading level="h2" variant="secondary">Section Lavande</Heading>
+<Heading level="h3">Sous-section Standard</Heading>
+
+// Texte avec tailles et variantes
+<Text size="lg" weight="medium" variant="primary">Texte d'introduction important</Text>
+<Text>Paragraphe standard Montserrat 16-18px</Text>
+<Text size="sm" variant="muted">Légende discrète</Text>
+
+// Citations élégantes Playfair Display
+<Quote size="large" variant="primary">
+  "La beauté naturelle révèle l'essence authentique de chaque être."
+</Quote>
+
+// Slogans & Punchlines avec gradients
+<Slogan variant="gradient" size="hero">L'Authentique Beauté Naturelle</Slogan>
+<Slogan variant="primary" size="large">Révélez Votre Éclat Naturel</Slogan>
+
+// Labels & Tags e-commerce
+<Label variant="primary">Bio Certifié</Label>
+<Label variant="accent">Promo -20%</Label>
+<Label size="xs" variant="success" rounded="full">Nouveau</Label>
+
+// Liens avec états hover
+<Link variant="default" href="#">Lien primary par défaut</Link>
+<Link variant="secondary" href="#">Lien lavande</Link>
+<Link variant="accent" href="#">Lien soleil méditerranéen</Link>
+```
+
+### Usage Tailwind Classes Directes
+
+```tsx
+// Familles HerbisVeritas
+<h1 className="font-display text-4xl font-bold">Hero Playfair Display</h1>
+<h2 className="font-display text-2xl font-semibold">Section Playfair Display</h2>
+<h3 className="font-sans text-xl font-medium">Sous-section Montserrat</h3>
+<p className="font-sans text-base">Corps de texte Montserrat</p>
+<code className="font-mono text-sm">Code monospace</code>
+
+// Poids typographiques
+<span className="font-regular">Montserrat Regular (400)</span>
+<span className="font-medium">Montserrat Medium (500)</span>  
+<span className="font-semibold">Montserrat SemiBold (600)</span>
+<span className="font-bold">Montserrat Bold (700)</span>
+
+// Tailles responsive automatiques
+<h1 className="text-4xl">H1 Hero (40px → 64px)</h1>
+<h2 className="text-2xl">H2 Sections (28px → 40px)</h2>
+<h3 className="text-xl">H3 Sous-sections (22px → 28px)</h3>
+<p className="text-base">Paragraphe standard (16px → 18px)</p>
+```
+
+---
+
+## 🪞 Tokens d'Élévation
+
+### Ombres & Focus
+
+```css
+--shadow-sm: 0 1px 2px rgba(0,0,0,.06);              /* Cards légères */
+--shadow-md: 0 6px 16px rgba(0,0,0,.10);             /* Cards principales */
+--shadow-lg: 0 12px 28px rgba(0,0,0,.14);            /* Modales, overlays */
+--ring-focus: 0 0 0 3px color-mix(in srgb, rgb(var(--primary-500)) 30%, transparent);
+```
+
+### Bordures
+
+```css
+--border-1: 1px;      /* Bordure standard */
+--border-2: 2px;      /* Bordure emphase */
+```
+
+### Usage Tailwind
+
+```tsx
+// Élévation
+<div className="shadow-sm">Carte légère</div>
+<div className="shadow-md">Carte standard</div>  
+<div className="shadow-lg">Modale/overlay</div>
+
+// Focus states
+<button className="focus:ring ring-ring">Button avec focus</button>
+
+// Bordures
+<div className="border border-hv-neutral-200">Bordure fine</div>
+<div className="border-2 border-hv-primary">Bordure emphase</div>
+```
+
+---
+
+## 🎛️ Tokens Motion (Framer Motion Ready)
+
+### Durées d'Animation
+
+```css
+--dur-fast: 120ms;    /* Micro-interactions */
+--dur-base: 200ms;    /* Transitions standard */
+--dur-slow: 320ms;    /* Animations complexes */
+```
+
+### Courbes d'Animation
+
+```css
+--ease-standard: cubic-bezier(.2,.8,.2,1);    /* Transitions générales */
+--ease-entrance: cubic-bezier(.16,1,.3,1);    /* Entrées d'éléments */
+--ease-exit:     cubic-bezier(.4,0,1,1);      /* Sorties d'éléments */
+```
+
+### Usage Tailwind + Framer Motion
+
+```tsx
+// Transitions CSS
+<div className="transition-all duration-base ease-standard">
+  Element avec transition
+</div>
+
+// Framer Motion avec tokens
+const variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { 
+      duration: parseFloat(getComputedStyle(document.documentElement)
+        .getPropertyValue('--dur-base').replace('ms', '')) / 1000,
+      ease: [0.2, 0.8, 0.2, 1] // --ease-standard
+    }
+  }
+}
+```
+
+---
+
+## 🌫️ Tokens Utilitaires
+
+### Z-index Sémantiques
+
+```css
+--z-base: 0;       /* Éléments de base */
+--z-header: 10;    /* Navigation */
+--z-overlay: 40;   /* Overlays/dropdowns */
+--z-modal: 50;     /* Modales */
+--z-toast: 60;     /* Notifications */
+```
+
+### Opacités
+
+```css
+--opacity-disabled: .5;    /* États désactivés */
+--opacity-dim: .75;        /* États estompés */
+```
+
+### Layout Containers
+
+```css
+--container-sm: 640px;     /* Mobile large */
+--container-md: 768px;     /* Tablet */
+--container-lg: 1024px;    /* Desktop */
+--container-xl: 1280px;    /* Large desktop */
+```
+
+### Usage Tailwind
+
+```tsx
+// Z-index
+<nav className="z-header">Navigation</nav>
+<div className="z-modal">Modale</div>
+<div className="z-toast">Toast notification</div>
+
+// Opacités
+<button disabled className="opacity-disabled">Disabled</button>
+<div className="opacity-dim">Contenu estompé</div>
+
+// Containers responsive
+<div className="max-w-container-lg mx-auto">Contenu centré</div>
+```
+
+---
+
+## 📱 Responsive & Breakpoints
+
+### Breakpoints Tailwind (déjà configurés)
+
+```css
+sm: 640px   /* Mobile large */
+md: 768px   /* Tablet */
+lg: 1024px  /* Desktop */
+xl: 1280px  /* Large desktop */
+```
+
+### Typography Responsive Automatique
+
+Grâce aux tokens `clamp()`, la typographie s'adapte automatiquement :
+
+```tsx
+// Ces classes s'adaptent automatiquement au viewport
+<h1 className="text-3xl">Titre 36px → 48px automatique</h1>
+<p className="text-base">Corps 16px → 18px automatique</p>
+
+// Plus besoin de : sm:text-lg md:text-xl lg:text-2xl
+// Remplacé par : text-xl (fluide automatique)
+```
+
+### Espacement Responsive avec Tokens
+
+```tsx
+// Espacement qui s'adapte naturellement
+<section className="py-section-gap px-page-pad">
+  <div className="space-y-card-gap">
+    <div className="p-card-pad">Card content</div>
+  </div>
+</section>
+```
 
 ---
 
