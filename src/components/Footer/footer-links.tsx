@@ -67,7 +67,7 @@ export function FooterLinks() {
             <h4 className="mb-9 text-lg font-semibold text-white">
               {section.title}
             </h4>
-            <nav>
+            <nav aria-label={`Navigation ${section.title}`}>
               <ul>
                 {section.links.map((link) => (
                   <li key={link.label}>

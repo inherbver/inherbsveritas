@@ -46,6 +46,7 @@ const Header = () => {
   return (
     <>
       <header
+        role="banner"
         className={`ud-header left-0 top-0 z-40 flex w-full items-center ${
           sticky
             ? "shadow-nav fixed z-[999] border-b border-stroke bg-white/80 backdrop-blur-[5px] dark:border-dark-3/20 dark:bg-dark/10"
@@ -139,6 +140,8 @@ const Header = () => {
                   />
                 </button>
                 <nav
+                  role="navigation"
+                  aria-label="Navigation principale"
                   id="navbarCollapse"
                   className={`navbar absolute right-0 z-30 w-[250px] rounded border-[.5px] border-body-color/50 bg-white px-6 py-4 duration-300 dark:border-body-color/20 dark:bg-dark-2 lg:visible lg:static lg:w-auto lg:border-none lg:!bg-transparent lg:p-0 lg:opacity-100 lg:dark:bg-transparent ${
                     navbarOpen
@@ -261,7 +264,7 @@ const Header = () => {
               <div className="hidden items-center justify-end pr-16 sm:flex lg:pr-0">
                 {/* theme toggler */}
                 <button
-                  aria-label="theme toggler"
+                  aria-label="Basculer entre thème clair et sombre"
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
                   className="flex h-8 w-8 items-center justify-center text-body-color duration-300 dark:text-white"
                 >

@@ -16,9 +16,16 @@ export default function Home() {
       {/* Demo Design System temporaire */}
       <ColorShowcase />
       
-      <section className="py-16">
+      <section 
+        className="py-16"
+        role="main"
+        aria-labelledby="boutique-title"
+      >
         <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-hv-primary mb-4">
+          <h1 
+            id="boutique-title"
+            className="text-4xl font-bold text-hv-primary mb-4"
+          >
             Boutique HerbisVeritas
           </h1>
           <p className="text-lg text-hv-neutral-600 max-w-2xl mx-auto">

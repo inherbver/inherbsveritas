@@ -50,6 +50,7 @@ $ tt
 **Pour copier-coller direct :**
 - `cc` → Consulte CLAUDE.md et applique les patterns définis
 - `dp` → Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes  
+- `ts` → Utilise le sous-agent dédié afin d'analyser et de résoudre les erreurs de typage (pas d'any, unknown en cas de grande difficultés à typer)
 - `orthodox` → Vérifie cohérence des fichiers doc C:\inherbisveritas\doc et leur actualité avec la codebase et la base de données
 - `github` → Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote
 - `build` → Lance npm run build + vérification erreurs + rapport de performance + validation MVP
@@ -64,6 +65,7 @@ $ tt
 - `all` → Lance tests unitaires + tests d'intégration + tests E2E + rapport de couverture + rapport de performance
 - `security` → Lance une analyse de sécurité avec l'agent dédié
 - `archi` → Vérifie via le sous-agent dédié l'absence de doublons “fonctionnels” : même composant/service ne doit pas exister à 2 endroits différents (hors ré-exports)
+- `typo` → Vérifie cohérence typographique avec le guide typographique HerbisVeritas
 
 ## Raccourcis Clavier Système
 
