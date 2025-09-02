@@ -1,7 +1,8 @@
 'use client'
 
 import React from 'react'
-import { ProductGrid, ProductCard, useCart } from '@/components/modules/boutique'
+import { ProductGrid, useCart } from '@/components/modules/boutique'
+import { ProductCard } from '@/components/products/product-card-optimized'
 import { Product } from '@/types/product'
 import { Button } from '@/components/ui'
 import { toast } from 'react-hot-toast'

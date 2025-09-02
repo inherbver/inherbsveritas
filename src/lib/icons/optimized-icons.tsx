@@ -4,44 +4,22 @@
  */
 
 // Core navigation icons (critical path)
-import Home from 'lucide-react/dist/esm/icons/home';
-import Menu from 'lucide-react/dist/esm/icons/menu';
-import X from 'lucide-react/dist/esm/icons/x';
-import User from 'lucide-react/dist/esm/icons/user';
-import Search from 'lucide-react/dist/esm/icons/search';
-import ShoppingCart from 'lucide-react/dist/esm/icons/shopping-cart';
+import { Home, Menu, X, User, Search, ShoppingCart } from 'lucide-react';
 
 // Business icons (HerbisVeritas)
-import Leaf from 'lucide-react/dist/esm/icons/leaf';
-import Heart from 'lucide-react/dist/esm/icons/heart';
-import Star from 'lucide-react/dist/esm/icons/star';
-import Award from 'lucide-react/dist/esm/icons/award';
-import Shield from 'lucide-react/dist/esm/icons/shield';
+import { Leaf, Heart, Star, Award, Shield } from 'lucide-react';
 
 // UI interaction icons
-import ChevronDown from 'lucide-react/dist/esm/icons/chevron-down';
-import ChevronUp from 'lucide-react/dist/esm/icons/chevron-up';
-import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
-import ChevronLeft from 'lucide-react/dist/esm/icons/chevron-left';
-import Plus from 'lucide-react/dist/esm/icons/plus';
-import Minus from 'lucide-react/dist/esm/icons/minus';
+import { ChevronDown, ChevronUp, ChevronRight, ChevronLeft, Plus, Minus } from 'lucide-react';
 
 // Form icons
-import Eye from 'lucide-react/dist/esm/icons/eye';
-import EyeOff from 'lucide-react/dist/esm/icons/eye-off';
-import Check from 'lucide-react/dist/esm/icons/check';
-import AlertTriangle from 'lucide-react/dist/esm/icons/alert-triangle';
-import Info from 'lucide-react/dist/esm/icons/info';
+import { Eye, EyeOff, Check, AlertTriangle, Info } from 'lucide-react';
 
 // Theme icons
-import Sun from 'lucide-react/dist/esm/icons/sun';
-import Moon from 'lucide-react/dist/esm/icons/moon';
+import { Sun, Moon } from 'lucide-react';
 
 // Social icons (critical pour footer)
-import Facebook from 'lucide-react/dist/esm/icons/facebook';
-import Instagram from 'lucide-react/dist/esm/icons/instagram';
-import Mail from 'lucide-react/dist/esm/icons/mail';
-import Phone from 'lucide-react/dist/esm/icons/phone';
+import { Facebook, Instagram, Mail, Phone } from 'lucide-react';
 
 // Export centralisé des icônes critiques
 export const Icons = {
@@ -101,31 +79,10 @@ export function DynamicIcon({ name, className, size = 16 }: DynamicIconProps) {
   return <IconComponent className={className} size={size} />;
 }
 
-// Lazy loading pour icônes moins critiques
-export const LazyIcons = {
-  // Admin icons (chargés seulement si admin)
-  settings: () => import('lucide-react/dist/esm/icons/settings'),
-  users: () => import('lucide-react/dist/esm/icons/users'),
-  barChart: () => import('lucide-react/dist/esm/icons/bar-chart'),
-  package: () => import('lucide-react/dist/esm/icons/package'),
-
-  // E-commerce icons (chargés au besoin)
-  creditCard: () => import('lucide-react/dist/esm/icons/credit-card'),
-  truck: () => import('lucide-react/dist/esm/icons/truck'),
-  gift: () => import('lucide-react/dist/esm/icons/gift'),
-  tag: () => import('lucide-react/dist/esm/icons/tag'),
-
-  // Social extended (newsletter, partage)
-  twitter: () => import('lucide-react/dist/esm/icons/twitter'),
-  linkedin: () => import('lucide-react/dist/esm/icons/linkedin'),
-  share: () => import('lucide-react/dist/esm/icons/share-2'),
-  link: () => import('lucide-react/dist/esm/icons/external-link'),
-
-  // Utility icons
-  calendar: () => import('lucide-react/dist/esm/icons/calendar'),
-  clock: () => import('lucide-react/dist/esm/icons/clock'),
-  mapPin: () => import('lucide-react/dist/esm/icons/map-pin'),
-  filter: () => import('lucide-react/dist/esm/icons/filter'),
+// Configuration des icônes à charger dynamiquement (placeholder pour lazy loading)
+export const LazyIconsConfig = {
+  admin: ['settings', 'users', 'bar-chart', 'package'],
+  ecommerce: ['credit-card', 'truck', 'gift', 'tag'],
+  social: ['twitter', 'linkedin', 'share-2'],
+  utility: ['external-link', 'calendar', 'clock', 'map-pin', 'filter']
 } as const;
-
-export type LazyIconName = keyof typeof LazyIcons;

@@ -1,24 +1,22 @@
-# HerbisVeritas V2 - Architecture Base de Données MVP
+# Architecture Base de Données MVP - HerbisVeritas V2
 
-## 📋 Vue d'Ensemble
+## Vue d'Ensemble
 
-Cette documentation couvre le **schéma MVP à 13 tables essentielles** de la plateforme e-commerce HerbisVeritas V2, construite sur Supabase PostgreSQL.
+Architecture base de données MVP à 13 tables essentielles optimisée pour l'architecture Shared Components, construite sur Supabase PostgreSQL.
 
-**Architecture MVP validée** pour lancement avec fonctionnalités business critiques préservées.
+**Statut :** Architecture déployée et opérationnelle avec intégration ContentCard/ContentGrid.
 
 La base de données supporte :
-- 🌐 **Multilingue** - FR/EN via JSONB (DE/ES en V2)
-- 👥 **Utilisateurs** - 3 rôles (user/admin/dev)
-- 🛒 **E-commerce complet** - Panier invité, Stripe, tracking Colissimo
-- 📰 **Magazine TipTap** - Éditeur riche, categories seulement
-- 🏪 **Partenaires** - Points de vente avec réseaux sociaux
-- 📅 **Événements** - Hero simple (pas calendrier complexe)
+- **Multilingue** : FR/EN via JSONB (DE/ES → V2)
+- **Utilisateurs** : 3 rôles (user/admin/dev)
+- **E-commerce complet** : Panier invité, Stripe, tracking Colissimo
+- **Magazine TipTap** : Éditeur riche, catégories
+- **Partenaires** : Points de vente avec réseaux sociaux
+- **Événements** : Hero simple
 
----
+## Architecture MVP (13 Tables)
 
-## 🏗️ Architecture MVP (13 Tables)
-
-### Structure Validée
+### Structure Optimisée Shared Components
 
 ```mermaid
 graph TB
@@ -43,7 +41,7 @@ graph TB
 
 ### Organisation par Modules MVP
 
-**🔵 Core E-commerce (8 tables)**
+**Core E-commerce (8 tables)**
 - `users` - Profils utilisateurs (3 rôles)
 - `addresses` - Table séparée moderne  
 - `products` - Labels HerbisVeritas + i18n JSONB
@@ -51,20 +49,34 @@ graph TB
 - `carts` + `cart_items` - Guest/User système
 - `orders` + `order_items` - Stripe complet, 4 états
 
-**🟢 Content & Marketing (5 tables)**
-- `articles` - Magazine TipTap (pas analytics)
-- `partners` - Points vente avec réseaux sociaux
-- `next_events` - Événement Hero simple
-- `newsletter_subscribers` - Basique (pas tracking RGPD)
-- `featured_items` - Hero polyvalent produits/articles/événements
+**Content & Marketing (5 tables)**
+- `articles` - Magazine TipTap avec ContentCard
+- `partners` - Points vente avec ContentCard
+- `next_events` - Événement Hero via ContentCard
+- `newsletter_subscribers` - Abonnements
+- `featured_items` - Hero polyvalent ContentCard
 
-**❌ Tables reportées V2 :**
+**Tables reportées V2 :**
 - `login_attempts` (sécurité avancée)
 - `tags`, `article_tags` (système M:N → categories seules)
 - `markets` (calendrier récurrence → `next_events` simple)
 - `pickup_points`, `shipping_methods` (logistique → prix fixe Colissimo)
 - `audit_logs`, `events` (monitoring avancé)
 - `legal_documents` (CMS → pages statiques)
+
+### Architecture Shared Components
+
+**ContentCard Variants :**
+- **product** → utilise `products` + `categories`
+- **article** → utilise `articles` + `categories` + `users`
+- **partner** → utilise `partners`
+- **event** → utilise `next_events`
+
+**ContentGrid Collections :**
+- ProductGrid → requête `products` avec filtres
+- ArticleGrid → requête `articles` publiés
+- PartnerGrid → requête `partners` actifs
+- EventGrid → requête `next_events`
 
 ---
 

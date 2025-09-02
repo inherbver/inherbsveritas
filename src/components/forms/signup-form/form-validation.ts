@@ -19,39 +19,39 @@ export const validateForm = (formData: FormData): FormErrors => {
   
   // Validation email
   if (!formData.email) {
-    errors.email = 'Email requis';
+    errors['email'] = 'Email requis';
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-    errors.email = 'Format email invalide';
+    errors['email'] = 'Format email invalide';
   }
   
   // Validation mot de passe
   if (!formData.password) {
-    errors.password = 'Mot de passe requis';
+    errors['password'] = 'Mot de passe requis';
   } else if (formData.password.length < 8) {
-    errors.password = 'Mot de passe trop court (min. 8 caractères)';
+    errors['password'] = 'Mot de passe trop court (min. 8 caractères)';
   } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-    errors.password = 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre';
+    errors['password'] = 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre';
   }
   
   // Validation confirmation mot de passe
   if (!formData.confirmPassword) {
-    errors.confirmPassword = 'Confirmation requise';
+    errors['confirmPassword'] = 'Confirmation requise';
   } else if (formData.password !== formData.confirmPassword) {
-    errors.confirmPassword = 'Les mots de passe ne correspondent pas';
+    errors['confirmPassword'] = 'Les mots de passe ne correspondent pas';
   }
   
   // Validation prénom
   if (!formData.firstName) {
-    errors.firstName = 'Prénom requis';
+    errors['firstName'] = 'Prénom requis';
   } else if (formData.firstName.length < 2) {
-    errors.firstName = 'Prénom trop court (min. 2 caractères)';
+    errors['firstName'] = 'Prénom trop court (min. 2 caractères)';
   }
   
   // Validation nom
   if (!formData.lastName) {
-    errors.lastName = 'Nom requis';
+    errors['lastName'] = 'Nom requis';
   } else if (formData.lastName.length < 2) {
-    errors.lastName = 'Nom trop court (min. 2 caractères)';
+    errors['lastName'] = 'Nom trop court (min. 2 caractères)';
   }
   
   return errors;
@@ -71,18 +71,10 @@ export const getPasswordStrength = (password: string): {
   if (/\d/.test(password)) score++;
   if (/[^a-zA-Z\d]/.test(password)) score++;
   
-  const levels = [
-    { label: 'Très faible', color: 'red' },
-    { label: 'Faible', color: 'orange' },
-    { label: 'Moyen', color: 'yellow' },
-    { label: 'Fort', color: 'blue' },
-    { label: 'Très fort', color: 'green' }
-  ];
-  
-  const levelIndex = Math.min(Math.floor(score / 1.2), levels.length - 1);
-  
-  return {
-    score,
-    ...levels[levelIndex]
-  };
+  // Mappage direct avec default failsafe
+  if (score <= 1) return { score, label: 'Très faible', color: 'red' };
+  if (score <= 2) return { score, label: 'Faible', color: 'orange' };
+  if (score <= 3) return { score, label: 'Moyen', color: 'yellow' };
+  if (score <= 4) return { score, label: 'Fort', color: 'blue' };
+  return { score, label: 'Très fort', color: 'green' };
 };

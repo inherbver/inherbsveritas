@@ -83,7 +83,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
             <h2 className="text-lg font-semibold">Inscription réussie !</h2>
             <p>
               Un email de confirmation a été envoyé à <strong>{formData.email}</strong>.
-              Veuillez cliquer sur le lien dans l'email pour activer votre compte.
+              Veuillez cliquer sur le lien dans l&apos;email pour activer votre compte.
             </p>
             <div className="pt-2">
               <Link 

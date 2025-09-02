@@ -1,10 +1,10 @@
-# PROJECT_STRUCTURE - HerbisVeritas V2
+# Structure Projet - HerbisVeritas V2
 
-## 📋 Structure de Projet MVP
+## Vue d'Ensemble
 
-Ce document définit l'organisation stricte des fichiers et dossiers pour le MVP HerbisVeritas V2 basé sur l'architecture 13 tables validée.
+Organisation des fichiers et dossiers optimisée pour l'architecture Shared Components, basée sur le schéma MVP 13 tables et l'architecture ContentCard/ContentGrid.
 
-**⚠️ CRITIQUE : Respecter cette structure pour éviter les doublons et maintenir la cohérence MVP.**
+**Statut :** Structure déployée avec architecture Shared Components opérationnelle.
 
 ---
 
@@ -52,79 +52,56 @@ src/app/
 └── 📄 providers.tsx           # Context providers
 ```
 
-### `/src/components` - Composants React
+### `/src/components` - Architecture Shared Components
 
-**Convention Noms :** `PascalCase` pour composants, index.tsx pour exports
+**Architecture Révolutionnaire :** ContentCard/ContentGrid unifiés + wrappers optimisés.
 
 ```
 src/components/
-├── 📁 About/                  # Section À propos
-│   └── 📄 index.tsx
-├── 📁 Admin/                  # Interface administration
-│   ├── 📄 Dashboard.tsx       # Tableau de bord admin
-│   ├── 📄 ProductsCRUD.tsx    # CRUD produits
-│   ├── 📄 OrdersManagement.tsx # Gestion commandes
-│   └── 📄 UsersManagement.tsx # Gestion utilisateurs
-├── 📁 Articles/               # Module magazine
-│   ├── 📄 ArticlesList.tsx    # Liste articles
-│   ├── 📄 ArticleCard.tsx     # Card article
-│   └── 📄 ArticleDetail.tsx   # Vue détail
-├── 📁 CallToAction/           # CTA sections
-│   └── 📄 index.tsx
-├── 📁 Cart/                   # Système panier
-│   ├── 📄 CartSheet.tsx       # Panier coulissant
-│   ├── 📄 CartItem.tsx        # Item panier
-│   └── 📄 CartSummary.tsx     # Résumé totaux
-├── 📁 Categories/             # Navigation catégories
-│   ├── 📄 CategoryTree.tsx    # Arbre hiérarchique
-│   └── 📄 CategoryFilter.tsx  # Filtres produits
-├── 📁 Common/                 # Composants génériques
-│   ├── 📄 Breadcrumb.tsx      # Fil d'Ariane
-│   ├── 📄 Loader.tsx          # Indicateurs charge
-│   ├── 📄 PreLoader.tsx       # Preloader app
-│   ├── 📄 ScrollUp.tsx        # Scroll to top
-│   └── 📄 SectionTitle.tsx    # Titres sections
-├── 📁 Contact/                # Formulaire contact
-│   └── 📄 index.tsx
-├── 📁 Dashboard/              # Tableau de bord user
-│   ├── 📄 ProfileSettings.tsx # Paramètres profil
-│   ├── 📄 OrderHistory.tsx    # Historique commandes
-│   └── 📄 AddressBook.tsx     # Carnet adresses
-├── 📁 Features/               # Features produit
-│   ├── 📄 SingleFeature.tsx
-│   ├── 📄 featuresData.tsx
-│   └── 📄 index.tsx
-├── 📁 Footer/                 # Pied de page
-│   └── 📄 index.tsx
-├── 📁 Header/                 # En-tête navigation
-│   ├── 📄 index.tsx
-│   ├── 📄 ThemeToggler.tsx    # Toggle dark/light
-│   └── 📄 menuData.tsx        # Data navigation
-├── 📁 Hero/                   # Hero sections
-│   └── 📄 index.tsx
-├── 📁 Newsletter/             # Inscription newsletter
-│   ├── 📄 SignupPopup.tsx     # Popup inscription
-│   └── 📄 FooterSignup.tsx    # Signup footer
-├── 📁 Orders/                 # Gestion commandes
-│   ├── 📄 OrderSummary.tsx    # Résumé commande
-│   ├── 📄 OrderTracking.tsx   # Suivi livraison
-│   └── 📄 OrderHistory.tsx    # Historique
-├── 📁 Partners/               # Partenaires
-│   └── 📄 index.tsx
-├── 📁 Products/               # Catalogue produits
-│   ├── 📄 ProductCard.tsx     # Card produit
-│   ├── 📄 ProductDetail.tsx   # Détail produit
-│   ├── 📄 ProductsList.tsx    # Liste produits
-│   ├── 📄 ProductFilters.tsx  # Filtres recherche
-│   └── 📄 index.tsx
-├── 📁 UI/                     # Composants UI base
-│   ├── 📄 Button.tsx          # shadcn/ui Button
-│   ├── 📄 Input.tsx           # shadcn/ui Input
-│   ├── 📄 HydrationSafe.tsx   # Wrapper hydratation
-│   └── 📄 ...                 # Autres composants shadcn
-└── 📁 NotFound/               # Page 404
-    └── 📄 index.tsx
+├── 📁 ui/                       # Atomic Components (shadcn/ui)
+│   ├── 📄 content-card.tsx      # Composant générique central
+│   ├── 📄 content-grid.tsx      # Template grilles universel
+│   ├── 📄 inci-list-enhanced.tsx # Listes INCI optimisées
+│   ├── 📄 button.tsx            # shadcn/ui Button
+│   ├── 📄 card.tsx              # Structures de base
+│   ├── 📄 badge.tsx             # 7 variants HerbisVeritas
+│   └── 📄 index.ts              # Exports centralisés
+├── 📁 products/                 # E-commerce Optimized
+│   └── 📄 product-card-optimized.tsx # Wrapper ContentCard (-57% code)
+├── 📁 content/                  # Editorial
+│   ├── 📄 article-card.tsx      # Wrapper ContentCard articles
+│   └── 📄 category-card.tsx     # Wrapper admin categories
+├── 📁 collections/              # Templates Préconfigurés
+│   └── 📄 index.tsx             # ProductGrid, ArticleGrid, CategoryGrid
+├── 📁 demo/                     # Démos composants
+│   ├── 📄 boutique-demo.tsx     # Demo produits optimisée
+│   ├── 📄 color-showcase/       # Showcase couleurs
+│   └── 📄 typography-showcase.tsx # Typography
+├── 📁 forms/                    # Formulaires métier
+│   ├── 📄 signup-form.tsx       # Inscription utilisateur
+│   └── 📄 signup-form/          # Sous-composants form
+├── 📁 categories/               # Navigation catégories
+│   └── 📄 category-navigation.tsx # Navigation optimisée
+├── 📁 common/                   # Composants génériques
+│   ├── 📄 breadcrumb.tsx        # Fil d'Ariane
+│   ├── 📄 loader.tsx            # Indicateurs charge
+│   ├── 📄 preloader.tsx         # Preloader app
+│   └── 📄 section-title.tsx     # Titres sections
+├── 📁 layout/                   # Composants layout
+│   ├── 📄 header.tsx            # En-tête navigation
+│   ├── 📄 footer.tsx            # Pied de page
+│   └── 📄 sidebar.tsx           # Navigation latérale
+└── 📁 modules/                  # Legacy modules (migration)
+    └── 📁 boutique/             # Migration vers wrappers
+        └── 📁 components/
+            └── 📁 product-grid/ # Migré vers ContentGrid
 ```
+
+**Innovation Architecture :**
+- **ContentCard générique** remplace tous les Card spécialisés
+- **ContentGrid universel** template pour toutes collections  
+- **Wrappers optimisés** compatibilité API + performance
+- **Tests >85%** coverage systématique
 
 ### `/src/lib` - Logique Métier
 

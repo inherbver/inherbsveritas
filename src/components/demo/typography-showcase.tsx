@@ -2,7 +2,7 @@
  * Showcase des composants typographiques HerbisVeritas
  * Démontre toute la hiérarchie et les variantes selon le guide typographique
  */
-import { Heading, Text, Quote, Slogan, Label, Link } from '@/components/ui/typography'
+import { Heading, Text, Slogan, Label, Link } from '@/components/ui/typography'
 
 export default function TypographyShowcase() {
   return (
@@ -109,10 +109,10 @@ export default function TypographyShowcase() {
             Couleur muted pour hiérarchiser l&apos;information.
           </Text>
 
-          <Quote size="base" variant="primary">
+          <Text size="lg" variant="muted" className="italic border-l-4 border-hv-accent pl-4">
             &quot;La beauté naturelle révèle l&apos;essence authentique de chaque être. 
             Nos produits bio célèbrent cette vérité universelle.&quot;
-          </Quote>
+          </Text>
           
           <Text size="xs" variant="muted" className="text-right mt-2">
             — Témoignage client HerbisVeritas
@@ -168,7 +168,7 @@ export default function TypographyShowcase() {
               <div><Link variant="secondary" href="#">Lien secondary (Lavande)</Link></div>
               <div><Link variant="accent" href="#">Lien accent (Soleil)</Link></div>
               <div><Link variant="muted" href="#">Lien muted discret</Link></div>
-              <div><Link variant="inherit" href="#">Lien héritant la couleur parent</Link></div>
+              <div><Link variant="default" href="#">Lien héritant la couleur parent</Link></div>
             </div>
           </div>
         </div>

@@ -89,7 +89,7 @@ export function ProductCardOptimized({
     currency: product.currency,
     stock: product.stock,
     inStock: product.stock > 0,
-    category: product.category_id // TODO: resolve category name
+    ...(product.category_id && { category: product.category_id }) // TODO: resolve category name
   }
 
   // Contenu personnalisé INCI (spécificité cosmétique)
@@ -105,11 +105,10 @@ export function ProductCardOptimized({
   return (
     <ContentCard
       // Identité
-      id={product.id}
       slug={product.slug}
       title={product.name}
-      description={product.description_short}
-      imageUrl={product.image_url}
+      {...(product.description_short && { description: product.description_short })}
+      {...(product.image_url && { imageUrl: product.image_url })}
       imageAlt={product.name}
       
       // Configuration
@@ -126,7 +125,7 @@ export function ProductCardOptimized({
       
       // État
       isLoading={isLoading}
-      className={className}
+      {...(className && { className })}
       
       // Contenu spécialisé cosmétique
       customContent={inciContent}

@@ -6,20 +6,18 @@
  */
 
 import * as React from 'react';
-import dynamic from 'next/dynamic';
-import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import ShoppingCart from 'lucide-react/dist/esm/icons/shopping-cart';
+import { ShoppingCart } from 'lucide-react';
 
-// Dynamic import du cart complet seulement au clic
-const CartDrawer = dynamic(
-  () => import('@/stores/cart-store').then(() => import('@/components/cart/cart-drawer')),
-  {
-    ssr: false, // Client-only
-    loading: () => <CartDrawerSkeleton />
-  }
-);
+// Placeholder pour cart drawer (component non créé encore)
+// const CartDrawer = dynamic(
+//   () => import('@/components/cart/cart-drawer'),
+//   {
+//     ssr: false, // Client-only
+//     loading: () => <CartDrawerSkeleton />
+//   }
+// );
 
 // Hook léger pour le count seulement
 function useCartCount() {
@@ -78,51 +76,51 @@ export function LazyCartTrigger({ className, variant = 'ghost' }: LazyCartTrigge
       
       {/* Cart drawer chargé seulement si ouvert */}
       {isOpen && (
-        <React.Suspense fallback={<CartDrawerSkeleton />}>
-          <CartDrawer 
-            isOpen={isOpen} 
-            onClose={() => setIsOpen(false)} 
-          />
-        </React.Suspense>
+        <div className="fixed inset-0 z-50 bg-background/50">
+          <div className="fixed right-0 top-0 h-full w-full max-w-sm bg-background p-4">
+            <p>Cart Drawer - Coming Soon</p>
+            <Button onClick={() => setIsOpen(false)}>Close</Button>
+          </div>
+        </div>
       )}
     </>
   );
 }
 
-function CartDrawerSkeleton() {
-  return (
-    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
-      <div className="fixed right-0 top-0 h-full w-full max-w-sm border-l bg-background p-6 shadow-lg">
-        <div className="flex items-center justify-between mb-6">
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-6 w-6 rounded" />
-        </div>
-        
-        <div className="space-y-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="flex items-center gap-3 p-4 border rounded">
-              <Skeleton className="h-12 w-12 rounded" />
-              <div className="flex-1">
-                <Skeleton className="h-4 w-24 mb-2" />
-                <Skeleton className="h-3 w-16" />
-              </div>
-              <Skeleton className="h-8 w-16" />
-            </div>
-          ))}
-        </div>
-        
-        <div className="absolute bottom-6 left-6 right-6 space-y-4">
-          <div className="flex justify-between items-center">
-            <Skeleton className="h-5 w-16" />
-            <Skeleton className="h-6 w-20" />
-          </div>
-          <Skeleton className="h-10 w-full" />
-          <Skeleton className="h-10 w-full" />
-        </div>
-      </div>
-    </div>
-  );
-}
+// function CartDrawerSkeleton() {
+//   return (
+//     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
+//       <div className="fixed right-0 top-0 h-full w-full max-w-sm border-l bg-background p-6 shadow-lg">
+//         <div className="flex items-center justify-between mb-6">
+//           <Skeleton className="h-6 w-24" />
+//           <Skeleton className="h-6 w-6 rounded" />
+//         </div>
+//         
+//         <div className="space-y-4">
+//           {[...Array(3)].map((_, i) => (
+//             <div key={i} className="flex items-center gap-3 p-4 border rounded">
+//               <Skeleton className="h-12 w-12 rounded" />
+//               <div className="flex-1">
+//                 <Skeleton className="h-4 w-24 mb-2" />
+//                 <Skeleton className="h-3 w-16" />
+//               </div>
+//               <Skeleton className="h-8 w-16" />
+//             </div>
+//           ))}
+//         </div>
+//         
+//         <div className="absolute bottom-6 left-6 right-6 space-y-4">
+//           <div className="flex justify-between items-center">
+//             <Skeleton className="h-5 w-16" />
+//             <Skeleton className="h-6 w-20" />
+//           </div>
+//           <Skeleton className="h-10 w-full" />
+//           <Skeleton className="h-10 w-full" />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 // Export types pour compatibilité
 export type { LazyCartTriggerProps };

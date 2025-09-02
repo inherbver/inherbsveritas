@@ -151,7 +151,15 @@ export interface ProductLabelFilterProps {
 }
 
 export const ProductLabelFilter = React.memo<ProductLabelFilterProps>(function ProductLabelFilter({
-  availableLabels = Object.values(HerbisVeritasLabel),
+  availableLabels = [
+    HerbisVeritasLabel.BIO,
+    HerbisVeritasLabel.NATUREL,
+    HerbisVeritasLabel.VEGAN,
+    HerbisVeritasLabel.ARTISANAL,
+    HerbisVeritasLabel.LOCAL,
+    HerbisVeritasLabel.ZERO_DECHET,
+    HerbisVeritasLabel.FAIT_MAIN
+  ],
   selectedLabels,
   onLabelsChange,
   locale = 'fr',
@@ -252,13 +260,12 @@ export const ProductLabelFilter = React.memo<ProductLabelFilterProps>(function P
             locale={locale}
             variant="compact"
             showTooltips={false}
-            maxVisible={undefined}
           />
         </div>
       )}
     </div>
   );
-}
+});
 
 /**
  * Admin Label Management Component
@@ -280,26 +287,8 @@ export function AdminProductLabels({
 }: AdminProductLabelsProps) {
   const [validationError, setValidationError] = React.useState<string | null>(null);
 
-  const handleLabelToggle = (label: HerbisVeritasLabel) => {
-    const newLabels = currentLabels.includes(label)
-      ? currentLabels.filter(l => l !== label)
-      : [...currentLabels, label];
 
-    // Validation
-    if (newLabels.length > maxLabels) {
-      setValidationError(
-        locale === 'fr' 
-          ? `Maximum ${maxLabels} labels autorisés`
-          : `Maximum ${maxLabels} labels allowed`
-      );
-      return;
-    }
-
-    setValidationError(null);
-    onLabelsChange(newLabels);
-  };
-
-  const validateLabelCombination = (labels: HerbisVeritasLabel[]): string | null => {
+  const validateLabelCombination = React.useCallback((labels: HerbisVeritasLabel[]): string | null => {
     // Business rules validation
     if (labels.includes(HerbisVeritasLabel.BIO) && labels.includes(HerbisVeritasLabel.NATUREL)) {
       // Bio implique naturel - pas besoin des deux
@@ -309,14 +298,14 @@ export function AdminProductLabels({
     }
     
     return null;
-  };
+  }, [locale]);
 
   React.useEffect(() => {
     const combinationError = validateLabelCombination(currentLabels);
     if (combinationError) {
       setValidationError(combinationError);
     }
-  }, [currentLabels, locale]);
+  }, [currentLabels, validateLabelCombination]);
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -357,7 +346,6 @@ export function AdminProductLabels({
               locale={locale}
               variant="default"
               showTooltips={true}
-              maxVisible={undefined}
             />
           ) : (
             <p className="text-sm text-muted-foreground">

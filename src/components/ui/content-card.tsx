@@ -9,13 +9,13 @@
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { LucideIcon } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
+import Image from "next/image"
 
 // CVA pour les variants de carte
 const contentCardVariants = cva(
@@ -79,7 +79,6 @@ export interface ContentCardMetadata {
 
 export interface ContentCardProps extends VariantProps<typeof contentCardVariants> {
   // Identification
-  id: string;
   slug?: string;
   title: string;
   
@@ -111,9 +110,7 @@ export interface ContentCardProps extends VariantProps<typeof contentCardVariant
 }
 
 export function ContentCard({
-  // Identité
-  id,
-  slug,
+  // Identité (slug pour compatibilité API mais pas utilisé dans le rendu)
   title,
   description,
   excerpt,
@@ -160,10 +157,6 @@ export function ContentCard({
     }).format(dateObj);
   };
 
-  // Wrapper conditionnel pour les liens
-  const WrapperComponent = href ? Link : 'div';
-  const wrapperProps = href ? { href } : { onClick };
-
   if (isLoading) {
     return (
       <article className={cn(contentCardVariants({ variant, layout, size }), className)}>
@@ -178,13 +171,13 @@ export function ContentCard({
     );
   }
 
-  return (
-    <WrapperComponent {...wrapperProps}>
-      <article 
-        className={cn(contentCardVariants({ variant, layout, size }), className)}
-        itemScope 
-        itemType={variant === 'product' ? "https://schema.org/Product" : "https://schema.org/Article"}
-      >
+  const cardElement = (
+    <article 
+      className={cn(contentCardVariants({ variant, layout, size }), className)}
+      itemScope 
+      itemType={variant === 'product' ? "https://schema.org/Product" : "https://schema.org/Article"}
+      onClick={!href ? onClick : undefined}
+    >
         {/* Header slot personnalisable */}
         {headerSlot && (
           <CardHeader className="p-0">
@@ -342,7 +335,8 @@ export function ContentCard({
             ))}
           </CardFooter>
         )}
-      </article>
-    </WrapperComponent>
+    </article>
   );
+  
+  return href ? <Link href={href}>{cardElement}</Link> : cardElement;
 }

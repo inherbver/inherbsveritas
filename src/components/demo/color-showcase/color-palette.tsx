@@ -52,7 +52,7 @@ export const ColorPalette = ({ colorName, colorPrefix, icon, description }: Colo
             key={shade}
             shade={`${colorPrefix}-${shade}`}
             label={label}
-            isDefault={isDefault}
+            {...(isDefault !== undefined && { isDefault })}
           />
         ))}
       </div>

@@ -44,9 +44,8 @@ export {
 export {
   Icons,
   DynamicIcon,
-  LazyIcons,
-  type IconName,
-  type LazyIconName
+  LazyIconsConfig,
+  type IconName
 } from '@/lib/icons/optimized-icons';
 
 /**

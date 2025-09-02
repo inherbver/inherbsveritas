@@ -256,9 +256,9 @@ export const useCartStore = create<CartStore>()(
             item => item.product_id === guestItem.product_id
           );
           
-          if (existingIndex >= 0) {
+          if (existingIndex >= 0 && mergedItems[existingIndex]) {
             // Augmenter quantité si même produit
-            mergedItems[existingIndex].quantity += guestItem.quantity;
+            mergedItems[existingIndex]!.quantity += guestItem.quantity;
           } else {
             // Ajouter nouvel item
             mergedItems.push(guestItem);

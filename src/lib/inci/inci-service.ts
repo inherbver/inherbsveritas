@@ -193,9 +193,9 @@ export class InciService {
       name: cleanName,
       isOrganic,
       isAllergen,
-      function: dbInfo.function,
-      origin: dbInfo.origin,
-      description: dbInfo.description
+      ...(dbInfo.function && { function: dbInfo.function }),
+      ...(dbInfo.origin && { origin: dbInfo.origin }),
+      ...(dbInfo.description && { description: dbInfo.description })
     };
   }
 

@@ -28,12 +28,12 @@ export const FormFields = ({ formData, formErrors, handleInputChange }: FormFiel
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
               handleInputChange('firstName', e.target.value)
             }
-            error={formErrors.firstName}
+            error={formErrors['firstName']}
             required
             autoComplete="given-name"
           />
-          {formErrors.firstName && (
-            <p className="text-sm text-red-600">{formErrors.firstName}</p>
+          {formErrors['firstName'] && (
+            <p className="text-sm text-red-600">{formErrors['firstName']}</p>
           )}
         </div>
 
@@ -49,12 +49,12 @@ export const FormFields = ({ formData, formErrors, handleInputChange }: FormFiel
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
               handleInputChange('lastName', e.target.value)
             }
-            error={formErrors.lastName}
+            error={formErrors['lastName']}
             required
             autoComplete="family-name"
           />
-          {formErrors.lastName && (
-            <p className="text-sm text-red-600">{formErrors.lastName}</p>
+          {formErrors['lastName'] && (
+            <p className="text-sm text-red-600">{formErrors['lastName']}</p>
           )}
         </div>
       </div>
@@ -72,12 +72,12 @@ export const FormFields = ({ formData, formErrors, handleInputChange }: FormFiel
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
             handleInputChange('email', e.target.value)
           }
-          error={formErrors.email}
+          error={formErrors['email']}
           required
           autoComplete="email"
         />
-        {formErrors.email && (
-          <p className="text-sm text-red-600">{formErrors.email}</p>
+        {formErrors['email'] && (
+          <p className="text-sm text-red-600">{formErrors['email']}</p>
         )}
       </div>
 
@@ -94,12 +94,12 @@ export const FormFields = ({ formData, formErrors, handleInputChange }: FormFiel
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
             handleInputChange('password', e.target.value)
           }
-          error={formErrors.password}
+          error={formErrors['password']}
           required
           autoComplete="new-password"
         />
-        {formErrors.password && (
-          <p className="text-sm text-red-600">{formErrors.password}</p>
+        {formErrors['password'] && (
+          <p className="text-sm text-red-600">{formErrors['password']}</p>
         )}
         <p className="text-xs text-gray-600">
           Au moins 8 caractères avec majuscule, minuscule et chiffre
@@ -119,12 +119,12 @@ export const FormFields = ({ formData, formErrors, handleInputChange }: FormFiel
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
             handleInputChange('confirmPassword', e.target.value)
           }
-          error={formErrors.confirmPassword}
+          error={formErrors['confirmPassword']}
           required
           autoComplete="new-password"
         />
-        {formErrors.confirmPassword && (
-          <p className="text-sm text-red-600">{formErrors.confirmPassword}</p>
+        {formErrors['confirmPassword'] && (
+          <p className="text-sm text-red-600">{formErrors['confirmPassword']}</p>
         )}
       </div>
     </>

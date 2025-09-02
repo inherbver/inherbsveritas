@@ -46,7 +46,7 @@ export class CategoriesService {
       // Validation business rules
       const validation = this.validateCategoryData(data);
       if (!validation.success) {
-        return { success: false, error: validation.error };
+        return { success: false, error: validation.error || 'Validation failed' };
       }
 
       // Check slug uniqueness
@@ -56,7 +56,8 @@ export class CategoriesService {
       }
 
       // Insert category
-      const { data: newCategory, error } = await this.supabase
+      const supabaseClient = await this.supabase;
+      const { data: newCategory, error } = await supabaseClient
         .from('categories')
         .insert({
           slug: data.slug,
@@ -86,7 +87,8 @@ export class CategoriesService {
    */
   async getCategories(includeInactive = false): Promise<ServiceResult<Category[]>> {
     try {
-      let query = this.supabase
+      const supabaseClient = await this.supabase;
+      let query = supabaseClient
         .from('categories')
         .select('*')
         .order('sort_order', { ascending: true });
@@ -114,7 +116,8 @@ export class CategoriesService {
    */
   async getCategoriesByParent(parentId: string | null): Promise<ServiceResult<Category[]>> {
     try {
-      const query = this.supabase
+      const supabaseClient = await this.supabase;
+      const query = supabaseClient
         .from('categories')
         .select('*')
         .eq('is_active', true)
@@ -141,7 +144,8 @@ export class CategoriesService {
    */
   async getCategoryBySlug(slug: string): Promise<ServiceResult<Category | null>> {
     try {
-      const { data: category, error } = await this.supabase
+      const supabaseClient = await this.supabase;
+      const { data: category, error } = await supabaseClient
         .from('categories')
         .select('*')
         .eq('slug', slug)
@@ -193,7 +197,8 @@ export class CategoriesService {
       // Add updated_at
       updateData.updated_at = new Date().toISOString();
 
-      const { data: updatedCategory, error } = await this.supabase
+      const supabaseClient = await this.supabase;
+      const { data: updatedCategory, error } = await supabaseClient
         .from('categories')
         .update(updateData)
         .eq('id', data.id)
@@ -218,7 +223,8 @@ export class CategoriesService {
   async deleteCategory(id: string): Promise<ServiceResult<boolean>> {
     try {
       // Check if category has children
-      const childrenCheck = await this.supabase
+      const supabaseClient = await this.supabase;
+      const childrenCheck = await supabaseClient
         .from('categories')
         .select('id')
         .eq('parent_id', id)
@@ -229,7 +235,7 @@ export class CategoriesService {
       }
 
       // Check if category has products
-      const productsCheck = await this.supabase
+      const productsCheck = await supabaseClient
         .from('products')
         .select('id')
         .eq('category_id', id)
@@ -240,7 +246,7 @@ export class CategoriesService {
       }
 
       // Soft delete
-      const { error } = await this.supabase
+      const { error } = await supabaseClient
         .from('categories')
         .update({ 
           is_active: false,
@@ -330,7 +336,8 @@ export class CategoriesService {
 
   private async checkSlugUniqueness(slug: string): Promise<boolean> {
     try {
-      const { data, error } = await this.supabase
+      const supabaseClient = await this.supabase;
+      const { data, error } = await supabaseClient
         .from('categories')
         .select('id')
         .eq('slug', slug)
@@ -368,7 +375,8 @@ export class CategoriesService {
     while (queue.length > 0) {
       const currentId = queue.shift()!;
       
-      const { data: children } = await this.supabase
+      const supabaseClient = await this.supabase;
+      const { data: children } = await supabaseClient
         .from('categories')
         .select('id')
         .eq('parent_id', currentId);
