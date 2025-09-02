@@ -33,8 +33,8 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 2. `addresses` - Table séparée FK
 3. `categories` - Hiérarchique + i18n JSONB
 4. `products` - Labels HerbisVeritas + INCI + i18n JSONB  
-5. `carts` - Guest/User système
-6. `cart_items`
+5. `carts` - Guest/User système **+ Architecture Cart Moderne React 19**
+6. `cart_items` - **avec optimistic updates + debouncing intelligent**
 7. `orders` - Stripe complet, 4 états
 8. `order_items` - Snapshot produits
 
@@ -55,6 +55,14 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
 - `audit_logs`/`events` (monitoring)
 - Analytics articles (`view_count`, `reading_time`)
 - Promotions produits (`is_on_promotion`)
+
+### 🚀 Innovation Technique Majeure
+
+**Architecture Cart Moderne + Shared Components :** Intégration révolutionnaire prévue Semaine 5
+- **React 19 useOptimistic** : UX cart avec 0ms perceived latency
+- **ContentCard Actions** : Cart intégré nativement dans architecture unifiée
+- **Debouncing Intelligent** : Server sync optimisé sans over-engineering
+- **Performance Exceptionnelle** : 70% code reuse + maintenance centralisée
 
 ---
 
@@ -199,43 +207,61 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
   - Fallback français intégré
   - **Tests** : Coverage i18n > 90%
 
-#### **Semaine 5 : Panier Évolutif & Layout (TDD First)**
+#### **Semaine 5 : Cart Moderne + Shared Components Integration (TDD First)**
 
-**🎯 State Management Évolutif - MIGRATION TANSTACK QUERY**
-- [ ] **Migration Store TanStack Query** 
-  - **TDD** : Tests cache queries panier AVANT migration Zustand
-  - **TDD** : Tests localStorage persistence TanStack Query AVANT hooks
-  - **TDD** : Tests merge cart guest→user avec Query patterns AVANT auth
-  - Remplacement Zustand par TanStack Query cache unifié
-  - Queries cart avec persistence localStorage via QueryClient
-  - Optimistic updates pour toutes mutations cart
-  - Merge cart guest→user via query invalidation patterns
-  - Architecture cache évolutive vers V2 (background sync)
-  - **Tests** : Coverage panier TanStack Query > 95%
-  - **Performance** : Mémoire réduite -62% vs multiple stores
+**🎯 ARCHITECTURE CART MODERNE - Integration Architecture Shared Components**
+- [ ] **Evolution Zustand + React Query Hybride** 
+  - **TDD** : Tests store hybride optimistic state AVANT migration
+  - **TDD** : Tests React 19 useOptimistic AVANT UI components
+  - **TDD** : Tests debouncing unifié AVANT server sync
+  - Évolution store Zustand existant (UI state) + React Query (server state)
+  - React 19 useOptimistic pour updates instantanées ContentCard actions
+  - Debouncing unifié avec `useDebouncedSync` (300ms optimal)
+  - Server Actions cart intégrées Next.js 15
+  - Architecture séparation claire local/server state
+  - **Tests** : Coverage cart moderne > 95%
+  - **Performance** : UX optimiste + sync serveur intelligent
 
-**🎯 Composants Layout MVP (Phase 3)**
-- [ ] **Layout Components**
-  - **TDD** : Tests Header responsive AVANT UI
-  - **TDD** : Tests Footer links AVANT content
-  - Header avec nav simple + auth state display
-  - Footer avec links essentiels
-  - PageLayout container responsive
-  - Sidebar basique (préparé pour collapsible V2)
-  - **Tests** : Coverage layout > 85%
+**🎯 ContentCard + Cart Integration Native**
+- [ ] **ProductCard Actions Optimisées**
+  - **TDD** : Tests ContentCard cart actions AVANT optimistic updates
+  - **TDD** : Tests ProductCard loading states AVANT UX flows
+  - ProductCard optimisé avec actions ContentCard intégrées
+  - Cart actions natives dans système générique ContentCard
+  - Loading/error states unifiés avec variants ContentCard
+  - Integration transparente avec ContentGrid templates
+  - **Tests** : Coverage ContentCard cart actions > 90%
 
-- [ ] **Cart UI Évolutif avec TanStack Query**
-  - **TDD** : Tests CartSheet optimistic updates AVANT UI
-  - **TDD** : Tests calculs totaux avec cache queries AVANT formules
-  - **TDD** : Tests mutations cart avec rollback AVANT intégration
-  - **E2E** : Tests parcours ajout panier avec optimistic UI complet
-  - CartSheet slide-over avec optimistic updates temps réel
-  - CartSummary avec queries cache + invalidation automatique
-  - Add to cart avec useCartMutation + feedback immédiat
-  - Quantités avec mutations optimistes + validation
-  - Gestion erreurs avec rollback automatique vers état précédent
-  - **Tests** : Coverage cart UI avec TanStack Query > 90%
-  - **Performance** : Interactions -72% temps réponse vs race conditions
+- [ ] **Cart UI Moderne avec ContentGrid**
+  - **TDD** : Tests CartSheet React 19 patterns AVANT UI
+  - **TDD** : Tests optimistic rollback AVANT error handling
+  - **E2E** : Tests parcours cart optimiste complet
+  - CartSheet avec useOptimistic + debounced server sync
+  - CartDisplay intégré ContentGrid pour cohérence UI
+  - Quantités avec mutations optimistes + validation Zod
+  - Error handling avec rollback automatique UX seamless
+  - **Tests** : Coverage cart UI moderne > 90%
+  - **Performance** : 0ms perceived latency + sync intelligent
+
+**🎯 Database Optimisations Cart**
+- [ ] **Schema Optimisé + Server Actions**
+  - **TDD** : Tests fonctions atomiques AVANT API
+  - **TDD** : Tests RLS policies cart AVANT sécurité
+  - Vue `user_cart_view` optimisée avec JOIN intelligent
+  - Fonction atomique `cart_add_item` avec gestion conflits
+  - Server Actions sécurisées avec rate limiting intégré
+  - RLS policies cart optimales pour performance
+  - **Tests** : Coverage database cart > 85%
+  - **Performance** : Requêtes optimisées -40% temps réponse
+
+**💎 GAINS ARCHITECTURE SHARED COMPONENTS + CART MODERNE**
+- **Effort Semaine 5 :** 8-12h (vs 4-6 semaines from scratch)
+- **ROI Exceptionnel :** 70% réutilisation code existant
+- **UX Révolutionnaire :** 0ms perceived latency avec React 19 optimistic
+- **Code Reuse :** ContentCard actions + ContentGrid templates natifs
+- **Time to Market :** 1-2 semaines vs 1-2 mois traditionnel
+- **Performance :** Debouncing intelligent + server sync optimisé
+- **Maintenance :** Intégré architecture centralisée Shared Components
 
 #### **Semaine 6 : Commandes (TDD First)**
 - [ ] **Checkout flow**
