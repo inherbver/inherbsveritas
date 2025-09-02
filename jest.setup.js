@@ -89,8 +89,8 @@ const createMockSupabaseClient = (overrides = {}) => ({
 
 // Mock global pour @/lib/supabase/client
 jest.mock('@/lib/supabase/client', () => ({
-  createClient: jest.fn(() => createMockSupabaseClient()),
-  supabase: createMockSupabaseClient()
+  createClient: jest.fn(() => global.createMockSupabaseClient()),
+  supabase: global.createMockSupabaseClient()
 }))
 
 // Mock global pour @/lib/supabase/server  
