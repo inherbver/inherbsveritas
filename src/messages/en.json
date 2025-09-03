@@ -124,5 +124,16 @@
     "title": "Page not found",
     "description": "The page you are looking for does not exist.",
     "backHome": "Back to home"
+  },
+  "categories": {
+    "navigation": "Navigation",
+    "all": "All",
+    "selected": "Selected",
+    "home": "Home",
+    "filter": "Filter",
+    "selectCategory": "Select a category",
+    "noCategories": "No categories available",
+    "loading": "Loading categories...",
+    "error": "Error loading categories"
   }
 }
