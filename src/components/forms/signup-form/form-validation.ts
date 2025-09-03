@@ -1,60 +1,58 @@
 /**
- * Logique de validation pour SignupForm
+ * Logique de validation pour SignupForm avec Zod
  */
 
-export interface FormData {
-  email: string;
-  password: string;
-  confirmPassword: string;
-  firstName: string;
-  lastName: string;
-}
+import { z } from 'zod'
+
+export const signupFormSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email requis')
+    .email('Format email invalide'),
+  password: z
+    .string()
+    .min(8, 'Mot de passe trop court (min. 8 caractères)')
+    .regex(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 
+      'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre'
+    ),
+  confirmPassword: z
+    .string()
+    .min(1, 'Confirmation requise'),
+  firstName: z
+    .string()
+    .min(2, 'Prénom trop court (min. 2 caractères)')
+    .max(50, 'Prénom trop long (max. 50 caractères)'),
+  lastName: z
+    .string()
+    .min(2, 'Nom trop court (min. 2 caractères)')
+    .max(50, 'Nom trop long (max. 50 caractères)')
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Les mots de passe ne correspondent pas',
+  path: ['confirmPassword']
+})
+
+export type FormData = z.infer<typeof signupFormSchema>
 
 export interface FormErrors {
   [key: string]: string;
 }
 
 export const validateForm = (formData: FormData): FormErrors => {
-  const errors: FormErrors = {};
-  
-  // Validation email
-  if (!formData.email) {
-    errors['email'] = 'Email requis';
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-    errors['email'] = 'Format email invalide';
+  try {
+    signupFormSchema.parse(formData)
+    return {}
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errors: FormErrors = {}
+      error.errors.forEach((err) => {
+        if (err.path.length > 0) {
+          errors[err.path[0] as string] = err.message
+        }
+      })
+      return errors
+    }
+    return { form: 'Erreur de validation inattendue' }
   }
-  
-  // Validation mot de passe
-  if (!formData.password) {
-    errors['password'] = 'Mot de passe requis';
-  } else if (formData.password.length < 8) {
-    errors['password'] = 'Mot de passe trop court (min. 8 caractères)';
-  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-    errors['password'] = 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre';
-  }
-  
-  // Validation confirmation mot de passe
-  if (!formData.confirmPassword) {
-    errors['confirmPassword'] = 'Confirmation requise';
-  } else if (formData.password !== formData.confirmPassword) {
-    errors['confirmPassword'] = 'Les mots de passe ne correspondent pas';
-  }
-  
-  // Validation prénom
-  if (!formData.firstName) {
-    errors['firstName'] = 'Prénom requis';
-  } else if (formData.firstName.length < 2) {
-    errors['firstName'] = 'Prénom trop court (min. 2 caractères)';
-  }
-  
-  // Validation nom
-  if (!formData.lastName) {
-    errors['lastName'] = 'Nom requis';
-  } else if (formData.lastName.length < 2) {
-    errors['lastName'] = 'Nom trop court (min. 2 caractères)';
-  }
-  
-  return errors;
 };
 
 export const getPasswordStrength = (password: string): {

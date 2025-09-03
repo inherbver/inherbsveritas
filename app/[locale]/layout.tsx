@@ -1,5 +1,6 @@
 import { locales } from '@/i18n-config'
 import { notFound } from 'next/navigation'
+import Header from '@/components/header'
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -23,6 +24,7 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body>
         <div>
+          <Header />
           <main>{children}</main>
         </div>
       </body>

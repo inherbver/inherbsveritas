@@ -17,7 +17,8 @@ export interface LoginCredentials {
 export interface LoginResult {
   success: boolean
   user?: AuthUser
-  message?: AuthMessage
+  message?: string
+  error?: string
   redirectTo?: string
 }
 
@@ -37,7 +38,8 @@ export interface RegisterCredentials {
 export interface RegisterResult {
   success: boolean
   user?: AuthUser
-  message?: AuthMessage
+  message?: string
+  error?: string  
   requiresConfirmation?: boolean
 }
 
@@ -49,7 +51,8 @@ export interface AuthUser {
 }
 
 // Constantes métier
-const MIN_PASSWORD_LENGTH = 8
+const MIN_PASSWORD_LENGTH_REGISTER = 8
+const MIN_PASSWORD_LENGTH_LOGIN = 6
 
 // Helpers internes avec rôles corrigés
 function createAuthUser(supabaseUser: any, email: string): AuthUser {
@@ -64,21 +67,18 @@ function createAuthUser(supabaseUser: any, email: string): AuthUser {
 // Login user avec messages centralisés
 export async function loginUser(credentials: LoginCredentials): Promise<LoginResult> {
   try {
-    // Validation entrées avec messages centralisés
+    // Validation entrées
     if (!validateEmail(credentials.email)) {
       return {
         success: false,
-        message: AUTH_MESSAGES.validation.emailInvalid
+        error: 'Email invalide'
       }
     }
 
-    if (credentials.password.length < MIN_PASSWORD_LENGTH) {
+    if (credentials.password.length < MIN_PASSWORD_LENGTH_REGISTER) {
       return {
         success: false,
-        message: {
-          ...AUTH_MESSAGES.validation.passwordTooShort,
-          params: { minLength: MIN_PASSWORD_LENGTH }
-        }
+        error: `Mot de passe trop court (min ${MIN_PASSWORD_LENGTH_REGISTER} caractères)`
       }
     }
 
@@ -93,7 +93,7 @@ export async function loginUser(credentials: LoginCredentials): Promise<LoginRes
     if (error || !data.user) {
       return {
         success: false,
-        message: AUTH_MESSAGES.login.invalidCredentials
+        error: 'Email ou mot de passe incorrect'
       }
     }
 
@@ -104,14 +104,13 @@ export async function loginUser(credentials: LoginCredentials): Promise<LoginRes
     return {
       success: true,
       user,
-      message: AUTH_MESSAGES.login.success,
       redirectTo
     }
   } catch (error) {
-    // Gestion erreurs réseau avec messages centralisés
+    // Gestion erreurs réseau
     return {
       success: false,
-      message: AUTH_MESSAGES.login.networkError
+      error: 'Erreur de connexion, réessayez plus tard'
     }
   }
 }
@@ -168,18 +167,15 @@ export async function registerUser(credentials: RegisterCredentials): Promise<Re
     if (!validateEmail(normalizedEmail)) {
       return {
         success: false,
-        message: AUTH_MESSAGES.validation.emailInvalid
+        error: 'Email invalide'
       }
     }
 
     // Validation password longueur
-    if (credentials.password.length < MIN_PASSWORD_LENGTH) {
+    if (credentials.password.length < MIN_PASSWORD_LENGTH_REGISTER) {
       return {
         success: false,
-        message: {
-          ...AUTH_MESSAGES.validation.passwordTooShort,
-          params: { minLength: MIN_PASSWORD_LENGTH }
-        }
+        error: `Mot de passe trop court (min ${MIN_PASSWORD_LENGTH_REGISTER} caractères)`
       }
     }
 
@@ -187,15 +183,15 @@ export async function registerUser(credentials: RegisterCredentials): Promise<Re
     if (credentials.password !== credentials.confirmPassword) {
       return {
         success: false,
-        message: AUTH_MESSAGES.validation.passwordMismatch
+        error: 'Les mots de passe ne correspondent pas'
       }
     }
 
     // Validation acceptation conditions
-    if (!credentials.acceptTerms) {
+    if (credentials.acceptTerms === false || credentials.acceptTerms === undefined) {
       return {
         success: false,
-        message: AUTH_MESSAGES.validation.termsNotAccepted
+        error: 'Vous devez accepter les conditions d\'utilisation'
       }
     }
 
@@ -208,18 +204,26 @@ export async function registerUser(credentials: RegisterCredentials): Promise<Re
     })
 
     if (error) {
-      // Gestion erreurs spécifiques avec parsing centralisé
-      const parsedError = parseSupabaseError(error)
+      // Gestion erreurs spécifiques avec traduction
+      let errorMessage = error.message || 'Erreur de création du compte'
+      
+      // Traduction des erreurs Supabase courantes
+      if (errorMessage.includes('User already registered')) {
+        errorMessage = 'Un compte existe déjà avec cet email'
+      } else if (errorMessage.includes('Password should be at least') || errorMessage.includes('Password too weak')) {
+        errorMessage = 'Le mot de passe doit respecter les critères de sécurité'
+      }
+      
       return {
         success: false,
-        message: parsedError
+        error: errorMessage
       }
     }
 
     if (!data.user) {
       return {
         success: false,
-        message: AUTH_MESSAGES.register.accountCreationError
+        error: 'Impossible de créer le compte'
       }
     }
 
@@ -234,14 +238,14 @@ export async function registerUser(credentials: RegisterCredentials): Promise<Re
       user,
       requiresConfirmation,
       message: requiresConfirmation 
-        ? AUTH_MESSAGES.register.emailVerificationRequired
-        : AUTH_MESSAGES.register.success
+        ? 'Vérifiez votre email pour confirmer votre compte'
+        : 'Compte créé avec succès'
     }
   } catch (error) {
-    // Gestion erreurs réseau avec messages centralisés
+    // Gestion erreurs réseau 
     return {
       success: false,
-      message: AUTH_MESSAGES.register.networkError
+      error: 'Erreur de connexion, réessayez plus tard'
     }
   }
 }

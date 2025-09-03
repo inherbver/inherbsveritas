@@ -12,6 +12,7 @@
 import { useState } from 'react'
 import { useAuthActions } from '@/lib/auth/hooks/use-auth-actions'
 import Link from 'next/link'
+import { validateLoginForm, type LoginFormData } from './login-form/form-validation'
 
 // Composants UI temporaires - À remplacer par shadcn/ui
 function Button({ children, variant = 'default', disabled = false, type = 'button', className = '', ...props }: any) {
@@ -77,30 +78,18 @@ interface LoginFormProps {
 
 export function LoginForm({ redirectTo, onSuccess }: LoginFormProps) {
   const { signIn, loading, error, clearError } = useAuthActions()
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: ''
   })
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
 
   const validateForm = (): boolean => {
-    const errors: Record<string, string> = {}
-    
-    if (!formData.email) {
-      errors['email'] = 'Email requis'
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors['email'] = 'Format email invalide'
-    }
-    
-    if (!formData.password) {
-      errors['password'] = 'Mot de passe requis'
-    } else if (formData.password.length < 6) {
-      errors['password'] = 'Mot de passe trop court (min. 6 caractères)'
-    }
-    
+    const errors = validateLoginForm(formData)
     setFormErrors(errors)
     return Object.keys(errors).length === 0
   }
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -115,7 +104,7 @@ export function LoginForm({ redirectTo, onSuccess }: LoginFormProps) {
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: keyof LoginFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
     
     // Effacer erreur du champ

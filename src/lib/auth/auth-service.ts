@@ -114,7 +114,7 @@ class AuthService {
         return {
           success: false,
           user: null,
-          error: error.errors[0].message
+          error: error.errors[0]?.message || 'Erreur de validation'
         }
       }
 
@@ -177,7 +177,7 @@ class AuthService {
         return {
           success: false,
           user: null,
-          error: error.errors[0].message
+          error: error.errors[0]?.message || 'Erreur de validation'
         }
       }
 
@@ -215,7 +215,7 @@ class AuthService {
    */
   async getUserRole(user: User): Promise<Role> {
     // Rôle depuis user_metadata (défini lors de l'inscription)
-    const role = user.user_metadata?.role as Role
+    const role = user.user_metadata?.['role'] as Role
     return role || 'user' // Défaut user
   }
 

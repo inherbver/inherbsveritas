@@ -146,7 +146,7 @@ class AddressService {
         return {
           success: false,
           address: null,
-          error: error.errors[0].message
+          error: error.errors[0]?.message || 'Erreur de validation'
         }
       }
 
@@ -230,7 +230,7 @@ class AddressService {
         return {
           success: false,
           address: null,
-          error: error.errors[0].message
+          error: error.errors[0]?.message || 'Erreur de validation'
         }
       }
 
@@ -292,7 +292,7 @@ class AddressService {
           await this.supabase
             .from('addresses')
             .update({ is_default: true })
-            .eq('id', otherAddresses[0].id)
+            .eq('id', otherAddresses[0]?.id)
             .eq('user_id', userId)
 
           promotedNewDefault = true

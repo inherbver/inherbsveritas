@@ -1,15 +1,16 @@
 "use client";
-import { signOut } from "next-auth/react";
+import { useSupabase } from '@/lib/supabase/hooks/use-supabase';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 
 interface HeaderAuthSectionProps {
-  session: any;
+  user: any | null;
   sticky: boolean;
 }
 
-export const HeaderAuthSection = ({ session, sticky }: HeaderAuthSectionProps) => {
+export const HeaderAuthSection = ({ user, sticky }: HeaderAuthSectionProps) => {
+  const { signOut } = useSupabase();
   const pathUrl = usePathname();
   const { theme, setTheme } = useTheme();
 
@@ -39,11 +40,11 @@ export const HeaderAuthSection = ({ session, sticky }: HeaderAuthSectionProps) =
   );
 
   const renderAuthButtons = () => {
-    if (session) {
+    if (user) {
       return (
         <>
           <p className="text-base font-medium text-body-color dark:text-white">
-            Welcome, {session.user?.name || session.user?.email}
+            Bonjour, {user.user_metadata?.firstName || user.email}
           </p>
           <button
             onClick={() => signOut()}
@@ -53,7 +54,7 @@ export const HeaderAuthSection = ({ session, sticky }: HeaderAuthSectionProps) =
                 : "bg-white bg-opacity-20 text-white hover:bg-opacity-100 hover:text-dark"
             }`}
           >
-            Sign Out
+            Se déconnecter
           </button>
         </>
       );
@@ -63,16 +64,16 @@ export const HeaderAuthSection = ({ session, sticky }: HeaderAuthSectionProps) =
       return (
         <>
           <Link
-            href="/signin"
+            href="/login"
             className="px-7 py-3 text-base font-medium text-dark hover:opacity-70 dark:text-white"
           >
-            Sign In
+            Se connecter
           </Link>
           <Link
             href="/signup"
             className="rounded-lg bg-primary px-6 py-3 text-base font-medium text-white duration-300 ease-in-out hover:bg-primary/90 dark:bg-white/10 dark:hover:bg-white/20"
           >
-            Sign Up
+            S&apos;inscrire
           </Link>
         </>
       );
@@ -81,12 +82,12 @@ export const HeaderAuthSection = ({ session, sticky }: HeaderAuthSectionProps) =
     return (
       <>
         <Link
-          href="/signin"
+          href="/login"
           className={`px-7 py-3 text-base font-medium hover:opacity-70 ${
             sticky ? "text-dark dark:text-white" : "text-white"
           }`}
         >
-          Sign In
+          Se connecter
         </Link>
         <Link
           href="/signup"
@@ -96,7 +97,7 @@ export const HeaderAuthSection = ({ session, sticky }: HeaderAuthSectionProps) =
               : "bg-white/10 hover:bg-white/20"
           }`}
         >
-          Sign Up
+          S&apos;inscrire
         </Link>
       </>
     );

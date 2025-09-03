@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "next-auth/react";
+import { useSupabase } from '@/lib/supabase/hooks/use-supabase';
 
 import { HeaderLogo } from "./header-logo";
 import { MobileMenuButton } from "./mobile-menu-button";
@@ -9,7 +9,7 @@ import { useHeaderState } from "./use-header-state";
 import menuData from "./menuData";
 
 const Header = () => {
-  const { data: session } = useSession();
+  const { user } = useSupabase();
   const {
     navbarOpen,
     sticky,
@@ -49,7 +49,7 @@ const Header = () => {
               />
             </div>
             
-            <HeaderAuthSection session={session} sticky={sticky} />
+            <HeaderAuthSection user={user} sticky={sticky} />
           </div>
         </div>
       </div>

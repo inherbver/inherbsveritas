@@ -17,10 +17,11 @@ import { FormFields } from './signup-form/form-fields'
 import { validateForm, FormData, FormErrors } from './signup-form/form-validation'
 
 interface SignupFormProps {
+  redirectTo?: string | undefined
   onSuccess?: (needsConfirmation: boolean) => void
 }
 
-export function SignupForm({ onSuccess }: SignupFormProps) {
+export function SignupForm({ redirectTo, onSuccess }: SignupFormProps) {
   const { signUp, loading, error, clearError } = useAuthActions()
   const [formData, setFormData] = useState<FormData>({
     email: '',
@@ -64,7 +65,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
         password: formData.password,
         firstName: formData.firstName,
         lastName: formData.lastName
-      })
+      }, redirectTo)
 
       if (result.success) {
         setShowSuccess(true)
@@ -87,7 +88,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
             </p>
             <div className="pt-2">
               <Link 
-                href="/signin" 
+                href="/login" 
                 className="text-blue-600 hover:text-blue-800 underline font-medium"
               >
                 Retour à la connexion
@@ -136,7 +137,7 @@ export function SignupForm({ onSuccess }: SignupFormProps) {
         <p className="text-sm text-gray-600">
           Déjà un compte ?{' '}
           <Link 
-            href="/signin" 
+            href="/login" 
             className="text-blue-600 hover:text-blue-800 font-medium"
           >
             Se connecter

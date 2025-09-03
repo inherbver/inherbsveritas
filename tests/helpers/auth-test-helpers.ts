@@ -6,8 +6,9 @@
 import type { AuthMessage } from '@/lib/messages/auth-messages'
 import { formatAuthMessage } from '@/lib/messages/auth-messages'
 
-// Helper pour extraire le message d'erreur formaté depuis un résultat
-export function extractErrorMessage(result: { success: boolean; message?: AuthMessage }): string {
+// Helper pour extraire le message d'erreur depuis un résultat
+export function extractErrorMessage(result: { success: boolean; message?: AuthMessage; error?: string }): string {
+  if (result.error) return result.error
   if (!result.message) return ''
   return formatAuthMessage(result.message)
 }
@@ -20,7 +21,7 @@ export function extractSuccessMessage(result: { success: boolean; message?: Auth
 
 // Helper pour vérifier qu'un résultat contient le bon message d'erreur
 export function expectErrorMessage(
-  result: { success: boolean; message?: AuthMessage },
+  result: { success: boolean; message?: AuthMessage; error?: string },
   expectedMessage: string
 ) {
   expect(result.success).toBe(false)

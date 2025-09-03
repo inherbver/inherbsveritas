@@ -91,12 +91,12 @@ export function ProductGrid({ initialFilters, className }: ProductGridProps) {
       
       // Configuration
       variant="product"
-      className={className}
+      className={className || ""}
       
       // États
       isLoading={loading}
       loadingCount={8}
-      error={error || undefined}
+      error={error || null}
       emptyMessage="Aucun produit trouvé pour les critères sélectionnés."
       
       // Pagination

@@ -4,7 +4,7 @@
  */
 
 import { NextResponse, NextRequest } from 'next/server'
-import { createClient } from '@/lib/supabase/middleware'
+import { createMiddlewareClient } from '@/lib/supabase/middleware'
 import type { User } from '@supabase/supabase-js'
 
 type Role = 'user' | 'admin' | 'dev'
@@ -57,7 +57,7 @@ function matchesRoute(pathname: string, patterns: string[]): boolean {
  * Récupère le rôle d'un utilisateur
  */
 function getUserRole(user: User): Role {
-  return user.user_metadata?.role as Role || 'user'
+  return user.user_metadata?.['role'] as Role || 'user'
 }
 
 /**
@@ -150,7 +150,7 @@ export async function middleware(request: NextRequest) {
 
   try {
     // Créer client Supabase pour middleware
-    const { supabase, response } = createClient(request)
+    const { supabase, response } = await createMiddlewareClient(request)
 
     // Récupérer la session utilisateur
     const { data: { session }, error } = await supabase.auth.getSession()
