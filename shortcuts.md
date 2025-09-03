@@ -52,6 +52,7 @@ $ tt
 - `dp` → Consulte docs/DEVELOPMENT_PLAN_MVP.md et indique où nous en sommes  
 - `ts` → Utilise le sous-agent dédié afin d'analyser et de résoudre les erreurs de typage (pas d'any, unknown en cas de grande difficultés à typer)
 - `orthodox` → Vérifie cohérence des fichiers doc C:\inherbisveritas\doc et leur actualité avec la codebase et la base de données
+- `doc` → Vérifie la cohérence des fichiers `.md` entre eux (contenu, redondances, contradictions).
 - `github` → Analyse pending changes, commit selon patterns CLAUDE.md et push vers remote
 - `build` → Lance npm run build + vérification erreurs + rapport de performance + validation MVP
 - `c7` → Commençons la prochaine étape recommandée avec recherche Context7 + génération NEXT_STEP.md

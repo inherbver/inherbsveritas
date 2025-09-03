@@ -2,344 +2,455 @@
 
 ## Vue d'Ensemble
 
-Le système d'authentification HerbisVeritas V2 implémente une architecture complète avec authentification Supabase, gestion des rôles, middleware de protection des routes et gestion des adresses utilisateur.
+Le système d'authentification HerbisVeritas V2 utilise **Supabase Auth** avec Next.js 15 App Router, intégrant une architecture complète de gestion des rôles, middleware de protection des routes et hooks personnalisés.
 
 **Architecture :** TDD First, Security-First, Production-Ready  
-**Stack :** Supabase Auth + Next.js 15 Middleware + Zod Validation  
-**Sécurité :** RLS Policies + Rate Limiting + RBAC
+**Stack :** Supabase Auth + Next.js 15 + Zod Validation + TypeScript  
+**Sécurité :** RLS Policies + Rate Limiting + RBAC + SSR-Safe
 
 ---
 
 ## Architecture Globale
 
-### Composants Principaux
+### Structure des Fichiers
 
 ```
 src/lib/auth/
-├── auth-service.ts          # Service authentification principal
-├── middleware.ts           # Protection routes Next.js 15
-└── types.ts               # Types TypeScript auth
+├── actions.ts              # Actions serveur auth (loginUser, registerUser)
+├── auth-service.ts         # Service authentification (legacy)
+├── middleware.ts           # Helpers middleware auth
+├── roles.ts                # Configuration rôles et redirections
+└── hooks/
+    └── use-auth-actions.ts # Hook client pour actions auth
 
-src/lib/addresses/
-├── address-service.ts      # CRUD adresses utilisateur
-├── address-validation.ts   # Validation Zod + formatage
-└── types.ts               # Types addresses
+src/lib/supabase/
+├── client.ts               # Client Supabase navigateur
+├── server.ts               # Client Supabase serveur
+├── middleware.ts           # Client Supabase middleware
+└── hooks/
+    └── use-supabase.ts     # Hook unifié Supabase
+
+src/components/forms/
+├── login-form/
+│   ├── form-validation.ts  # Validation Zod login (6 char min)
+│   └── index.tsx          # Composant formulaire login
+└── signup-form/
+    ├── form-validation.ts  # Validation Zod register (8 char min)
+    └── index.tsx          # Composant formulaire register
+
+app/(auth)/
+├── login/page.tsx          # Page connexion
+└── signup/page.tsx         # Page inscription
 ```
 
 ### Flow d'Authentification
 
 ```mermaid
 graph TD
-    A[User Login] --> B[auth-service.signIn]
-    B --> C[Supabase Auth]
-    C --> D[Session Cookie]
-    D --> E[Middleware Check]
-    E --> F{Route Protected?}
-    F -->|Yes| G[Role Validation]
-    F -->|No| H[Allow Access]
-    G --> I{Role Sufficient?}
-    I -->|Yes| H
-    I -->|No| J[403 Forbidden]
+    A[User Login] --> B[loginUser action]
+    B --> C[Validation Zod]
+    C --> D[Supabase Auth signInWithPassword]
+    D --> E[Session Cookie SSR]
+    E --> F[Middleware Check]
+    F --> G{Route Protected?}
+    G -->|Yes| H[Role Validation]
+    G -->|No| I[Allow Access]
+    H --> J{Role Sufficient?}
+    J -->|Yes| K[Role Redirect]
+    J -->|No| L[403 Forbidden]
+    K --> M[/profile, /admin, /dev]
 ```
 
 ---
 
-## Service d'Authentification
+## Actions d'Authentification
 
-### AuthService API
+### API Actions Serveur
 
-#### Authentification
+#### Connexion Utilisateur
 
 ```typescript
-// Connexion utilisateur
-const result = await authService.signIn({
+import { loginUser } from '@/lib/auth/actions'
+
+const result = await loginUser({
   email: 'user@herbisveritas.fr',
-  password: 'SecurePassword123!'
+  password: 'SecurePass123!'
 })
 
-// Création compte
-const result = await authService.signUp({
-  email: 'newuser@herbisveritas.fr', 
-  password: 'SecurePassword123!',
-  firstName: 'Jean',
-  lastName: 'Dupont'
+// Résultat
+interface LoginResult {
+  success: boolean
+  user?: AuthUser
+  error?: string
+  redirectTo?: string
+}
+
+// Exemple de redirection selon rôle
+if (result.success) {
+  // user -> /profile
+  // admin -> /admin  
+  // dev -> /dev
+}
+```
+
+#### Création de Compte
+
+```typescript
+import { registerUser } from '@/lib/auth/actions'
+
+const result = await registerUser({
+  email: 'newuser@herbisveritas.fr',
+  password: 'SecurePass123!',
+  confirmPassword: 'SecurePass123!',
+  acceptTerms: true
 })
 
-// Déconnexion
-const result = await authService.signOut()
+// Résultat
+interface RegisterResult {
+  success: boolean
+  user?: AuthUser
+  message?: string
+  error?: string
+  requiresConfirmation?: boolean
+}
 ```
 
-#### Gestion des Rôles
+### Hooks Client
+
+#### useAuthActions
 
 ```typescript
-// Récupérer rôle utilisateur
-const role = await authService.getUserRole(user) // 'user' | 'admin' | 'dev'
+import { useAuthActions } from '@/lib/auth/hooks/use-auth-actions'
 
-// Vérifier permission spécifique
-const canEdit = await authService.hasPermission(user, 'edit:products')
-
-// Requérir rôle minimum (throw si insuffisant)
-await authService.requireRole(user, 'admin')
+function LoginComponent() {
+  const { signIn, signUp, loading, error } = useAuthActions()
+  
+  const handleLogin = async () => {
+    const result = await signIn(email, password, '/dashboard')
+    if (result.success) {
+      // Redirection automatique
+    }
+  }
+}
 ```
 
-#### Session Management
+#### useSupabase
 
 ```typescript
-// Utilisateur connecté
-const user = await authService.getCurrentUser()
+import { useSupabase } from '@/lib/supabase/hooks/use-supabase'
 
-// Statut authentifié
-const isAuth = await authService.isAuthenticated()
+function ProfileComponent() {
+  const { user, signOut, loading } = useSupabase()
+  
+  if (loading) return <div>Loading...</div>
+  if (!user) return <div>Please login</div>
+  
+  return (
+    <div>
+      <p>Welcome {user.user_metadata?.firstName}</p>
+      <button onClick={() => signOut()}>Logout</button>
+    </div>
+  )
+}
 ```
 
-### Système de Permissions
+---
 
-**Matrice des permissions par rôle :**
+## Système de Rôles
 
-| Permission | User | Admin | Dev |
-|------------|------|-------|-----|
-| `view:products` | ✅ | ✅ | ✅ |
-| `edit:products` | ❌ | ✅ | ✅ |
-| `view:orders` | ❌ | ✅ | ✅ |
-| `edit:orders` | ❌ | ✅ | ✅ |
-| `view:users` | ❌ | ✅ | ✅ |
-| `edit:users` | ❌ | ✅ | ✅ |
-| `view:content` | ❌ | ✅ | ✅ |
-| `edit:content` | ❌ | ✅ | ✅ |
-| `debug:system` | ❌ | ❌ | ✅ |
-
-### Rate Limiting
-
-**Protection contre les attaques par force brute :**
-- **Limite :** 5 tentatives par email
-- **Fenêtre :** 15 minutes
-- **Storage :** Mémoire (production: Redis recommandé)
+### Configuration des Rôles
 
 ```typescript
-// Automatique dans signIn()
-// Erreur après 5 échecs : "Trop de tentatives. Réessayez dans 15 minutes."
+// src/lib/auth/roles.ts
+export const USER_ROLES = {
+  GUEST: 'guest',
+  USER: 'user', 
+  DEV: 'dev',
+  ADMIN: 'admin'
+} as const
+
+// Redirections après connexion
+export const ROLE_REDIRECTS = {
+  guest: '/',
+  user: '/profile',
+  dev: '/dev',          // Interface développeur
+  admin: '/admin'       // Interface administrateur
+}
+```
+
+### Matrice des Permissions
+
+| Rôle | Description | Accès |
+|------|-------------|-------|
+| **guest** | Visiteur non connecté | Pages publiques uniquement |
+| **user** | Utilisateur standard | Profile, commandes, wishlist |
+| **admin** | Administrateur | Gestion produits, commandes, utilisateurs |
+| **dev** | Développeur | Interface debug + accès admin |
+
+### Protection des Routes
+
+**Routes publiques :**
+```typescript
+// Accès libre (tous rôles)
+const PUBLIC_ROUTES = [
+  '/', '/shop', '/products', '/about', '/contact'
+]
+```
+
+**Routes authentifiées :**
+```typescript
+// Connexion requise (user minimum)
+const PROTECTED_ROUTES = [
+  '/profile', '/orders', '/addresses', '/wishlist'
+]
+```
+
+**Routes admin :**
+```typescript
+// Admin ou dev requis
+const ADMIN_ROUTES = [
+  '/admin/*'
+]
+```
+
+**Routes développeur :**
+```typescript
+// Dev uniquement
+const DEV_ROUTES = [
+  '/dev/*'
+]
 ```
 
 ---
 
 ## Middleware de Protection
 
-### Configuration des Routes
-
-**Routes publiques :**
-- `/`, `/shop`, `/magazine`, `/about`, `/contact`
-- `/auth/*` (pages connexion)
-
-**Routes authentifiées :**
-- `/profile`, `/orders`, `/addresses`, `/wishlist`
-
-**Routes admin :**
-- `/admin/*` (admin ou dev requis)
-
-**Routes développeur :**
-- `/dev/*` (dev uniquement)
-
-### Headers de Sécurité
-
-Le middleware ajoute automatiquement des headers sur les routes sensibles :
+### Configuration Next.js 15
 
 ```typescript
-X-Frame-Options: DENY
-X-Content-Type-Options: nosniff
-Referrer-Policy: strict-origin-when-cross-origin
-X-XSS-Protection: 1; mode=block
+// src/middleware.ts
+import { createMiddlewareClient } from '@/lib/supabase/middleware'
+
+export async function middleware(request: NextRequest) {
+  const { supabase, response } = await createMiddlewareClient(request)
+  
+  // Récupération session
+  const { data: { session } } = await supabase.auth.getSession()
+  const user = session?.user
+  
+  // Validation route + rôle
+  const pathname = request.nextUrl.pathname
+  const userRole = getUserRole(user)
+  
+  // Protection et redirection
+  return handleRouteProtection(request, response, userRole, pathname)
+}
+
+// Matcher pour éviter API routes
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
+}
 ```
 
 ### Gestion des Erreurs
 
-**Comportements :**
-- **Non connecté → Route protégée :** Redirection `/auth/login?redirect=/target`
-- **Rôle insuffisant :** 403 Forbidden + log sécurité
+**Comportements automatiques :**
+- **Non connecté → Route protégée :** Redirection `/login?redirectedFrom=/target`
+- **Rôle insuffisant :** Redirection `/unauthorized` + log sécurité
 - **Token expiré :** Nettoyage cookies + redirection login
-- **Erreur réseau Supabase :** 503 Service Unavailable (retry 30s)
+- **Erreur Supabase :** 503 Service Unavailable
 
 ---
 
-## Système d'Adresses
+## Validation des Formulaires
 
-### AddressService API
-
-#### CRUD Operations
+### Validation Login (Client)
 
 ```typescript
-// Créer adresse
-const result = await addressService.createAddress(userId, {
-  type: 'shipping',
-  first_name: 'Jean',
-  last_name: 'Dupont', 
-  address_line_1: '123 Rue de la République',
-  city: 'Lyon',
-  postal_code: '69000',
-  country: 'FR',
-  phone: '+33123456789'
+// src/components/forms/login-form/form-validation.ts
+import { z } from 'zod'
+
+export const loginFormSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email requis')
+    .email('Format email invalide'),
+  password: z
+    .string()
+    .min(6, 'Mot de passe trop court (min. 6 caractères)')
 })
 
-// Récupérer adresses utilisateur
-const addresses = await addressService.getUserAddresses(userId)
+export const validateLoginForm = (formData: LoginFormData): FormErrors => {
+  // Validation temps réel côté client
+}
+```
 
-// Mettre à jour
-const result = await addressService.updateAddress(userId, addressId, {
-  city: 'Marseille',
-  postal_code: '13000'
+### Validation Register (Client + Serveur)
+
+```typescript
+// src/components/forms/signup-form/form-validation.ts
+export const signupFormSchema = z.object({
+  email: z.string().email('Format email invalide'),
+  password: z
+    .string()
+    .min(8, 'Mot de passe trop court (min. 8 caractères)')
+    .regex(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 
+      'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre'
+    ),
+  confirmPassword: z.string(),
+  firstName: z.string().min(2, 'Prénom trop court'),
+  lastName: z.string().min(2, 'Nom trop court')
+}).refine((data) => data.password === data.confirmPassword, {
+  message: 'Les mots de passe ne correspondent pas',
+  path: ['confirmPassword']
 })
-
-// Supprimer
-const result = await addressService.deleteAddress(userId, addressId)
 ```
 
-#### Gestion Par Défaut
+---
+
+## Architecture Supabase
+
+### Configuration Client
 
 ```typescript
-// Définir comme adresse par défaut
-await addressService.setDefaultAddress(userId, addressId, 'shipping')
-
-// Récupérer adresse par défaut
-const defaultAddr = await addressService.getDefaultAddress(userId, 'billing')
+// src/lib/supabase/client.ts
+export const createClient = () => 
+  createBrowserClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 ```
 
-### Validation Avancée
+### Configuration Serveur
 
-#### Codes Postaux par Pays
-
-**Formats supportés :**
-- **France :** 75001 (5 chiffres)
-- **États-Unis :** 90210 ou 90210-1234 (ZIP+4)
-- **Canada :** H3B 1X9 (format postal)
-- **Royaume-Uni :** SW1A 1AA (format UK)
-
-#### Validation Téléphones
-
-**Formats acceptés :**
 ```typescript
-// Français
-'+33123456789'      // International
-'01.23.45.67.89'   // National avec points
-'0123456789'       // National compact
-
-// International
-'+1234567890'      // Numérique international
+// src/lib/supabase/server.ts  
+export const createClient = () =>
+  createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll() },
+        setAll(cookiesToSet) { 
+          cookiesToSet.forEach(({ name, value, options }) => 
+            cookieStore.set(name, value, options))
+        },
+      },
+    }
+  )
 ```
 
-#### Auto-Formatting
-
-Le système nettoie et formate automatiquement :
+### Configuration Middleware
 
 ```typescript
-// Input utilisateur → Formaté
-{
-  first_name: '  jean  ',        // → 'Jean'
-  last_name: '  DUPONT  ',       // → 'DUPONT'
-  city: '  PARIS  ',             // → 'Paris'
-  postal_code: ' 7 5 0 0 1 ',    // → '75001'
-  country: ' fr ',               // → 'FR'
-  phone: ' +33 1 23 45 67 89 '   // → '+33123456789'
+// src/lib/supabase/middleware.ts
+export const createMiddlewareClient = async (request: NextRequest) => {
+  let response = NextResponse.next({ request })
+
+  const supabase = createServerClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return request.cookies.getAll() },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            request.cookies.set(name, value)
+            response.cookies.set(name, value, options)
+          })
+        },
+      },
+    }
+  )
+
+  return { supabase, response }
 }
 ```
 
 ---
 
-## Base de Données & Sécurité
+## Tests TDD
 
-### Tables Principales
+### Architecture de Test
 
-**users (Supabase Auth)**
-```sql
-users (
-  id uuid PRIMARY KEY,
-  email text UNIQUE,
-  user_metadata jsonb, -- { role: 'user|admin|dev' }
-  created_at timestamp,
-  updated_at timestamp
-)
-```
-
-**addresses**
-```sql
-addresses (
-  id uuid PRIMARY KEY,
-  user_id uuid REFERENCES auth.users(id),
-  type address_type CHECK (type IN ('shipping', 'billing')),
-  is_default boolean DEFAULT false,
-  first_name text NOT NULL,
-  last_name text NOT NULL,
-  company text,
-  address_line_1 text NOT NULL,
-  address_line_2 text,
-  city text NOT NULL,
-  postal_code text NOT NULL,
-  country char(2) NOT NULL,
-  phone text,
-  created_at timestamp DEFAULT now(),
-  updated_at timestamp DEFAULT now()
-)
-```
-
-### RLS Policies
-
-**Sécurité Row Level Security :**
-
-```sql
--- Addresses: utilisateur ne voit que ses adresses
-CREATE POLICY "Users can view own addresses" ON addresses
-  FOR SELECT USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can insert own addresses" ON addresses  
-  FOR INSERT WITH CHECK (auth.uid() = user_id);
-
-CREATE POLICY "Users can update own addresses" ON addresses
-  FOR UPDATE USING (auth.uid() = user_id);
-
-CREATE POLICY "Users can delete own addresses" ON addresses
-  FOR DELETE USING (auth.uid() = user_id);
-```
-
----
-
-## Tests & Qualité
-
-### Architecture TDD
-
-**Approche Test-Driven Development strict :**
+**Approche Test-Driven Development :**
 - 🔴 **Red :** Tests écrits AVANT implémentation
-- 🟢 **Green :** Code minimal pour passer les tests
+- 🟢 **Green :** Code minimal pour faire passer les tests
 - 🔵 **Refactor :** Amélioration sans casser les tests
 
-### Coverage Actuel
+### Configuration Tests
 
-**Métriques de tests :**
-- **Auth Service :** 25+ tests (flows, permissions, sessions)
-- **Address Service :** 20+ tests (CRUD, validation, RLS)  
-- **Middleware :** 15+ tests (routes, sécurité, erreurs)
-- **Coverage Total :** >85% sur modules critiques
+```javascript
+// jest.integration.config.js
+const config = {
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/jest.integration.setup.js'],
+  testMatch: ['<rootDir>/tests/integration/**/*.test.{js,ts}'],
+}
+
+// .env.test
+NEXT_PUBLIC_SUPABASE_URL=https://test.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=test-key
+```
+
+### Résultats Tests Actuels
+
+**Tests Login (6/6 passing) ✅**
+- Connexion user avec credentials valides
+- Connexion admin avec redirection /admin
+- Connexion dev avec redirection /dev
+- Rejet email invalide
+- Rejet password trop court
+- Gestion erreur Supabase credentials
+
+**Tests Register (5/5 passing) ✅**
+- Création compte user avec données valides
+- Création compte avec confirmation email
+- Rejet email invalide
+- Rejet password trop court
+- Rejet passwords non identiques
 
 ### Exemples de Tests
 
 ```typescript
-// Test authentification
-describe('AuthService.signIn', () => {
-  it('devrait authentifier utilisateur avec credentials valides', async () => {
-    const result = await authService.signIn({
-      email: 'test@herbisveritas.fr',
-      password: 'Password123!'
+// tests/integration/auth/login-flow.test.ts
+describe('Login Flow TDD', () => {
+  it('devrait connecter dev avec redirection vers /dev', async () => {
+    const result = await loginUser({
+      email: 'dev@herbisveritas.fr',
+      password: 'DevPassword123!'
     })
     
     expect(result.success).toBe(true)
-    expect(result.user).toBeDefined()
+    expect(result.user?.role).toBe('dev')
+    expect(result.redirectTo).toBe('/dev')
   })
 })
+```
 
-// Test permissions
-describe('Role permissions', () => {
-  it('devrait interdire user de modifier produits', async () => {
-    const canEdit = await authService.hasPermission(userRole, 'edit:products')
-    expect(canEdit).toBe(false)
-  })
-})
+---
+
+## Traduction d'Erreurs
+
+### Messages Supabase → Français
+
+```typescript
+// src/lib/auth/actions.ts
+if (error) {
+  let errorMessage = error.message
+  
+  // Traduction des erreurs courantes
+  if (errorMessage.includes('User already registered')) {
+    errorMessage = 'Un compte existe déjà avec cet email'
+  } else if (errorMessage.includes('Password should be at least')) {
+    errorMessage = 'Le mot de passe doit respecter les critères de sécurité'
+  }
+  
+  return { success: false, error: errorMessage }
+}
 ```
 
 ---
@@ -349,125 +460,102 @@ describe('Role permissions', () => {
 ### Variables d'Environnement
 
 ```bash
-# Supabase
+# Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
-# Rate Limiting (Production)
-REDIS_URL=redis://localhost:6379 # Optionnel pour rate limiting distribué
+# App Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NODE_ENV=development
 ```
 
-### Scripts Utiles
+### Scripts de Test
 
 ```json
 {
   "scripts": {
-    "test:auth": "jest tests/unit/lib/auth/ --coverage",
-    "test:addresses": "jest tests/unit/lib/addresses/ --coverage", 
-    "db:migrate": "supabase db push",
-    "db:reset": "supabase db reset"
+    "test:unit": "jest --config jest.config.js",
+    "test:integration": "jest --config jest.integration.config.js",
+    "test:auth": "npm run test:integration -- --testPathPatterns=auth",
+    "build": "next build && npm run typecheck"
   }
 }
 ```
 
 ---
 
-## Sécurité & Bonnes Pratiques
+## Sécurité
 
-### Sécurisation Production
+### Bonnes Pratiques Implémentées
 
-**✅ Implémenté :**
-- Rate limiting tentatives de connexion
-- Validation inputs côté client + serveur
-- RLS policies strictes
-- Headers sécurité automatiques
-- Logs tentatives accès non autorisé
+✅ **Validation côté client et serveur** (Zod)  
+✅ **Protection CSRF** automatique (Supabase)  
+✅ **Cookies sécurisés** (httpOnly, secure, sameSite)  
+✅ **Headers sécurité** (middleware)  
+✅ **Row Level Security** (RLS Supabase)  
+✅ **Logs tentatives non autorisées**  
 
-**🔄 Recommandé Production :**
+### Recommandations Production
+
+🔄 **À implémenter :**
 - Rate limiting distribué (Redis)
-- Monitoring tentatives intrusion
-- Audit logs complets
 - 2FA pour comptes admin
-
-### Patterns de Sécurité
-
-```typescript
-// ✅ BON - Validation inputs
-const validated = signInSchema.parse({ email, password })
-
-// ✅ BON - Vérification rôle avant action
-await authService.requireRole(user, 'admin')
-// ... action sensible
-
-// ❌ MAUVAIS - Confiance aveugle client
-if (user.role === 'admin') { /* action sensible */ }
-```
+- Rotation refresh tokens
+- Audit logs complets
+- Monitoring sécurité
 
 ---
 
-## Évolutions Prévues
+## Évolutions Futures
 
 ### Phase V2.1 (Post-MVP)
-
-**Extensions authentification :**
 - [ ] 2FA avec TOTP
-- [ ] Connexion sociale (Google, Apple)
+- [ ] Connexion sociale (Google, GitHub)
 - [ ] Magic links email
-- [ ] Refresh tokens rotation
+- [ ] PWA offline auth
 
-**Extensions adresses :**
-- [ ] Géocodage automatique
-- [ ] Validation adresses réelles (API)
-- [ ] Support pays supplémentaires
-- [ ] Points de retrait Colissimo
-
-### Phase V2.2 (Business)
-
-**Fonctionnalités avancées :**
-- [ ] Audit logs complets
-- [ ] Dashboard admin sécurisé
-- [ ] Gestion permissions granulaires
-- [ ] Single Sign-On (SSO)
+### Phase V2.2 (Enterprise)
+- [ ] SSO entreprise
+- [ ] Permissions granulaires
+- [ ] Audit trail complet
+- [ ] Multi-tenant auth
 
 ---
 
 ## Troubleshooting
 
-### Erreurs Courantes
+### Erreurs Communes
 
-**"Invalid JWT" dans logs :**
+**"Unauthorized access" en production :**
 ```typescript
-// Solution: Cookie corrompu, middleware nettoie automatiquement
-// Utilisateur sera redirigé vers login
+// Vérifier middleware matcher
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+}
 ```
 
-**Tests échouent en CI :**
+**Tests échouent localement :**
 ```bash
-# Vérifier variables env de test
-NEXT_PUBLIC_SUPABASE_URL=https://test.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=test-key
+# Vérifier variables .env.test
+cp .env.local .env.test
+npm run test:integration
 ```
 
-**Rate limiting trop strict :**
+**Redirection infinie :**
 ```typescript
-// Ajuster dans auth-service.ts
-const RATE_LIMIT_ATTEMPTS = 10 // au lieu de 5
-const RATE_LIMIT_WINDOW = 10 * 60 * 1000 // 10 min au lieu de 15
+// Vérifier routes publiques dans middleware
+const isPublicRoute = PUBLIC_ROUTES.includes(pathname)
 ```
-
-### Support & Debug
-
-**Logs utiles :**
-- Middleware: `console.warn('Unauthorized access attempt', { ... })`
-- Auth: `console.error('Rate limit exceeded', { email, attempts })`
-- Addresses: `console.error('Address validation failed', { errors })`
 
 ---
 
-**Version :** 1.0.0  
+**Version :** 2.0.0  
 **Date :** 2025-01-28  
-**Status :** ✅ Production Ready  
-**Next :** Semaine 3 MVP - Infrastructure UI + Products Foundation
+**Statut :** ✅ Production Ready (Supabase Auth Migration Complete)  
+**Tests :** 11/11 critiques passants  
+**Next :** Semaine 3 MVP - Products & UI Components
 
-Cette documentation couvre l'implémentation complète du système d'authentification HerbisVeritas V2, développé en méthodologie TDD stricte selon les standards CLAUDE.md.
+Cette documentation reflète l'implémentation complète du système d'authentification Supabase avec tests TDD validés selon les standards CLAUDE.md.

@@ -98,14 +98,16 @@ Ce plan de développement définit la **roadmap MVP validée** basée sur l'arch
   - Utilitaires CRUD génériques
 
 #### **Semaine 2 : Auth & Users (TDD First)**
-- [ ] **Authentification Supabase**
-  - **TDD** : Tests auth flows AVANT implémentation
-  - **TDD** : Tests 3 rôles permissions AVANT middleware
-  - Login/Register flows
-  - 3 rôles (user/admin/dev)
-  - Middleware protection routes
-  - Profile management
-  - **Tests** : Coverage auth > 90%
+- [x] **Authentification Supabase** ✅ **COMPLETE**
+  - **TDD** : Tests auth flows AVANT implémentation ✅
+  - **TDD** : Tests 3 rôles permissions AVANT middleware ✅
+  - Login/Register flows ✅
+  - 3 rôles (user/admin/dev) ✅
+  - Middleware protection routes ✅
+  - Profile management ✅
+  - **Tests** : Coverage auth > 90% ✅ (11/11 tests critiques)
+  - **Migration** : NextAuth → Supabase Auth complète ✅
+  - **Commit** : `9f62778` feat(auth): migration NextAuth vers Supabase Auth avec tests TDD
 
 - [ ] **Addresses système**
   - **TDD** : Tests CRUD addresses AVANT API

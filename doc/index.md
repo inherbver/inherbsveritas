@@ -13,6 +13,8 @@
 
 ### 🗃️ Infrastructure Technique
 - **[Schéma Base de Données MVP](./DATABASE_SCHEMA_MVP.md)** - Architecture 13 tables optimisées
+- **[Système d'Authentification](./AUTH_SYSTEM_DOCUMENTATION.md)** - Supabase Auth + TDD + Tests 11/11 ✅
+- **[Migration NextAuth → Supabase](./MIGRATION_NEXTAUTH_TO_SUPABASE.md)** - Guide migration complète
 - **[Structure Projet](./PROJECT_STRUCTURE.md)** - Organisation codebase et conventions
 - **[Migration TanStack Query](./MIGRATION_TANSTACK_QUERY.md)** - State management moderne
 
