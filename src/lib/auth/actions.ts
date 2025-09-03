@@ -5,7 +5,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { validateEmail } from '@/utils/validateEmail'
-import { AUTH_MESSAGES, parseSupabaseError, type AuthMessage } from '@/lib/messages/auth-messages'
+import { AUTH_MESSAGES, type AuthMessage } from '@/lib/messages/auth-messages'
 import { USER_ROLES, type UserRole, getRoleRedirect, normalizeRole } from '@/lib/auth/roles'
 
 // Types pour les actions auth avec messages structurés
@@ -52,7 +52,6 @@ export interface AuthUser {
 
 // Constantes métier
 const MIN_PASSWORD_LENGTH_REGISTER = 8
-const MIN_PASSWORD_LENGTH_LOGIN = 6
 
 // Helpers internes avec rôles corrigés
 function createAuthUser(supabaseUser: any, email: string): AuthUser {

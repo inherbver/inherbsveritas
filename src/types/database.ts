@@ -716,3 +716,11 @@ export type NewsletterSubscriberUpdate = TablesUpdate<'newsletter_subscribers'>
 export type FeaturedItem = Tables<'featured_items'>
 export type FeaturedItemInsert = TablesInsert<'featured_items'>
 export type FeaturedItemUpdate = TablesUpdate<'featured_items'>
+
+// Extended types pour business logic
+export interface CategoryWithChildren extends Category {
+  children?: Category[]
+}
+
+export type CategoryInput = Omit<CategoryInsert, 'id' | 'created_at' | 'updated_at'>
+export type ProductInput = Omit<ProductInsert, 'id' | 'created_at' | 'updated_at'>

@@ -1,0 +1,76 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "retry": "Réessayer",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "shop": "Boutique", 
+    "magazine": "Magazine",
+    "about": "À propos",
+    "contact": "Contact",
+    "cart": "Panier",
+    "account": "Mon compte"
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "register": "S'inscrire",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Pas encore de compte ?",
+    "hasAccount": "Déjà un compte ?"
+  },
+  "shop": {
+    "meta": {
+      "title": "Boutique - Cosmétiques naturels HerbisVeritas",
+      "description": "Découvrez notre gamme de cosmétiques artisanaux et naturels. Produits bio, récoltés à la main en Occitanie."
+    },
+    "title": "Boutique",
+    "noProducts": "Aucun produit ne correspond à vos critères",
+    "productCount": "{count} produit",
+    "productCount_plural": "{count} produits",
+    "inCategory": "dans cette catégorie",
+    "searchResults": "pour \"{search}\"",
+    "filters": {
+      "search": {
+        "placeholder": "Rechercher un produit...",
+        "button": "Rechercher"
+      },
+      "categories": {
+        "title": "Catégories",
+        "all": "Tous les produits"
+      },
+      "labels": {
+        "title": "Labels HerbisVeritas"
+      },
+      "active": {
+        "title": "Filtres actifs",
+        "clearAll": "Tout effacer"
+      }
+    }
+  },
+  "categories": {
+    "navigation": "Navigation",
+    "all": "Toutes les catégories",
+    "selected": "Sélectionnée",
+    "selectCategory": "Choisir une catégorie",
+    "filter": "Filtrer par catégorie",
+    "home": "Accueil"
+  },
+  "products": {
+    "addToCart": "Ajouter au panier",
+    "outOfStock": "Rupture de stock",
+    "price": "Prix",
+    "description": "Description",
+    "ingredients": "Ingrédients INCI",
+    "labels": "Labels"
+  }
+}
