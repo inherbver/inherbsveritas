@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { Cart, CartItem, Product, calculateCartTotal, validateProductStock } from '@/types/herbis-veritas';
+import { createCartSlice, type CartSlice } from './slices/cart-slice';
+import { createUISlice, type UISlice } from './slices/ui-slice';
 
 /**
  * === 🛒 Cart Store Zustand MVP ===
@@ -39,7 +41,7 @@ interface CartActions {
   resetError: () => void;
 }
 
-type CartStore = CartState & CartActions;
+type CartStore = CartState & CartActions & CartSlice & UISlice;
 
 /**
  * Store Zustand avec persistence localStorage
@@ -47,7 +49,11 @@ type CartStore = CartState & CartActions;
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
-      // === Initial State ===
+      // === Slices Integration ===
+      ...createCartSlice(set, get, null as any),
+      ...createUISlice(set, get, null as any),
+      
+      // === Legacy State (compatibilité) ===
       cart: null,
       isLoading: false,
       error: null,
@@ -56,7 +62,7 @@ export const useCartStore = create<CartStore>()(
       total: 0,
       tva: 0,
 
-      // === Actions CRUD ===
+      // === Legacy Actions CRUD (Migration progressive vers slices) ===
       addItem: (product: Product, quantity = 1) => {
         try {
           // Validation stock

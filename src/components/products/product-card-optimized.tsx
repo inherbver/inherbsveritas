@@ -3,7 +3,7 @@
 /**
  * ProductCard Optimisé - Wrapper ContentCard
  * 
- * Version optimisée utilisant le ContentCard générique
+ * Version optimisée utilisant le ContentCard générique + Integration Cart HerbisVeritas
  * Réduit de ~180 lignes à ~80 lignes (-57% code)
  * Compatible avec l'API existante ProductCardProps
  */
@@ -14,29 +14,36 @@ import { ContentCard, type ContentCardBadge, type ContentCardAction } from "@/co
 import { InciListCompact } from "@/components/ui/inci-list"
 import { ProductCardProps } from "@/types/product"
 import { LABEL_DISPLAY, LABEL_BADGE_VARIANTS } from "@/types/product"
+import { useCartActions, useIsInCart } from "@/hooks/use-cart-query"
 
 export function ProductCardOptimized({
   product,
-  onAddToCart,
+  onAddToCart, // Deprecated: utilise maintenant hooks cart directement
   onToggleFavorite,
   variant = 'default',
   className,
   isLoading = false,
 }: ProductCardProps) {
-  const [isAddingToCart, setIsAddingToCart] = React.useState(false)
   const [isFavorite, setIsFavorite] = React.useState(false)
 
-  // Handler pour ajout au panier avec optimistic updates
+  // === Integration Cart HerbisVeritas ===
+  const { addToCart, isAdding } = useCartActions()
+  const { isInCart, quantity } = useIsInCart(product.id)
+
+  // Handler pour ajout au panier avec hooks cart
   const handleAddToCart = async () => {
-    if (!onAddToCart || isAddingToCart || product.stock === 0) return
+    if (product.stock === 0 || isAdding) return
     
-    setIsAddingToCart(true)
     try {
-      await onAddToCart(product)
+      // Utilise les hooks cart modernes au lieu de l'ancienne prop
+      addToCart({ productId: product.id, quantity: 1 })
+      
+      // Backward compatibility: appelle aussi l'ancienne prop si fournie
+      if (onAddToCart) {
+        await onAddToCart(product)
+      }
     } catch (error) {
       console.error('Error adding to cart:', error)
-    } finally {
-      setIsAddingToCart(false)
     }
   }
 
@@ -61,15 +68,21 @@ export function ProductCardOptimized({
     productBadges.push({ label: 'Promo', variant: 'promo' })
   }
 
-  // Actions du produit
+  // Actions du produit avec état cart intégré
+  const getCartButtonLabel = () => {
+    if (isAdding) return 'Ajout...'
+    if (isInCart) return `Dans le panier (${quantity})`
+    return 'Ajouter au panier'
+  }
+
   const productActions: ContentCardAction[] = [
     {
-      label: isAddingToCart ? 'Ajout...' : 'Ajouter au panier',
+      label: getCartButtonLabel(),
       onClick: handleAddToCart,
-      variant: 'default',
+      variant: isInCart ? 'secondary' : 'default',
       icon: ShoppingCart,
-      loading: isAddingToCart,
-      disabled: product.stock === 0 || isAddingToCart
+      loading: isAdding,
+      disabled: product.stock === 0 || isAdding
     }
   ]
 
