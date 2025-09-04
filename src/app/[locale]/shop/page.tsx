@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: ShopPageProps): Promise<Metad
 
 
 // Composant principal de la page boutique
-async function ShopPageContent({ searchParams }: { searchParams: ShopPageProps['searchParams'] }) {
+async function ShopPageContent({ params, searchParams }: { params: ShopPageProps['params'], searchParams: ShopPageProps['searchParams'] }) {
   // Récupération des données côté serveur
   const [categories, allProducts] = await Promise.all([
     categoriesService.getCategoryHierarchy(),
@@ -63,9 +63,12 @@ async function ShopPageContent({ searchParams }: { searchParams: ShopPageProps['
   if (searchParams.search) {
     const searchTerm = searchParams.search.toLowerCase()
     filteredProducts = filteredProducts.filter(
-      product => 
-        product.name.toLowerCase().includes(searchTerm) ||
-        product.description_short?.toLowerCase().includes(searchTerm)
+      product => {
+        const name = product.translations[params.locale]?.name || product.translations['fr']?.name || ''
+        const description = product.translations[params.locale]?.description || product.translations['fr']?.description || ''
+        return name.toLowerCase().includes(searchTerm) ||
+               description.toLowerCase().includes(searchTerm)
+      }
     )
   }
 
@@ -184,10 +187,10 @@ function ShopPageSkeleton() {
 }
 
 // Page principale avec Suspense
-export default function ShopPage({ searchParams }: ShopPageProps) {
+export default function ShopPage({ params, searchParams }: ShopPageProps) {
   return (
     <Suspense fallback={<ShopPageSkeleton />}>
-      <ShopPageContent searchParams={searchParams} />
+      <ShopPageContent params={params} searchParams={searchParams} />
     </Suspense>
   )
 }

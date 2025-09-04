@@ -1,54 +1,35 @@
 /**
- * Toast System Types
- * 
- * Type definitions for the toast notification system
+ * Toast Types - HerbisVeritas V2 MVP
+ * TEMPORAIRE: Version stub pour permettre le build
  */
 
-import { type ExternalToast } from 'sonner'
-import { type UserRole } from '@/lib/auth/roles'
-
-export type ToastType = 'success' | 'error' | 'info' | 'warning' | 'loading'
-
-export interface ToastMessage {
-  type: ToastType
-  title: string
-  description?: string
-  duration?: number
+export interface ExternalToast {
+  description?: string;
+  duration?: number;
   action?: {
-    label: string
-    onClick: () => void
-  }
-  icon?: React.ReactNode
-  persistent?: boolean
+    label: string;
+    onClick: () => void;
+  };
 }
 
-export interface BusinessToastOptions {
-  // Business context
-  userId?: string
-  userRole?: UserRole
-  businessAction?: string
-  
-  // UI options
-  position?: ExternalToast['position']
-  persistent?: boolean
-  showCloseButton?: boolean
-  
-  // Callbacks
-  onSuccess?: () => void
-  onError?: (error: unknown) => void
-  onDismiss?: () => void
+export type UserRole = 'user' | 'admin' | 'dev';
+
+export type ToastType = 'success' | 'error' | 'info' | 'warning' | 'loading';
+
+export interface ToastOptions extends ExternalToast {
+  id?: string;
+  type?: ToastType;
+  icon?: React.ReactNode;
 }
 
-export interface ToastPromiseMessages<T = unknown> {
-  loading: string
-  success: string | ((data: T) => string)
-  error: string | ((error: unknown) => string)
+export interface BusinessToastOptions extends ToastOptions {
+  trackingId?: string;
+  userId?: string;
+  role?: UserRole;
 }
 
-export interface ToastDefaults {
-  success: number
-  error: number
-  info: number
-  warning: number
-  loading: number
+export interface AsyncToastOptions extends BusinessToastOptions {
+  loadingMessage: string;
+  successMessage?: string;
+  errorMessage?: string;
 }

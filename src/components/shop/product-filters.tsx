@@ -8,7 +8,7 @@
 import * as React from "react"
 import { useState } from "react"
 import { useRouter, useSearchParams, usePathname } from "next/navigation"
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Search, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -27,6 +27,13 @@ export const HERBIS_VERITAS_LABELS = [
   { key: 'essence_precieuse' as ProductLabel, label: 'Essence précieuse', description: 'Ingrédients rares et précieux' },
   { key: 'rupture_recolte' as ProductLabel, label: 'Rupture de récolte', description: 'Stock limité cette saison' }
 ] as const
+
+// Utilitaire pour récupérer le nom localisé d'une catégorie
+function getCategoryName(category: CategoryWithChildren, locale: string): string {
+  return category.translations[locale]?.name || 
+         category.translations['fr']?.name || 
+         category.slug
+}
 
 interface ProductFiltersProps {
   className?: string
@@ -137,9 +144,11 @@ export function CategoryFilter({
   className 
 }: CategoryFilterProps) {
   const t = useTranslations('shop.filters')
+  const locale = useLocale()
   
   const renderCategoryItem = (category: CategoryWithChildren, level = 0) => {
     const isSelected = category.id === selectedCategoryId
+    const categoryName = getCategoryName(category, locale)
     
     return (
       <div key={category.id} className="space-y-1">
@@ -153,7 +162,7 @@ export function CategoryFilter({
               : "hover:bg-muted"
           )}
         >
-          {category.name}
+          {categoryName}
         </button>
         {category.children?.map(child => renderCategoryItem(child, level + 1))}
       </div>
@@ -247,6 +256,7 @@ export function ActiveFilters({
   className 
 }: ActiveFiltersProps) {
   const t = useTranslations('shop.filters')
+  const locale = useLocale()
   
   const activeFiltersCount = 
     (selectedCategoryId ? 1 : 0) + 
@@ -280,7 +290,7 @@ export function ActiveFilters({
           {/* Catégorie active */}
           {selectedCategory && (
             <Badge variant="secondary" className="gap-1">
-              {selectedCategory.name}
+              {getCategoryName(selectedCategory, locale)}
               <button
                 onClick={onClearCategory}
                 className="ml-1 hover:bg-muted-foreground/20 rounded-full p-0.5"

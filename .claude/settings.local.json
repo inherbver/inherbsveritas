@@ -39,7 +39,9 @@
       "Bash(npm run test:coverage:*)",
       "Bash(for file in src/components/ui/inci-list-enhanced.tsx src/components/ui/content-grid.tsx src/lib/categories/categories-service.ts src/stores/cart-store.ts src/components/products/product-label-badge.tsx src/lib/inci/inci-service.ts src/components/ui/content-card.tsx)",
       "Bash(done)",
-      "Bash(npm run test:integration:*)"
+      "Bash(npm run test:integration:*)",
+      "mcp__supabase__search_docs",
+      "Bash(npm remove:*)"
     ],
     "deny": [],
     "ask": []

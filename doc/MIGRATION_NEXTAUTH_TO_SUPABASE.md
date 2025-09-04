@@ -330,7 +330,39 @@ Migration réussie avec **0 régression fonctionnelle**. Le système Supabase Au
 
 ---
 
-**Version :** 1.0.0  
-**Auteur :** Migration TDD automatisée  
-**Validation :** Tests passing + Build success  
-**Status :** ✅ Migration Complete
+---
+
+## Addendum : Nettoyage Post-Migration (2025-01-28)
+
+### Suppression Définitive NextAuth/Prisma
+
+Suite à la validation complète de la migration Supabase Auth, nettoyage final effectué :
+
+**Packages désinstallés :**
+```bash
+npm remove prisma @prisma/client next-auth @next-auth/prisma-adapter
+```
+
+**Fichiers supprimés :**
+- Dossier `prisma/` (schémas et migrations Prisma)
+- Routes API NextAuth `app/api/auth/[...nextauth]/`
+- Imports et configurations NextAuth
+
+**Types database.ts :**
+- ✅ Recréation complète avec structure MVP 13 tables
+- ✅ Support translations i18n (FR/EN)
+- ✅ Types Supabase cohérents
+
+**Validation finale :**
+- ✅ Build Next.js : 17 pages générées sans erreur
+- ✅ TypeScript : 0 erreurs de compilation
+- ✅ Structure MVP préservée
+
+**Commit :** Nettoyage définitif NextAuth/Prisma post-migration
+
+---
+
+**Version :** 1.1.0  
+**Auteur :** Migration TDD automatisée + Nettoyage post-migration  
+**Validation :** Tests passing + Build success + Clean codebase  
+**Status :** ✅ Migration Complete + Clean

@@ -20,11 +20,11 @@ const getLocalizedCategory = (category: CategoryWithChildren, locale: 'fr' | 'en
   const translations = category.translations as any
   if (translations && translations[locale]) {
     return {
-      name: translations[locale].name || category.name,
-      description: translations[locale].description || category.description
+      name: translations[locale].name || '',
+      description: translations[locale].description || ''
     }
   }
-  return { name: category.name, description: category.description }
+  return { name: '', description: '' }
 }
 
 export interface CategoryNavigationProps {

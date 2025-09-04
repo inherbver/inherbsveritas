@@ -5,7 +5,7 @@ import {
   localePrefix,
   // localeDetection,
   pathnames,
-  type Locale,
+  // type Locale,
 } from "./i18n-config";
 
 // Type for canonical pathnames based on the keys of the pathnames object
