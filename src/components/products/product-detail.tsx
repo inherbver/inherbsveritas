@@ -12,9 +12,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { InciListCompact } from "@/components/ui/inci-list-enhanced"
 import { ShoppingCart, Heart } from "lucide-react"
 
+import type { Product } from '@/types/product'
+
 interface ProductDetailProps {
-  product: any
-  onAddToCart?: (product: any, quantity: number) => Promise<void>
+  product: Product
+  onAddToCart?: (product: Product, quantity: number) => Promise<void>
 }
 
 export function ProductDetail({ product, onAddToCart }: ProductDetailProps) {

@@ -1,7 +1,8 @@
 'use client'
 
 import React from 'react'
-import { ProductGrid, useCart } from '@/components/modules/boutique'
+import { ProductGrid } from '@/components/collections'
+import { useCart } from '@/components/modules/boutique/hooks'
 import { ProductCard } from '@/components/products/product-card-optimized'
 import { Product } from '@/types/product'
 import { Button } from '@/components/ui'
