@@ -1,4 +1,4 @@
-import SingleClient from "./SingleClient";
+import SingleClient from "./single-client";
 import { clientsData } from "./clientsData";
 
 const Clients = () => {

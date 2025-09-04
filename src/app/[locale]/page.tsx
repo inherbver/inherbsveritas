@@ -1,5 +1,5 @@
-import { ProductGrid } from "@/components/modules/boutique/components/product-grid";
-import ScrollUp from "@/components/common/ScrollUp";
+import { ProductGrid } from "@/components/collections";
+import ScrollUp from "@/components/common/scroll-up";
 import { ColorShowcase } from "@/components/demo/color-showcase";
 import { Metadata } from "next";
 
@@ -33,7 +33,7 @@ export default function Home() {
           </p>
         </header>
         
-        <ProductGrid />
+        <ProductGrid products={[]} showFilters={false} />
       </section>
     </main>
   );

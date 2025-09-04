@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { ProductGrid } from '@/components/modules/boutique/components/product-grid'
+import { ProductGrid } from '@/components/collections'
 import { Spinner } from '@/components/ui/spinner'
 
 export default function ShopPage() {
@@ -25,7 +25,7 @@ export default function ShopPage() {
           </div>
         </div>
       }>
-        <ProductGrid />
+        <ProductGrid products={[]} showFilters={true} />
       </Suspense>
     </main>
   )

@@ -2,6 +2,7 @@
  * Supabase Admin Client Configuration
  * Used for administrative operations requiring service role permissions
  */
+import 'server-only'
 import { createClient } from '@supabase/supabase-js'
 import { Database } from '@/types/database'
 

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Breadcrumb from "@/components/common/Breadcrumb";
-import { ProductGrid } from "@/components/modules/boutique/components/product-grid";
+import { ProductGrid } from "@/components/collections";
 import { Loader } from "@/components/common/Loader";
 
 export const metadata = {
@@ -18,7 +18,7 @@ export default function ProductsPage() {
       <main className="pb-[120px] pt-[120px]">
         <section className="container">
           <Suspense fallback={<Loader />}>
-            <ProductGrid />
+            <ProductGrid products={[]} showFilters={true} />
           </Suspense>
         </section>
       </main>

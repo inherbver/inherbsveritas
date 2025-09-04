@@ -91,10 +91,9 @@ src/components/
 │   ├── 📄 header.tsx            # En-tête navigation
 │   ├── 📄 footer.tsx            # Pied de page
 │   └── 📄 sidebar.tsx           # Navigation latérale
-└── 📁 modules/                  # Legacy modules (migration)
-    └── 📁 boutique/             # Migration vers wrappers
-        └── 📁 components/
-            └── 📁 product-grid/ # Migré vers ContentGrid
+└── 📁 modules/                  # Legacy modules (consolidé)
+    └── 📁 boutique/             # Redirections vers collections
+        └── 📁 components/       # Exports consolidés
 ```
 
 **Innovation Architecture :**

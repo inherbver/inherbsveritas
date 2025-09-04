@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
-import { ProductDetail } from '@/components/modules/boutique/components/product-detail'
+import { ProductDetail } from '@/components/products/product-detail'
 import { Spinner } from '@/components/ui/spinner'
 import { type ProductLabel } from '@/types/product'
 

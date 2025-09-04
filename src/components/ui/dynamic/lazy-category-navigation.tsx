@@ -110,8 +110,7 @@ function CategoryFilterSkeleton() {
 
 // Re-export avec lazy loading
 export { CategoryNavigation, CategoryBreadcrumb, CategoryFilter };
-export type { 
-  CategoryNavigationProps, 
-  CategoryBreadcrumbProps, 
-  CategoryFilterProps 
-} from '@/components/categories/category-navigation';
+// Types à définir selon les besoins futurs
+export type CategoryNavigationProps = {}
+export type CategoryBreadcrumbProps = {}  
+export type CategoryFilterProps = {}

@@ -1,1 +1,0 @@
-export { ProductGrid, type ProductGridProps } from "./product-grid"

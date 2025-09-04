@@ -180,25 +180,25 @@ export function BoutiqueDemo() {
           {/* Normal grid */}
           <div>
             <h3 className="text-lg font-medium mb-3">Grille Complète</h3>
-            <ProductGrid />
+            <ProductGrid products={mockProducts} />
           </div>
 
           {/* Empty state */}
           <div>
             <h3 className="text-lg font-medium mb-3">État Vide</h3>
-            <ProductGrid />
+            <ProductGrid products={mockProducts} />
           </div>
 
           {/* Error state */}
           <div>
             <h3 className="text-lg font-medium mb-3">État d&apos;Erreur</h3>
-            <ProductGrid />
+            <ProductGrid products={mockProducts} />
           </div>
 
           {/* Loading state */}
           <div>
             <h3 className="text-lg font-medium mb-3">État de Chargement</h3>
-            <ProductGrid />
+            <ProductGrid products={mockProducts} />
           </div>
         </div>
       </section>
