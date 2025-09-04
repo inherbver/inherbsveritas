@@ -12,7 +12,7 @@ interface ProductActionsProps {
   variant?: 'default' | 'compact'
   isAddingToCart: boolean
   onAddToCart: () => void
-  onToggleFavorite?: (product: Product) => void
+  onToggleFavorite?: ((product: Product) => void) | undefined
 }
 
 export function ProductActions({ 

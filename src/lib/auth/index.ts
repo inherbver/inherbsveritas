@@ -37,4 +37,4 @@ export {
 } from '../../components/auth/role-gate'
 
 // Middleware (internal use)
-export { updateSession, getSessionDetails } from './middleware'
+export { updateSession } from './middleware'

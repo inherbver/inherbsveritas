@@ -1,0 +1,18 @@
+{
+  "title": "À Propos de In Herbis Veritas",
+  "hero": {
+    "title": "Nos Racines",
+    "subtitle": "Cultiver le bien-être, une plante à la fois.",
+    "imageAlt": "Arrière-plan de la section hero de la page À Propos",
+    "ctaLabel": "Découvrir nos engagements"
+  },
+  "navigation": {
+    "title": "À Propos",
+    "shop": "Boutique",
+    "products": "Produits"
+  },
+  "NotFound": {
+    "title": "Page non trouvée",
+    "description": "La page que vous recherchez n'existe pas."
+  }
+}

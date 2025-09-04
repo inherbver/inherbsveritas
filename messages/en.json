@@ -1,0 +1,76 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit"
+  },
+  "navigation": {
+    "home": "Home",
+    "shop": "Shop", 
+    "magazine": "Magazine",
+    "about": "About",
+    "contact": "Contact",
+    "cart": "Cart",
+    "account": "My Account"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  },
+  "shop": {
+    "meta": {
+      "title": "Shop - Natural cosmetics HerbisVeritas",
+      "description": "Discover our range of artisanal and natural cosmetics. Organic products, hand-harvested in Occitanie."
+    },
+    "title": "Shop",
+    "noProducts": "No products match your criteria",
+    "productCount": "{count} product",
+    "productCount_plural": "{count} products",
+    "inCategory": "in this category",
+    "searchResults": "for \"{search}\"",
+    "filters": {
+      "search": {
+        "placeholder": "Search for a product...",
+        "button": "Search"
+      },
+      "categories": {
+        "title": "Categories",
+        "all": "All products"
+      },
+      "labels": {
+        "title": "HerbisVeritas Labels"
+      },
+      "active": {
+        "title": "Active filters",
+        "clearAll": "Clear all"
+      }
+    }
+  },
+  "categories": {
+    "navigation": "Navigation",
+    "all": "All categories",
+    "selected": "Selected",
+    "selectCategory": "Choose a category",
+    "filter": "Filter by category",
+    "home": "Home"
+  },
+  "products": {
+    "addToCart": "Add to cart",
+    "outOfStock": "Out of stock",
+    "price": "Price",
+    "description": "Description", 
+    "ingredients": "INCI ingredients",
+    "labels": "Labels"
+  }
+}

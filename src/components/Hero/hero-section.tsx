@@ -14,7 +14,9 @@ interface HeroSectionProps {
 export function HeroSection({ children, className = '' }: HeroSectionProps) {
   return (
     <section
+      role="banner"
       id="home"
+      aria-labelledby="hero-title"
       className={`relative overflow-hidden bg-primary pt-[120px] md:pt-[130px] lg:pt-[160px] ${className}`}
     >
       <div className="container">

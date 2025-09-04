@@ -8,6 +8,7 @@ export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./tool
 export { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card"
 export { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs"
 export { Spinner, spinnerVariants } from "./spinner"
+export { Skeleton } from "./skeleton"
 export {
   Select,
   SelectContent,
@@ -23,3 +24,11 @@ export {
 
 // Composants spécialisés HerbisVeritas MVP
 export { InciList, InciListCompact } from "./inci-list"
+
+// Skeletons système unifié
+export { 
+  ProductCardSkeleton, 
+  ProductGridSkeleton, 
+  HeroSkeleton, 
+  FooterSkeleton 
+} from "./skeletons"

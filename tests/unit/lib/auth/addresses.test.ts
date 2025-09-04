@@ -14,19 +14,7 @@ import {
   type UpdateAddressData
 } from '@/lib/auth/addresses'
 
-// Mock Supabase
-jest.mock('@/lib/supabase/client', () => ({
-  createClient: jest.fn(() => ({
-    from: jest.fn(() => ({
-      insert: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      select: jest.fn(),
-      eq: jest.fn(),
-      single: jest.fn()
-    }))
-  }))
-}))
+// Utilise les mocks centralisés
 
 describe('lib/auth/addresses (TDD)', () => {
   let mockSupabase: any
@@ -34,20 +22,10 @@ describe('lib/auth/addresses (TDD)', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     
+    // Utilise factory centralisée - pas besoin de setup manuel
+    mockSupabase = global.createMockSupabaseClient()
     const { createClient } = require('@/lib/supabase/client')
-    mockSupabase = createClient()
-
-    // Setup chainable methods
-    const mockQuery = {
-      insert: jest.fn().mockReturnThis(),
-      update: jest.fn().mockReturnThis(),
-      delete: jest.fn().mockReturnThis(),
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      single: jest.fn().mockResolvedValue({ data: null, error: null })
-    }
-
-    mockSupabase.from.mockReturnValue(mockQuery)
+    ;(createClient as jest.Mock).mockReturnValue(mockSupabase)
   })
 
   describe('createAddress (TDD)', () => {

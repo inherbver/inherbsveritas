@@ -1,0 +1,13 @@
+{
+  "addToCart": "Ajouter au panier",
+  "outOfStock": "Rupture de stock",
+  "limitedStock": "Stock limité ({count} restants)",
+  "price": {
+    "from": "À partir de",
+    "per": "par {unit}"
+  },
+  "certifications": "Certifications",
+  "producer": "Producteur",
+  "origin": "Origine",
+  "viewDetails": "Voir les détails"
+}

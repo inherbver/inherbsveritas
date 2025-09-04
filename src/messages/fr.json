@@ -119,5 +119,21 @@
     "newsletterDescription": "Inscrivez-vous pour recevoir nos actualités",
     "subscribe": "S'abonner",
     "followUs": "Suivez-nous"
+  },
+  "NotFound": {
+    "title": "Page non trouvée",
+    "description": "La page que vous cherchez n'existe pas.",
+    "backHome": "Retour à l'accueil"
+  },
+  "categories": {
+    "navigation": "Navigation",
+    "all": "Tous",
+    "selected": "Sélectionné",
+    "home": "Accueil",
+    "filter": "Filtrer",
+    "selectCategory": "Sélectionner une catégorie",
+    "noCategories": "Aucune catégorie disponible",
+    "loading": "Chargement des catégories...",
+    "error": "Erreur lors du chargement des catégories"
   }
 }

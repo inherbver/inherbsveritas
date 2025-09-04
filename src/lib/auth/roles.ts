@@ -26,8 +26,8 @@ export const ROLE_HIERARCHY: Record<UserRole, number> = {
 export const ROLE_REDIRECTS: Record<UserRole, string> = {
   guest: '/',
   user: '/profile',
-  dev: '/admin',    // Même redirection que admin
-  admin: '/admin'   // Interface admin partagée dev/admin
+  dev: '/dev',      // Interface dev dédiée
+  admin: '/admin'   // Interface admin
 } as const
 
 // === ROUTES PUBLIQUES ===

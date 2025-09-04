@@ -30,13 +30,13 @@ export type ArticleStatus = 'draft' | 'published' | 'archived'
 
 // Product labels for HerbisVeritas (MVP: 7 specific labels)
 export type ProductLabel = 
-  | 'recolte_main'           // "Récolté à la main"
+  | 'recolte_main'           // "R�colt� � la main"
   | 'bio'                    // "Bio"
   | 'origine_occitanie'      // "Origine Occitanie" 
   | 'partenariat_producteurs' // "Partenariat producteurs locaux"
-  | 'rituel_bien_etre'       // "Rituel de bien-être"
-  | 'rupture_recolte'        // "Rupture de récolte"
-  | 'essence_precieuse'      // "Essence précieuse"
+  | 'rituel_bien_etre'       // "Rituel de bien-�tre"
+  | 'rupture_recolte'        // "Rupture de r�colte"
+  | 'essence_precieuse'      // "Essence pr�cieuse"
 
 // Featured item types (Hero polyvalent)
 export type FeaturedType = 'product' | 'article' | 'event'
@@ -49,595 +49,460 @@ export interface TranslationContent {
     description?: string
     excerpt?: string
     content?: string
-    [key: string]: any
+    meta_description?: string
   }
 }
 
-// MVP Database Schema (13 tables)
+// HerbisVeritas MVP Database Schema Types
+
 export interface Database {
   public: {
     Tables: {
-      // 1. Users (3 roles MVP)
+      // Users table (extends Supabase auth.users)
       users: {
         Row: {
-          id: string // UUID references auth.users(id)
+          id: string
           email: string
+          role: UserRole
           first_name: string | null
           last_name: string | null
-          phone_number: string | null
-          role: UserRole
-          status: string // 'active' | 'inactive'
-          newsletter_subscribed: boolean
-          terms_accepted_at: string | null
-          last_activity: string | null
+          phone: string | null
+          newsletter_consent: boolean
           created_at: string
           updated_at: string
         }
         Insert: {
           id: string
           email: string
+          role?: UserRole
           first_name?: string | null
           last_name?: string | null
-          phone_number?: string | null
-          role?: UserRole
-          status?: string
-          newsletter_subscribed?: boolean
-          terms_accepted_at?: string | null
-          last_activity?: string | null
+          phone?: string | null
+          newsletter_consent?: boolean
           created_at?: string
           updated_at?: string
         }
         Update: {
+          id?: string
           email?: string
+          role?: UserRole
           first_name?: string | null
           last_name?: string | null
-          phone_number?: string | null
-          role?: UserRole
-          status?: string
-          newsletter_subscribed?: boolean
-          terms_accepted_at?: string | null
-          last_activity?: string | null
+          phone?: string | null
+          newsletter_consent?: boolean
+          created_at?: string
           updated_at?: string
         }
       }
-
-      // 2. Addresses (FK moderne)
+      // Categories table (hierarchy)
+      categories: {
+        Row: {
+          id: string
+          parent_id: string | null
+          slug: string
+          sort_order: number
+          is_active: boolean
+          translations: TranslationContent
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          parent_id?: string | null
+          slug: string
+          sort_order?: number
+          is_active?: boolean
+          translations: TranslationContent
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          parent_id?: string | null
+          slug?: string
+          sort_order?: number
+          is_active?: boolean
+          translations?: TranslationContent
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      // Products table (inventory)
+      products: {
+        Row: {
+          id: string
+          category_id: string
+          sku: string
+          slug: string
+          price: number
+          stock_quantity: number
+          low_stock_threshold: number
+          weight_grams: number | null
+          dimensions_cm: Json | null
+          labels: ProductLabel[]
+          translations: TranslationContent
+          is_active: boolean
+          featured: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          category_id: string
+          sku: string
+          slug: string
+          price: number
+          stock_quantity?: number
+          low_stock_threshold?: number
+          weight_grams?: number | null
+          dimensions_cm?: Json | null
+          labels?: ProductLabel[]
+          translations: TranslationContent
+          is_active?: boolean
+          featured?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          category_id?: string
+          sku?: string
+          slug?: string
+          price?: number
+          stock_quantity?: number
+          low_stock_threshold?: number
+          weight_grams?: number | null
+          dimensions_cm?: Json | null
+          labels?: ProductLabel[]
+          translations?: TranslationContent
+          is_active?: boolean
+          featured?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      // Product images table
+      product_images: {
+        Row: {
+          id: string
+          product_id: string
+          url: string
+          alt_text: string | null
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          url: string
+          alt_text?: string | null
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          product_id?: string
+          url?: string
+          alt_text?: string | null
+          sort_order?: number
+          created_at?: string
+        }
+      }
+      // Addresses table
       addresses: {
         Row: {
           id: string
           user_id: string
-          address_type: AddressType
+          type: AddressType
           is_default: boolean
-          first_name: string | null
-          last_name: string | null
-          company_name: string | null
-          street_number: string | null
-          address_line1: string
-          address_line2: string | null
+          first_name: string
+          last_name: string
+          company: string | null
+          address_line_1: string
+          address_line_2: string | null
           city: string
           postal_code: string
-          country_code: string
-          state_province_region: string | null
-          phone_number: string | null
-          email: string | null
+          country: string
+          phone: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           user_id: string
-          address_type: AddressType
+          type: AddressType
           is_default?: boolean
-          first_name?: string | null
-          last_name?: string | null
-          company_name?: string | null
-          street_number?: string | null
-          address_line1: string
-          address_line2?: string | null
+          first_name: string
+          last_name: string
+          company?: string | null
+          address_line_1: string
+          address_line_2?: string | null
           city: string
           postal_code: string
-          country_code?: string
-          state_province_region?: string | null
-          phone_number?: string | null
-          email?: string | null
+          country: string
+          phone?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
+          id?: string
           user_id?: string
-          address_type?: AddressType
+          type?: AddressType
           is_default?: boolean
-          first_name?: string | null
-          last_name?: string | null
-          company_name?: string | null
-          street_number?: string | null
-          address_line1?: string
-          address_line2?: string | null
+          first_name?: string
+          last_name?: string
+          company?: string | null
+          address_line_1?: string
+          address_line_2?: string | null
           city?: string
           postal_code?: string
-          country_code?: string
-          state_province_region?: string | null
-          phone_number?: string | null
-          email?: string | null
-          updated_at?: string
-        }
-      }
-
-      // 3. Categories (hiérarchique avec i18n JSONB)
-      categories: {
-        Row: {
-          id: string
-          slug: string
-          parent_id: string | null
-          name: string // Contenu français (défaut)
-          description: string | null
-          color: string | null // Hex color
-          translations: Json // i18n JSONB
-          sort_order: number
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          slug: string
-          parent_id?: string | null
-          name: string
-          description?: string | null
-          color?: string | null
-          translations?: Json
-          sort_order?: number
+          country?: string
+          phone?: string | null
           created_at?: string
           updated_at?: string
         }
-        Update: {
-          slug?: string
-          parent_id?: string | null
-          name?: string
-          description?: string | null
-          color?: string | null
-          translations?: Json
-          sort_order?: number
-          updated_at?: string
-        }
       }
-
-      // 4. Products (cosmétique avec labels HerbisVeritas)
-      products: {
-        Row: {
-          id: string
-          slug: string
-          category_id: string | null
-          name: string // Français (défaut)
-          description_short: string | null
-          description_long: string | null
-          price: number // DECIMAL(10,2)
-          currency: string
-          stock: number
-          unit: string
-          image_url: string | null
-          inci_list: string[] | null // Liste ingrédients INCI (réglementation EU)
-          labels: ProductLabel[] | null // Labels HerbisVeritas
-          status: string // 'active' | 'inactive'
-          is_active: boolean
-          is_new: boolean
-          translations: Json // i18n JSONB
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          slug: string
-          category_id?: string | null
-          name: string
-          description_short?: string | null
-          description_long?: string | null
-          price: number
-          currency?: string
-          stock?: number
-          unit?: string
-          image_url?: string | null
-          inci_list?: string[] | null
-          labels?: ProductLabel[] | null
-          status?: string
-          is_active?: boolean
-          is_new?: boolean
-          translations?: Json
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          slug?: string
-          category_id?: string | null
-          name?: string
-          description_short?: string | null
-          description_long?: string | null
-          price?: number
-          currency?: string
-          stock?: number
-          unit?: string
-          image_url?: string | null
-          inci_list?: string[] | null
-          labels?: ProductLabel[] | null
-          status?: string
-          is_active?: boolean
-          is_new?: boolean
-          translations?: Json
-          updated_at?: string
-        }
-      }
-
-      // 5. Carts (système Guest/User MVP)
-      carts: {
-        Row: {
-          id: string
-          user_id: string | null // NULL si invité
-          guest_id: string | null // Session invité
-          status: string // 'active' | 'completed' | 'abandoned'
-          metadata: Json
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          user_id?: string | null
-          guest_id?: string | null
-          status?: string
-          metadata?: Json
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          user_id?: string | null
-          guest_id?: string | null
-          status?: string
-          metadata?: Json
-          updated_at?: string
-        }
-      }
-
-      // 6. Cart Items
-      cart_items: {
-        Row: {
-          id: string
-          cart_id: string
-          product_id: string
-          quantity: number
-          added_at: string
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          cart_id: string
-          product_id: string
-          quantity?: number
-          added_at?: string
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          cart_id?: string
-          product_id?: string
-          quantity?: number
-          added_at?: string
-          updated_at?: string
-        }
-      }
-
-      // 7. Orders (commandes avec Stripe complet)
+      // Orders table
       orders: {
         Row: {
           id: string
-          order_number: string | null // Généré automatiquement
-          user_id: string
-          status: OrderStatus // États MVP (4 états)
-          payment_status: PaymentStatus
-          total_amount: number // DECIMAL(10,2)
+          user_id: string | null
+          status: OrderStatus
+          email: string
+          subtotal: number
+          shipping_cost: number
+          tax_amount: number
+          total_amount: number
           currency: string
-          shipping_fee: number // Prix fixe Colissimo MVP (4.90€)
-          shipping_address_id: string | null
-          billing_address_id: string | null
-          payment_method: string | null
-          payment_intent_id: string | null
-          stripe_checkout_session_id: string | null
-          stripe_checkout_id: string | null
-          shipping_method: string | null // 'colissimo'
-          tracking_number: string | null
-          tracking_url: string | null
-          notes: string | null
+          stripe_payment_intent_id: string | null
+          billing_address: Json
+          shipping_address: Json
           created_at: string
           updated_at: string
-          shipped_at: string | null
-          delivered_at: string | null
         }
         Insert: {
           id?: string
-          order_number?: string | null
-          user_id: string
+          user_id?: string | null
           status?: OrderStatus
-          payment_status?: PaymentStatus
+          email: string
+          subtotal: number
+          shipping_cost?: number
+          tax_amount?: number
           total_amount: number
           currency?: string
-          shipping_fee?: number
-          shipping_address_id?: string | null
-          billing_address_id?: string | null
-          payment_method?: string | null
-          payment_intent_id?: string | null
-          stripe_checkout_session_id?: string | null
-          stripe_checkout_id?: string | null
-          shipping_method?: string | null
-          tracking_number?: string | null
-          tracking_url?: string | null
-          notes?: string | null
+          stripe_payment_intent_id?: string | null
+          billing_address: Json
+          shipping_address: Json
           created_at?: string
           updated_at?: string
-          shipped_at?: string | null
-          delivered_at?: string | null
         }
         Update: {
-          order_number?: string | null
-          user_id?: string
+          id?: string
+          user_id?: string | null
           status?: OrderStatus
-          payment_status?: PaymentStatus
+          email?: string
+          subtotal?: number
+          shipping_cost?: number
+          tax_amount?: number
           total_amount?: number
           currency?: string
-          shipping_fee?: number
-          shipping_address_id?: string | null
-          billing_address_id?: string | null
-          payment_method?: string | null
-          payment_intent_id?: string | null
-          stripe_checkout_session_id?: string | null
-          stripe_checkout_id?: string | null
-          shipping_method?: string | null
-          tracking_number?: string | null
-          tracking_url?: string | null
-          notes?: string | null
+          stripe_payment_intent_id?: string | null
+          billing_address?: Json
+          shipping_address?: Json
+          created_at?: string
           updated_at?: string
-          shipped_at?: string | null
-          delivered_at?: string | null
         }
       }
-
-      // 8. Order Items (articles commande avec snapshot)
+      // Order items table
       order_items: {
         Row: {
           id: string
           order_id: string
-          product_id: string | null
+          product_id: string
           quantity: number
-          price_at_purchase: number // DECIMAL(10,2)
-          product_name_at_purchase: string | null
-          product_image_url_at_purchase: string | null
-          product_sku_at_purchase: string | null
+          unit_price: number
+          total_price: number
           created_at: string
-          updated_at: string
         }
         Insert: {
           id?: string
           order_id: string
-          product_id?: string | null
+          product_id: string
           quantity: number
-          price_at_purchase: number
-          product_name_at_purchase?: string | null
-          product_image_url_at_purchase?: string | null
-          product_sku_at_purchase?: string | null
+          unit_price: number
+          total_price: number
           created_at?: string
-          updated_at?: string
         }
         Update: {
+          id?: string
           order_id?: string
-          product_id?: string | null
+          product_id?: string
           quantity?: number
-          price_at_purchase?: number
-          product_name_at_purchase?: string | null
-          product_image_url_at_purchase?: string | null
-          product_sku_at_purchase?: string | null
-          updated_at?: string
+          unit_price?: number
+          total_price?: number
+          created_at?: string
         }
       }
-
-      // 9. Articles (magazine TipTap)
+      // Articles table (blog/content)
       articles: {
         Row: {
           id: string
           slug: string
-          author_id: string
-          category_id: string | null
-          title: string // Français (défaut)
-          excerpt: string | null
-          content: Json // TipTap JSON
-          content_html: string | null // HTML généré
-          featured_image: string | null
-          status: string // 'draft' | 'published' | 'archived'
+          status: ArticleStatus
           published_at: string | null
-          seo_title: string | null
-          seo_description: string | null
-          translations: Json // i18n JSONB
+          translations: TranslationContent
+          featured_image_url: string | null
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           slug: string
-          author_id: string
-          category_id?: string | null
-          title: string
-          excerpt?: string | null
-          content: Json
-          content_html?: string | null
-          featured_image?: string | null
-          status?: string
+          status?: ArticleStatus
           published_at?: string | null
-          seo_title?: string | null
-          seo_description?: string | null
-          translations?: Json
+          translations: TranslationContent
+          featured_image_url?: string | null
           created_at?: string
           updated_at?: string
         }
         Update: {
+          id?: string
           slug?: string
-          author_id?: string
-          category_id?: string | null
-          title?: string
-          excerpt?: string | null
-          content?: Json
-          content_html?: string | null
-          featured_image?: string | null
-          status?: string
+          status?: ArticleStatus
           published_at?: string | null
-          seo_title?: string | null
-          seo_description?: string | null
-          translations?: Json
+          translations?: TranslationContent
+          featured_image_url?: string | null
+          created_at?: string
           updated_at?: string
         }
       }
-
-      // 10. Partners (points de vente avec réseaux sociaux)
-      partners: {
+      // Events table 
+      events: {
         Row: {
           id: string
-          name: string
-          description: string
-          address: string
-          image_url: string
-          facebook_url: string | null
-          instagram_url: string | null
-          display_order: number
+          slug: string
+          event_date: string
+          location: string | null
+          max_participants: number | null
+          current_participants: number
+          price: number | null
+          translations: TranslationContent
           is_active: boolean
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
-          name: string
-          description: string
-          address: string
-          image_url: string
-          facebook_url?: string | null
-          instagram_url?: string | null
-          display_order?: number
+          slug: string
+          event_date: string
+          location?: string | null
+          max_participants?: number | null
+          current_participants?: number
+          price?: number | null
+          translations: TranslationContent
           is_active?: boolean
           created_at?: string
           updated_at?: string
         }
         Update: {
-          name?: string
-          description?: string
-          address?: string
-          image_url?: string
-          facebook_url?: string | null
-          instagram_url?: string | null
-          display_order?: number
-          is_active?: boolean
-          updated_at?: string
-        }
-      }
-
-      // 11. Next Events (événement Hero simple)
-      next_events: {
-        Row: {
-          id: string
-          title: string
-          description: string | null
-          date: string // DATE "2025-02-15"
-          time_start: string // TIME "09:00"
-          time_end: string | null // TIME "17:00"
-          location: string
-          image_url: string | null
-          is_active: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
           id?: string
-          title: string
-          description?: string | null
-          date: string
-          time_start: string
-          time_end?: string | null
-          location: string
-          image_url?: string | null
+          slug?: string
+          event_date?: string
+          location?: string | null
+          max_participants?: number | null
+          current_participants?: number
+          price?: number | null
+          translations?: TranslationContent
           is_active?: boolean
           created_at?: string
           updated_at?: string
         }
-        Update: {
-          title?: string
-          description?: string | null
-          date?: string
-          time_start?: string
-          time_end?: string | null
-          location?: string
-          image_url?: string | null
-          is_active?: boolean
-          updated_at?: string
-        }
       }
-
-      // 12. Newsletter Subscribers (basique)
-      newsletter_subscribers: {
-        Row: {
-          id: string
-          email: string
-          is_active: boolean
-          subscribed_at: string
-          source: string | null // "website" | "popup" | "checkout"
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          email: string
-          is_active?: boolean
-          subscribed_at?: string
-          source?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          email?: string
-          is_active?: boolean
-          subscribed_at?: string
-          source?: string | null
-          updated_at?: string
-        }
-      }
-
-      // 13. Featured Items (Hero polyvalent)
+      // Hero/Featured content table
       featured_items: {
         Row: {
           id: string
-          type: FeaturedType // 'product' | 'article' | 'event'
-          item_id: string // FK polymorphe
-          title_override: string | null
-          subtitle: string | null
-          image_override: string | null
+          type: FeaturedType
+          target_id: string
+          sort_order: number
+          start_date: string | null
+          end_date: string | null
           is_active: boolean
-          display_order: number
           created_at: string
           updated_at: string
         }
         Insert: {
           id?: string
           type: FeaturedType
-          item_id: string
-          title_override?: string | null
-          subtitle?: string | null
-          image_override?: string | null
+          target_id: string
+          sort_order?: number
+          start_date?: string | null
+          end_date?: string | null
           is_active?: boolean
-          display_order?: number
           created_at?: string
           updated_at?: string
         }
         Update: {
+          id?: string
           type?: FeaturedType
-          item_id?: string
-          title_override?: string | null
-          subtitle?: string | null
-          image_override?: string | null
+          target_id?: string
+          sort_order?: number
+          start_date?: string | null
+          end_date?: string | null
           is_active?: boolean
-          display_order?: number
+          created_at?: string
           updated_at?: string
+        }
+      }
+      // Newsletter subscriptions
+      newsletter_subscriptions: {
+        Row: {
+          id: string
+          email: string
+          is_active: boolean
+          subscribed_at: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          id?: string
+          email: string
+          is_active?: boolean
+          subscribed_at?: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          id?: string
+          email?: string
+          is_active?: boolean
+          subscribed_at?: string
+          unsubscribed_at?: string | null
+        }
+      }
+      // Analytics/tracking table
+      page_views: {
+        Row: {
+          id: string
+          path: string
+          user_agent: string | null
+          ip_address: string | null
+          referrer: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          path: string
+          user_agent?: string | null
+          ip_address?: string | null
+          referrer?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          path?: string
+          user_agent?: string | null
+          ip_address?: string | null
+          referrer?: string | null
+          created_at?: string
         }
       }
     }
@@ -656,63 +521,71 @@ export interface Database {
       product_label: ProductLabel
       featured_type: FeaturedType
     }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
 
-// Utility types
-export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
-export type TablesInsert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert']
-export type TablesUpdate<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update']
+// Type aliases for easier use
+export type Tables<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]
 
-// Export common types for easy access
-export type User = Tables<'users'>
-export type UserInsert = TablesInsert<'users'>
-export type UserUpdate = TablesUpdate<'users'>
+export type Enums<T extends keyof Database['public']['Enums']> =
+  Database['public']['Enums'][T]
 
-export type Address = Tables<'addresses'>
-export type AddressInsert = TablesInsert<'addresses'>
-export type AddressUpdate = TablesUpdate<'addresses'>
+export type Row<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Row']
 
-export type Category = Tables<'categories'>
-export type CategoryInsert = TablesInsert<'categories'>
-export type CategoryUpdate = TablesUpdate<'categories'>
+export type Insert<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Insert']
 
-export type Product = Tables<'products'>
-export type ProductInsert = TablesInsert<'products'>
-export type ProductUpdate = TablesUpdate<'products'>
+export type Update<T extends keyof Database['public']['Tables']> =
+  Database['public']['Tables'][T]['Update']
 
-export type Cart = Tables<'carts'>
-export type CartInsert = TablesInsert<'carts'>
-export type CartUpdate = TablesUpdate<'carts'>
+// Common entities
+export type User = Row<'users'>
+export type Category = Row<'categories'>
+export type Product = Row<'products'>
+export type ProductImage = Row<'product_images'>
+export type Address = Row<'addresses'>
+export type Order = Row<'orders'>
+export type OrderItem = Row<'order_items'>
+export type Article = Row<'articles'>
+export type Event = Row<'events'>
+export type FeaturedItem = Row<'featured_items'>
+export type NewsletterSubscription = Row<'newsletter_subscriptions'>
+export type PageView = Row<'page_views'>
 
-export type CartItem = Tables<'cart_items'>
-export type CartItemInsert = TablesInsert<'cart_items'>
-export type CartItemUpdate = TablesUpdate<'cart_items'>
+// Insert types
+export type NewUser = Insert<'users'>
+export type NewCategory = Insert<'categories'>
+export type NewProduct = Insert<'products'>
+export type NewProductImage = Insert<'product_images'>
+export type NewAddress = Insert<'addresses'>
+export type NewOrder = Insert<'orders'>
+export type NewOrderItem = Insert<'order_items'>
+export type NewArticle = Insert<'articles'>
+export type NewEvent = Insert<'events'>
+export type NewFeaturedItem = Insert<'featured_items'>
+export type NewNewsletterSubscription = Insert<'newsletter_subscriptions'>
+export type NewPageView = Insert<'page_views'>
 
-export type Order = Tables<'orders'>
-export type OrderInsert = TablesInsert<'orders'>
-export type OrderUpdate = TablesUpdate<'orders'>
+// Update types
+export type UpdateUser = Update<'users'>
+export type UpdateCategory = Update<'categories'>
+export type UpdateProduct = Update<'products'>
+export type UpdateProductImage = Update<'product_images'>
+export type UpdateAddress = Update<'addresses'>
+export type UpdateOrder = Update<'orders'>
+export type UpdateOrderItem = Update<'order_items'>
+export type UpdateArticle = Update<'articles'>
+export type UpdateEvent = Update<'events'>
+export type UpdateFeaturedItem = Update<'featured_items'>
+export type UpdateNewsletterSubscription = Update<'newsletter_subscriptions'>
+export type UpdatePageView = Update<'page_views'>
 
-export type OrderItem = Tables<'order_items'>
-export type OrderItemInsert = TablesInsert<'order_items'>
-export type OrderItemUpdate = TablesUpdate<'order_items'>
-
-export type Article = Tables<'articles'>
-export type ArticleInsert = TablesInsert<'articles'>
-export type ArticleUpdate = TablesUpdate<'articles'>
-
-export type Partner = Tables<'partners'>
-export type PartnerInsert = TablesInsert<'partners'>
-export type PartnerUpdate = TablesUpdate<'partners'>
-
-export type NextEvent = Tables<'next_events'>
-export type NextEventInsert = TablesInsert<'next_events'>
-export type NextEventUpdate = TablesUpdate<'next_events'>
-
-export type NewsletterSubscriber = Tables<'newsletter_subscribers'>
-export type NewsletterSubscriberInsert = TablesInsert<'newsletter_subscribers'>
-export type NewsletterSubscriberUpdate = TablesUpdate<'newsletter_subscribers'>
-
-export type FeaturedItem = Tables<'featured_items'>
-export type FeaturedItemInsert = TablesInsert<'featured_items'>
-export type FeaturedItemUpdate = TablesUpdate<'featured_items'>
+// Extended types with relations
+export interface CategoryWithChildren extends Category {
+  children?: CategoryWithChildren[]
+}

@@ -1,7 +1,8 @@
 /**
  * Supabase Server Client Configuration
- * Used for Server Components, Server Actions and API routes
+ * Server-side client for use in Server Components and API routes
  */
+
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { Database } from '@/types/database'
@@ -27,8 +28,8 @@ export async function createClient() {
             // This can be ignored if you have middleware refreshing
             // user sessions.
           }
-        }
-      }
+        },
+      },
     }
   )
 }

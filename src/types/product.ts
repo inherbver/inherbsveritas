@@ -71,7 +71,7 @@ export interface ProductCardProps {
 }
 
 export interface ProductFilters {
-  category?: string
+  category?: string | undefined
   labels?: ProductLabel[]
   priceMin?: number
   priceMax?: number

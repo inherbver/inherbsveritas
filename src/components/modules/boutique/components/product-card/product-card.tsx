@@ -54,7 +54,7 @@ export function ProductCard({
 
   return (
     <article itemScope itemType="https://schema.org/Product">
-      <CardWrapper productSlug={product.slug} variant={variant} className={className}>
+      <CardWrapper productSlug={product.slug} variant={variant} className={className || ''}>
         {/* Product Image avec badges overlay */}
         <div className="relative">
           <ProductImage 

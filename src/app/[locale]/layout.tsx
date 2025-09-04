@@ -5,16 +5,16 @@
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages } from 'next-intl/server'
 import { notFound } from 'next/navigation'
-import { routing } from '@/i18n/routing'
-import Footer from '@/components/Footer'
-import Header from '@/components/Header'
-import ScrollToTop from '@/components/ScrollToTop'
+import { locales } from '@/i18n-config'
+import Footer from '@/components/footer'
+import Header from '@/components/header'
+import ScrollToTop from '@/components/scroll-to-top'
 import '../../styles/index.css'
 import '../../styles/prism-vsc-dark-plus.css'
 import Providers from '../providers'
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
+  return locales.map((locale) => ({ locale }))
 }
 
 export default async function LocaleLayout({
@@ -27,7 +27,7 @@ export default async function LocaleLayout({
   const { locale } = await params
   
   // Validate locale
-  if (!routing.locales.includes(locale as any)) {
+  if (!locales.includes(locale as (typeof locales)[number])) {
     notFound()
   }
 

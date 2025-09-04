@@ -5,8 +5,8 @@
  * Configured for cosmetics business content
  */
 
-import { HeroSection } from '../hero/hero-section';
-import { HeroContent } from '../hero/hero-content';
+import { HeroSection } from './hero-section';
+import { HeroContent } from './hero-content';
 
 export default function Hero() {
   const heroData = {
