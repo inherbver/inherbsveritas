@@ -41,7 +41,11 @@
       "Bash(done)",
       "Bash(npm run test:integration:*)",
       "mcp__supabase__search_docs",
-      "Bash(npm remove:*)"
+      "Bash(npm remove:*)",
+      "Bash(npm run test:database:*)",
+      "Bash(npm run:*)",
+      "Bash(node:*)",
+      "WebFetch(domain:docs.stripe.com)"
     ],
     "deny": [],
     "ask": []

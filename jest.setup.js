@@ -111,3 +111,9 @@ global.createMockSupabaseClient = createMockSupabaseClient
 // Mock environment variables
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
 process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+
+// Mock environment variables pour Stripe
+process.env.STRIPE_SECRET_KEY = 'sk_test_mock_stripe_secret_key'
+process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test_mock_webhook_secret'
+process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = 'pk_test_mock_publishable_key'
+process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3000'
