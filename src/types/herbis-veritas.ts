@@ -202,6 +202,25 @@ export interface Cart {
 }
 
 /**
+ * Interface cart item pour Phase 2 avec données produit intégrées
+ * Compatible avec user_cart_view et optimistic updates
+ */
+export interface HerbisCartItem {
+  id: string; // ID du cart_item ou optimistic ID
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  labels?: HerbisVeritasLabel[];
+  unit?: string;
+  inci_list?: string[];
+  image_url?: string;
+  slug?: string;
+  stock_quantity?: number;
+  low_stock_threshold?: number;
+}
+
+/**
  * === 🎯 Business Logic Helpers ===
  */
 export const getLocalizedCategory = (category: Category, locale: 'fr' | 'en' = 'fr') => {

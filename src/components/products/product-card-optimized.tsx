@@ -14,7 +14,7 @@ import { ContentCard, type ContentCardBadge, type ContentCardAction } from "@/co
 import { InciListCompact } from "@/components/ui/inci-list"
 import { ProductCardProps } from "@/types/product"
 import { LABEL_DISPLAY, LABEL_BADGE_VARIANTS } from "@/types/product"
-import { useCartActions, useIsInCart } from "@/hooks/use-cart-query"
+import { useCartActions, useIsInCart } from "@/hooks/cart"
 
 export function ProductCardOptimized({
   product,
@@ -36,7 +36,15 @@ export function ProductCardOptimized({
     
     try {
       // Utilise les hooks cart modernes au lieu de l'ancienne prop
-      addToCart({ productId: product.id, quantity: 1 })
+      addToCart({ 
+        productId: product.id, 
+        name: product.name,
+        price: product.price,
+        quantity: 1,
+        labels: product.labels || [],
+        slug: product.slug,
+        ...(product.image_url && { image_url: product.image_url })
+      })
       
       // Backward compatibility: appelle aussi l'ancienne prop si fournie
       if (onAddToCart) {

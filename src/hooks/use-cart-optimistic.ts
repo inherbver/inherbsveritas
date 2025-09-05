@@ -1,43 +1,51 @@
 'use client'
 
 import { useOptimistic } from 'react';
-import { CartItem, Product } from '@/types/herbis-veritas';
+import type { HerbisCartItem } from '@/types/herbis-veritas';
 
 /**
- * === 🚀 Cart Optimistic Hook - React 19 ===
+ * === 🚀 Cart Optimistic Hook - React 19 Phase 2 ===
  * Hook utilisant useOptimistic pour updates instantanées du cart
- * 0ms perceived latency pour UX révolutionnaire
+ * Integration avec user_cart_view et RPC functions
  */
 
-export type CartAction = 
-  | { type: 'ADD_ITEM'; payload: { product: Product; quantity: number } }
+export type CartOptimisticAction = 
+  | { type: 'ADD_ITEM'; payload: { item: Omit<HerbisCartItem, 'id'> } }
   | { type: 'UPDATE_QUANTITY'; payload: { productId: string; quantity: number } }
   | { type: 'REMOVE_ITEM'; payload: { productId: string } }
-  | { type: 'CLEAR_CART' };
+  | { type: 'CLEAR_CART'; payload: {} };
 
-function cartOptimisticReducer(state: CartItem[], action: CartAction): CartItem[] {
+function cartOptimisticReducer(state: HerbisCartItem[], action: CartOptimisticAction): HerbisCartItem[] {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const { product, quantity } = action.payload;
-      const existingIndex = state.findIndex(item => 
-        item.product_id === product.id
+      const { item } = action.payload;
+      const existingIndex = state.findIndex(cartItem => 
+        cartItem.productId === item.productId
       );
       
       if (existingIndex !== -1) {
         // Mettre à jour quantité existante
-        return state.map((item, index) => 
+        return state.map((cartItem, index) => 
           index === existingIndex 
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
+            ? { ...cartItem, quantity: cartItem.quantity + (item.quantity || 1) }
+            : cartItem
         );
       }
       
       // Nouvel item avec ID temporaire optimiste
-      const newItem: CartItem = {
-        product_id: product.id,
-        quantity,
-        price: product.price,
-        product
+      const newItem: HerbisCartItem = {
+        id: `optimistic-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        productId: item.productId,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity || 1,
+        labels: item.labels || [],
+        unit: item.unit || 'pièce',
+        slug: item.slug || '',
+        inci_list: item.inci_list || [],
+        ...(item.image_url && { image_url: item.image_url }),
+        ...(item.stock_quantity !== undefined && { stock_quantity: item.stock_quantity }),
+        ...(item.low_stock_threshold !== undefined && { low_stock_threshold: item.low_stock_threshold }),
       };
       
       return [...state, newItem];
@@ -47,11 +55,11 @@ function cartOptimisticReducer(state: CartItem[], action: CartAction): CartItem[
       const { productId, quantity } = action.payload;
       
       if (quantity <= 0) {
-        return state.filter(item => item.product_id !== productId);
+        return state.filter(item => item.productId !== productId);
       }
       
       return state.map(item =>
-        item.product_id === productId
+        item.productId === productId
           ? { ...item, quantity }
           : item
       );
@@ -59,7 +67,7 @@ function cartOptimisticReducer(state: CartItem[], action: CartAction): CartItem[
       
     case 'REMOVE_ITEM': {
       const { productId } = action.payload;
-      return state.filter(item => item.product_id !== productId);
+      return state.filter(item => item.productId !== productId);
     }
     
     case 'CLEAR_CART': {
@@ -72,12 +80,12 @@ function cartOptimisticReducer(state: CartItem[], action: CartAction): CartItem[
 }
 
 interface UseCartOptimisticOptions {
-  onOptimisticUpdate?: (action: CartAction) => void;
-  onError?: (error: Error, action: CartAction) => void;
+  onOptimisticUpdate?: (action: CartOptimisticAction) => void;
+  onError?: (error: Error, action: CartOptimisticAction) => void;
 }
 
 export function useCartOptimistic(
-  serverItems: CartItem[] = [],
+  serverItems: HerbisCartItem[] = [],
   options: UseCartOptimisticOptions = {}
 ) {
   const [optimisticItems, addOptimistic] = useOptimistic(
@@ -86,10 +94,10 @@ export function useCartOptimistic(
   );
 
   // Actions optimistes avec callbacks
-  const addItemOptimistic = (product: Product, quantity: number = 1) => {
-    const action: CartAction = { 
+  const addItemOptimistic = (item: Omit<HerbisCartItem, 'id'>) => {
+    const action: CartOptimisticAction = { 
       type: 'ADD_ITEM', 
-      payload: { product, quantity } 
+      payload: { item } 
     };
     
     options.onOptimisticUpdate?.(action);
@@ -97,7 +105,7 @@ export function useCartOptimistic(
   };
 
   const updateQuantityOptimistic = (productId: string, quantity: number) => {
-    const action: CartAction = { 
+    const action: CartOptimisticAction = { 
       type: 'UPDATE_QUANTITY', 
       payload: { productId, quantity } 
     };
@@ -107,7 +115,7 @@ export function useCartOptimistic(
   };
 
   const removeItemOptimistic = (productId: string) => {
-    const action: CartAction = { 
+    const action: CartOptimisticAction = { 
       type: 'REMOVE_ITEM', 
       payload: { productId } 
     };
@@ -117,7 +125,7 @@ export function useCartOptimistic(
   };
 
   const clearCartOptimistic = () => {
-    const action: CartAction = { type: 'CLEAR_CART' };
+    const action: CartOptimisticAction = { type: 'CLEAR_CART', payload: {} };
     
     options.onOptimisticUpdate?.(action);
     addOptimistic(action);
@@ -130,11 +138,24 @@ export function useCartOptimistic(
     0
   );
 
+  // HerbisVeritas analytics spécifiques
+  const labelsDistribution = optimisticItems.reduce((acc, item) => {
+    item.labels?.forEach(label => {
+      acc[label] = (acc[label] || 0) + item.quantity;
+    });
+    return acc;
+  }, {} as Record<string, number>);
+
+  const averageItemPrice = itemCount > 0 ? subtotal / itemCount : 0;
+  const mostPopularLabel = Object.entries(labelsDistribution)
+    .sort(([, a], [, b]) => b - a)[0]?.[0] || null;
+
   return {
     // État optimiste
     optimisticItems,
     itemCount,
     subtotal,
+    isEmpty: optimisticItems.length === 0,
     
     // Actions optimistes
     addItemOptimistic,
@@ -144,9 +165,14 @@ export function useCartOptimistic(
     
     // Utilitaires
     hasItem: (productId: string) => 
-      optimisticItems.some(item => item.product_id === productId),
+      optimisticItems.some(item => item.productId === productId),
     getItem: (productId: string) => 
-      optimisticItems.find(item => item.product_id === productId),
+      optimisticItems.find(item => item.productId === productId),
+    
+    // HerbisVeritas analytics
+    labelsDistribution,
+    averageItemPrice,
+    mostPopularLabel,
   };
 }
 
