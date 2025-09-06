@@ -12,8 +12,8 @@ import * as React from "react"
 import { ShoppingCart, Heart } from "lucide-react"
 import { ContentCard, type ContentCardBadge, type ContentCardAction } from "@/components/ui/content-card"
 import { InciListCompact } from "@/components/ui/inci-list"
+import { ProductBadges, createHerbisVeritasBadges } from "@/components/shop/product-badges"
 import { ProductCardProps } from "@/types/product"
-import { LABEL_DISPLAY, LABEL_BADGE_VARIANTS } from "@/types/product"
 import { useCartActions, useIsInCart } from "@/hooks/cart"
 
 export function ProductCardOptimized({
@@ -62,19 +62,20 @@ export function ProductCardOptimized({
     onToggleFavorite(product)
   }
 
-  // Conversion des labels HerbisVeritas en badges
-  const productBadges: ContentCardBadge[] = product.labels.map(label => ({
-    label: LABEL_DISPLAY[label],
-    variant: LABEL_BADGE_VARIANTS[label] as any
-  }))
+  // Génération des badges HerbisVeritas enrichis
+  const herbisVeritasBadges = createHerbisVeritasBadges(
+    product.labels,
+    product.is_new,
+    product.is_on_promotion,
+    false, // isLimited - à implémenter plus tard
+    false  // isFeatured - à implémenter plus tard
+  )
 
-  // Ajout des badges d'état
-  if (product.is_new) {
-    productBadges.push({ label: 'Nouveau', variant: 'new' })
-  }
-  if (product.is_on_promotion) {
-    productBadges.push({ label: 'Promo', variant: 'promo' })
-  }
+  // Conversion pour ContentCard (backward compatibility)
+  const productBadges: ContentCardBadge[] = herbisVeritasBadges.map(badge => ({
+    label: badge.label,
+    variant: badge.variant as any
+  }))
 
   // Actions du produit avec état cart intégré
   const getCartButtonLabel = () => {
@@ -113,15 +114,32 @@ export function ProductCardOptimized({
     ...(product.category_id && { category: product.category_id }) // TODO: resolve category name
   }
 
-  // Contenu personnalisé INCI (spécificité cosmétique)
-  const inciContent = product.inci_list && product.inci_list.length > 0 && variant !== 'compact' ? (
-    <section className="mt-2" role="complementary" aria-label="Composition INCI">
-      <InciListCompact 
-        inciList={product.inci_list} 
-        className="border-t pt-2 mt-2"
-      />
-    </section>
-  ) : null
+  // Contenu enrichi avec badges et INCI
+  const enrichedContent = (
+    <>
+      {/* Badges HerbisVeritas */}
+      {herbisVeritasBadges.length > 0 && (
+        <div className="mb-3">
+          <ProductBadges 
+            badges={herbisVeritasBadges}
+            maxVisible={3}
+            size="sm"
+            layout="horizontal"
+          />
+        </div>
+      )}
+      
+      {/* Liste INCI si disponible */}
+      {product.inci_list && product.inci_list.length > 0 && variant !== 'compact' && (
+        <section className="mt-2" role="complementary" aria-label="Composition INCI">
+          <InciListCompact 
+            inciList={product.inci_list} 
+            className="border-t pt-2 mt-2"
+          />
+        </section>
+      )}
+    </>
+  )
 
   return (
     <ContentCard
@@ -149,7 +167,7 @@ export function ProductCardOptimized({
       {...(className && { className })}
       
       // Contenu spécialisé cosmétique
-      customContent={inciContent}
+      customContent={enrichedContent}
     />
   )
 }

@@ -11,6 +11,8 @@ import { ProductsService } from '@/lib/products/products-service'
 import { ContentGrid } from '@/components/ui/content-grid'
 import { ProductCard } from '@/components/products/product-card-optimized'
 import { ProductFilters } from '@/components/shop/product-filters'
+import { HeroSection } from '@/components/shop/hero-section'
+import { TrustIndicators } from '@/components/shop/trust-indicators'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -85,59 +87,90 @@ async function ShopPageContent({ params, searchParams }: { params: ShopPageProps
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Sidebar Navigation & Filtres */}
-        <aside className="lg:col-span-1">
-          <ProductFilters
-            categories={categories}
-            selectedCategoryId={searchParams.category}
-            selectedLabels={(searchParams.labels?.split(',') as any) || []}
-            searchTerm={searchParams.search || ''}
-          />
-        </aside>
+    <div className="min-h-screen bg-gray-50/30">
+      {/* Hero Section */}
+      <HeroSection locale={params.locale} />
 
-        {/* Grille produits principale */}
-        <main className="lg:col-span-3">
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold mb-2">HerbisVeritas</h1>
-            <p className="text-gray-600 text-lg mb-4">
-              Cosmétiques bio artisanaux d&apos;Occitanie - Labels certifiés
-            </p>
-            <p className="text-sm text-gray-500">
-              {filteredProducts.length} produit{filteredProducts.length > 1 ? 's' : ''} 
-              {searchParams.category && ' dans cette catégorie'}
-              {searchParams.search && ` pour "${searchParams.search}"`}
-            </p>
-          </div>
+      {/* Main Shop Content */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar Navigation & Filtres */}
+          <aside className="lg:col-span-1">
+            <ProductFilters
+              categories={categories}
+              selectedCategoryId={searchParams.category}
+              selectedLabels={(searchParams.labels?.split(',') as any) || []}
+              searchTerm={searchParams.search || ''}
+            />
+          </aside>
 
-          {/* ContentGrid avec ProductCard optimisé */}
-          <ContentGrid
-            variant="product"
-            items={filteredProducts}
-            renderItem={(product) => (
-              <ProductCard
-                key={product.id}
-                product={product as any}
-                onAddToCart={async (product) => {
-                  // Action panier sera ajoutée Semaine 5
-                  console.log('Add to cart:', product.name)
-                }}
-                variant="default"
+          {/* Grille produits principale */}
+          <main className="lg:col-span-3">
+            <header className="mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">
+                    {params.locale === 'en' ? 'Our Products' : 'Nos Produits'}
+                  </h1>
+                  <p className="text-gray-600 mt-1">
+                    {filteredProducts.length} produit{filteredProducts.length > 1 ? 's' : ''} 
+                    {searchParams.category && ' dans cette catégorie'}
+                    {searchParams.search && ` pour "${searchParams.search}"`}
+                  </p>
+                </div>
+                
+                {/* Trust indicators inline */}
+                <div className="hidden md:block">
+                  <TrustIndicators 
+                    variant="inline" 
+                    maxItems={3}
+                    locale={params.locale}
+                  />
+                </div>
+              </div>
+            </header>
+
+            {/* ContentGrid avec ProductCard optimisé */}
+            <ContentGrid
+              variant="product"
+              items={filteredProducts}
+              renderItem={(product) => (
+                <ProductCard
+                  key={product.id}
+                  product={product as any}
+                  onAddToCart={async (product) => {
+                    // Action panier sera ajoutée Semaine 5
+                    console.log('Add to cart:', product.name)
+                  }}
+                  variant="default"
+                />
+              )}
+              columns={{
+                default: 1,
+                sm: 2, 
+                md: 2,
+                lg: 3,
+                xl: 4
+              }}
+              gap="lg"
+              emptyMessage={params.locale === 'en' 
+                ? "No products match your criteria" 
+                : "Aucun produit ne correspond à vos critères"
+              }
+              allowViewToggle={false}
+            />
+
+            {/* Trust indicators section mobile */}
+            <div className="md:hidden mt-8">
+              <TrustIndicators 
+                variant="compact"
+                maxItems={4}
+                locale={params.locale}
+                className="space-y-4"
               />
-            )}
-            columns={{
-              default: 1,
-              sm: 2, 
-              md: 2,
-              lg: 3,
-              xl: 4
-            }}
-            gap="lg"
-            emptyMessage="Aucun produit ne correspond à vos critères"
-            allowViewToggle={false}
-          />
-        </main>
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   )
