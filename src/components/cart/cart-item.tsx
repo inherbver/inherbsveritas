@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -97,9 +98,11 @@ export function CartItem({
         {/* Image */}
         <div className="h-12 w-12 flex-shrink-0 rounded overflow-hidden">
           {item.image_url ? (
-            <img
+            <Image
               src={item.image_url}
               alt={item.name}
+              width={48}
+              height={48}
               className="h-full w-full object-cover"
             />
           ) : (
@@ -141,9 +144,11 @@ export function CartItem({
           {/* Image */}
           <div className="h-20 w-20 flex-shrink-0 rounded overflow-hidden border">
             {item.image_url ? (
-              <img
+              <Image
                 src={item.image_url}
                 alt={item.name}
+                width={80}
+                height={80}
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -267,9 +272,11 @@ export function CartItem({
       {/* Image */}
       <div className="h-16 w-16 flex-shrink-0 rounded overflow-hidden border">
         {item.image_url ? (
-          <img
+          <Image
             src={item.image_url}
             alt={item.name}
+            width={64}
+            height={64}
             className="h-full w-full object-cover"
           />
         ) : (

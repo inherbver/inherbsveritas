@@ -6,7 +6,6 @@
 import * as React from "react"
 import { Suspense } from "react"
 import { Metadata } from "next"
-import { getTranslations } from 'next-intl/server'
 import { CategoriesService } from '@/lib/categories/categories-service'
 import { ProductsService } from '@/lib/products/products-service'
 import { ContentGrid } from '@/components/ui/content-grid'
@@ -28,16 +27,22 @@ interface ShopPageProps {
   }
 }
 
-export async function generateMetadata({ params }: ShopPageProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: params.locale, namespace: 'shop' })
-  
+export async function generateMetadata(): Promise<Metadata> {
+  // Landing page principale - Metadata optimisés SEO
   return {
-    title: t('meta.title'),
-    description: t('meta.description'),
+    title: 'HerbisVeritas - Cosmétiques Bio Artisanaux d\'Occitanie',
+    description: 'Boutique officielle HerbisVeritas. Découvrez nos cosmétiques bio artisanaux aux labels certifiés. Produits naturels d\'Occitanie, savoir-faire traditionnel.',
+    keywords: 'cosmétiques bio, artisanal, HerbisVeritas, Occitanie, naturel, labels bio',
     openGraph: {
-      title: t('meta.title'),
-      description: t('meta.description'),
-      type: 'website'
+      title: 'HerbisVeritas - Cosmétiques Bio Artisanaux',
+      description: 'Boutique officielle de cosmétiques bio artisanaux d\'Occitanie',
+      type: 'website',
+      siteName: 'HerbisVeritas'
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'HerbisVeritas - Cosmétiques Bio Artisanaux',
+      description: 'Boutique officielle de cosmétiques bio artisanaux d\'Occitanie'
     }
   }
 }
@@ -95,8 +100,11 @@ async function ShopPageContent({ params, searchParams }: { params: ShopPageProps
         {/* Grille produits principale */}
         <main className="lg:col-span-3">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold mb-2">Boutique</h1>
-            <p className="text-gray-600">
+            <h1 className="text-3xl font-bold mb-2">HerbisVeritas</h1>
+            <p className="text-gray-600 text-lg mb-4">
+              Cosmétiques bio artisanaux d&apos;Occitanie - Labels certifiés
+            </p>
+            <p className="text-sm text-gray-500">
               {filteredProducts.length} produit{filteredProducts.length > 1 ? 's' : ''} 
               {searchParams.category && ' dans cette catégorie'}
               {searchParams.search && ` pour "${searchParams.search}"`}

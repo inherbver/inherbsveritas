@@ -45,7 +45,8 @@
       "Bash(npm run test:database:*)",
       "Bash(npm run:*)",
       "Bash(node:*)",
-      "WebFetch(domain:docs.stripe.com)"
+      "WebFetch(domain:docs.stripe.com)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

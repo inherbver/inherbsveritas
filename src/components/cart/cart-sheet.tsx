@@ -7,6 +7,7 @@
  */
 
 import React from 'react';
+import Image from 'next/image';
 import {
   Sheet,
   SheetContent,
@@ -50,9 +51,11 @@ function CartItem({ item, onUpdateQuantity, onRemoveItem, isUpdating = false, is
       {/* Image produit */}
       <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border">
         {item.image_url ? (
-          <img
+          <Image
             src={item.image_url}
             alt={item.name}
+            width={64}
+            height={64}
             className="h-full w-full object-cover object-center"
           />
         ) : (

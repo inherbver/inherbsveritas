@@ -1,0 +1,52 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - link "logo" [ref=e7] [cursor=pointer]:
+          - /url: /
+          - img "logo" [ref=e8] [cursor=pointer]
+        - generic [ref=e9]:
+          - navigation "Navigation principale" [ref=e11]:
+            - list [ref=e12]:
+              - listitem [ref=e13]:
+                - link "Boutique" [ref=e14] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=e15]:
+                - link "Produits" [ref=e16] [cursor=pointer]:
+                  - /url: /products
+              - listitem [ref=e17]:
+                - link "Magazine" [ref=e18] [cursor=pointer]:
+                  - /url: /magazine
+              - listitem [ref=e19]:
+                - link "Notre Histoire" [ref=e20] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e21]:
+                - link "Où nous trouver" [ref=e22] [cursor=pointer]:
+                  - /url: /partners
+              - listitem [ref=e23]:
+                - link "Contact" [ref=e24] [cursor=pointer]:
+                  - /url: /contact
+          - generic [ref=e26]:
+            - button "theme toggler" [ref=e27] [cursor=pointer]:
+              - img
+              - img [ref=e28] [cursor=pointer]
+            - generic [ref=e30]:
+              - link "Se connecter" [ref=e31] [cursor=pointer]:
+                - /url: /login
+              - link "S'inscrire" [ref=e32] [cursor=pointer]:
+                - /url: /signup
+    - main [ref=e33]:
+      - generic [ref=e34]:
+        - heading "HerbisVeritas Test Page" [level=1] [ref=e35]
+        - paragraph [ref=e36]: Système d'internationalisation fonctionnel !
+        - list [ref=e37]:
+          - listitem [ref=e38]: next-intl v4.1.0+ configuré
+          - listitem [ref=e39]: Routing internationalisé [locale] fonctionnel
+          - listitem [ref=e40]: Middleware i18n opérationnel
+          - listitem [ref=e41]: Rewriting /boutique → /shop actif
+          - listitem [ref=e42]: CSS et Tailwind corrigés
+  - alert [ref=e43]
+```
