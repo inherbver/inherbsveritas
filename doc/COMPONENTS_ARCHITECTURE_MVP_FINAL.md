@@ -22,6 +22,7 @@ src/components/
 │   ├── button.tsx                   # ✅ shadcn/ui configuré
 │   ├── card.tsx                     # ✅ Structures de base
 │   ├── badge.tsx                    # ✅ 7 variants HerbisVeritas
+│   ├── inci-list.tsx                # ✅ Simple INCI display (remplace inci-list-enhanced)
 │   └── index.ts                     # ✅ Exports centralisés
 ├── products/                        # E-commerce Optimized
 │   └── product-card-optimized.tsx   # ✅ Wrapper ContentCard (-57% code)

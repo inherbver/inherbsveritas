@@ -1,6 +1,11 @@
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
 import { locales } from '@/i18n-config'
 import { notFound } from 'next/navigation'
-import Header from '@/components/header'
+import { ModernLayoutWrapper } from '@/components/layout/modern-layout'
+import '../../src/styles/index.css'
+import '../../src/styles/prism-vsc-dark-plus.css'
+import Providers from '../../src/providers'
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -20,13 +25,19 @@ export default async function LocaleLayout({
     notFound()
   }
 
+  // Get messages for the locale
+  const messages = await getMessages()
+
   return (
-    <html lang={locale}>
+    <html suppressHydrationWarning className="!scroll-smooth" lang={locale}>
       <body>
-        <div>
-          <Header />
-          <main>{children}</main>
-        </div>
+        <NextIntlClientProvider messages={messages}>
+          <Providers>
+            <ModernLayoutWrapper locale={locale}>
+              {children}
+            </ModernLayoutWrapper>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

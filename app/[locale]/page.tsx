@@ -1,4 +1,12 @@
-export default function Home() {
+import { setRequestLocale } from 'next-intl/server'
+
+interface HomePageProps {
+  params: Promise<{ locale: string }>
+}
+
+export default async function Home({ params }: HomePageProps) {
+  const { locale } = await params
+  setRequestLocale(locale)
   return (
     <div>
       <h1>HerbisVeritas Test Page</h1>

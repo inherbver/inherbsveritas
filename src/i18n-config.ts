@@ -40,3 +40,12 @@ export const pathnames = {
 };
 
 export const localeDetection = true; // Activer/désactiver la détection automatique
+
+// Configuration pour next-intl v3.22+
+export const routing = {
+  locales,
+  defaultLocale,
+  pathnames,
+  localePrefix,
+  localeDetection
+} as const;

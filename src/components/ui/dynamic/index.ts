@@ -3,13 +3,7 @@
  * Central export pour tous les composants lazy-loaded
  */
 
-// INCI Components (30KB → 5KB initial)
-export { 
-  InciListDetailed, 
-  InciListCompact,
-  type InciListDetailedProps,
-  type InciListCompactProps
-} from './lazy-inci-analyzer';
+// INCI Components supprimés - remplacés par affichage simple
 
 // Category Components (45KB → 8KB initial)  
 export {

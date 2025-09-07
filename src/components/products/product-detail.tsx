@@ -9,7 +9,6 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { InciListCompact } from "@/components/ui/inci-list-enhanced"
 import { ShoppingCart, Heart } from "lucide-react"
 
 import type { Product } from '@/types/product'
@@ -115,7 +114,18 @@ export function ProductDetail({ product, onAddToCart }: ProductDetailProps) {
               <CardTitle>Composition (INCI)</CardTitle>
             </CardHeader>
             <CardContent>
-              <InciListCompact inciList={product.inci_list} maxVisible={5} />
+              {product.inci_list && product.inci_list.length > 0 ? (
+                <section className="space-y-2">
+                  <h4 className="font-semibold text-sm">Liste INCI :</h4>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm text-muted-foreground">
+                    {product.inci_list.map((ingredient, index) => (
+                      <li key={index}>{ingredient}</li>
+                    ))}
+                  </ul>
+                </section>
+              ) : (
+                <p className="text-muted-foreground italic text-sm">Aucune information INCI disponible</p>
+              )}
             </CardContent>
           </Card>
         )}

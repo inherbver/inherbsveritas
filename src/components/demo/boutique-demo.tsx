@@ -3,7 +3,7 @@
 import React from 'react'
 import { ProductGrid } from '@/components/collections'
 import { useCart } from '@/components/modules/boutique/hooks'
-import { ProductCard } from '@/components/products/product-card-optimized'
+import { EnhancedProductCard as ProductCard } from '@/components/products/enhanced-product-card'
 import { Product } from '@/types/product'
 import { Button } from '@/components/ui'
 import { toast } from 'react-hot-toast'

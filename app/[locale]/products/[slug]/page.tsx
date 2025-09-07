@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { notFound } from 'next/navigation'
+import { setRequestLocale } from 'next-intl/server'
 import { ProductDetail } from '@/components/products/product-detail'
 import { Spinner } from '@/components/ui/spinner'
 import { type ProductLabel } from '@/types/product'
@@ -52,6 +53,7 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const resolvedParams = await params
+  setRequestLocale(resolvedParams.locale)
   const product = await getProductBySlug(resolvedParams.slug)
 
   if (!product) {

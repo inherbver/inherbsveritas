@@ -9,7 +9,7 @@
 
 import * as React from "react"
 import { ContentGrid, type ContentGridProps, usePagination } from "@/components/ui/content-grid"
-import { ProductCard } from "@/components/products/product-card-optimized"
+import { EnhancedProductCard as ProductCard } from "@/components/products/enhanced-product-card"
 import { ArticleCard, type Article } from "@/components/content/article-card"
 import { CategoryCard } from "@/components/content/category-card"
 import { Product } from "@/types/product"
