@@ -390,9 +390,10 @@ export function ContentGrid<T = any>({
 }
 
 // Hook utilitaire pour pagination
-export function usePagination(items: any[], pageSize: number = 12) {
+export function usePagination(items: any[] | null, pageSize: number = 12) {
   const [currentPage, setCurrentPage] = React.useState(1)
-  const totalPages = Math.ceil(items.length / pageSize)
+  const safeItems = items || []
+  const totalPages = Math.ceil(safeItems.length / pageSize)
 
   const paginationConfig: PaginationConfig = {
     enabled: totalPages > 1,

@@ -1,6 +1,6 @@
 import SectionTitle from "../common/section-title";
 import SingleFeature from "./single-feature";
-import featuresData from "./featuresData";
+import featuresData from "./features-data";
 
 const Features = () => {
   return (

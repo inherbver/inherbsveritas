@@ -3,45 +3,69 @@ import { notFound } from 'next/navigation'
 import { setRequestLocale } from 'next-intl/server'
 import { ProductDetail } from '@/components/products/product-detail'
 import { Spinner } from '@/components/ui/spinner'
-import { type ProductLabel } from '@/types/product'
+import { createClient } from '@/lib/supabase/server'
+import type { Product as DatabaseProduct } from '@/types/database'
+import type { Product } from '@/types/product'
 
-// Mock fonction pour récupérer un produit par slug
-// TODO: Remplacer par l'API Supabase réelle
-async function getProductBySlug(slug: string) {
-  // Simulation d'un produit pour demo
-  const mockProduct = {
-    id: 'product-' + slug,
-    slug: slug,
-    name: 'Huile Essentielle de Lavande Bio',
-    description_short: 'Huile essentielle de lavande vraie (Lavandula angustifolia) certifiée bio, récoltée à la main en Occitanie.',
-    description_long: 'Cette huile essentielle de lavande vraie est issue de nos champs situés sur les plateaux de haute Provence. Distillée dans notre atelier selon des méthodes ancestrales, elle conserve toutes ses propriétés apaisantes et régénérantes. Parfaite pour la relaxation, les soins de la peau et l\'aromathérapie.',
-    price: 24.90,
-    currency: 'EUR',
-    stock: 12,
-    unit: 'flacon 10ml',
-    image_url: '/images/products/lavender-oil.jpg',
-    inci_list: [
-      'Lavandula Angustifolia Oil',
-      'Linalool',
-      'Limonene',
-      'Geraniol'
-    ],
-    labels: ['bio', 'recolte_main', 'origine_occitanie'] as ProductLabel[],
-    status: 'active',
-    is_active: true,
-    is_new: false,
-    is_on_promotion: false,
-    properties: 'Anti-inflammatoire\\nCicatrisante\\nAntispasmodique\\nSédative et calmante\\nRépulsive (insectes)',
-    compositionText: 'Huile essentielle 100% pure et naturelle de Lavandula angustifolia, obtenue par distillation à la vapeur d\'eau des sommités fleuries fraîches.',
-    usageInstructions: 'Usage externe uniquement.\\nPour le bain : 5 à 10 gouttes mélangées dans une base neutre.\\nEn diffusion : 5 à 10 gouttes dans un diffuseur électrique.\\nEn massage : 2 à 3 gouttes dans 10ml d\'huile végétale.\\n\\nPrécautions : Tenir hors de portée des enfants. Déconseillé aux femmes enceintes et allaitantes.',
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  }
-
-  // Simule un délai de chargement
-  await new Promise(resolve => setTimeout(resolve, 100))
+// Map database product to application product type
+function mapDatabaseProduct(dbProduct: DatabaseProduct, locale: string = 'fr'): Product {
+  const translationsData = dbProduct.translations || {}
+  const fallbackLocale = Object.keys(translationsData)[0] || 'fr'
+  const translations = translationsData[locale] || translationsData['fr'] || translationsData[fallbackLocale] || {}
   
-  return mockProduct
+  return {
+    id: dbProduct.id,
+    slug: dbProduct.slug,
+    category_id: dbProduct.category_id,
+    
+    // From translations
+    name: translations?.name || `Produit ${dbProduct.sku}`,
+    description_short: translations?.description || '',
+    description_long: translations?.description || '',
+    
+    // Commerce
+    price: dbProduct.price,
+    currency: 'EUR', // MVP: Fixed currency
+    stock: dbProduct.stock_quantity,
+    unit: 'g', // MVP: Fixed unit for cosmetics
+    
+    // Labels
+    labels: dbProduct.labels,
+    
+    // Status
+    status: 'active',
+    is_active: dbProduct.is_active,
+    
+    // Timestamps
+    created_at: dbProduct.created_at,
+    updated_at: dbProduct.updated_at,
+    
+    // Optional fields with translations
+    translations: dbProduct.translations
+  }
+}
+
+async function getProductBySlug(slug: string): Promise<Product | null> {
+  try {
+    const supabase = await createClient()
+    
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_active', true)
+      .single()
+    
+    if (error || !data) {
+      console.error('Erreur produit:', error)
+      return null
+    }
+    
+    return mapDatabaseProduct(data as DatabaseProduct)
+  } catch (err) {
+    console.error('Erreur chargement produit:', err)
+    return null
+  }
 }
 
 interface ProductPageProps {
@@ -60,7 +84,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound()
   }
 
-  const handleAddToCart = async (product: any, quantity: number) => {
+  const handleAddToCart = async (product: Product, quantity: number) => {
     'use server'
     // TODO: Implémenter ajout au panier côté serveur
     console.log(`Adding ${quantity}x ${product.name} to cart`)
@@ -87,35 +111,46 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
 export async function generateMetadata({ params }: ProductPageProps) {
   const resolvedParams = await params
-  const product = await getProductBySlug(resolvedParams.slug)
+  
+  // Get raw product from database for metadata
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('slug', resolvedParams.slug)
+      .eq('is_active', true)
+      .single()
 
-  if (!product) {
-    return {
-      title: 'Produit non trouvé',
-      description: 'Le produit que vous recherchez n\'existe pas.'
+    if (error || !data) {
+      return {
+        title: 'Produit non trouvé',
+        description: 'Le produit que vous recherchez n\'existe pas.'
+      }
     }
-  }
 
-  return {
-    title: `${product.name} | HerbisVeritas`,
-    description: product.description_short,
-    openGraph: {
-      title: product.name,
+    const product = mapDatabaseProduct(data as DatabaseProduct, resolvedParams.locale)
+
+    return {
+      title: `${product.name} | HerbisVeritas`,
       description: product.description_short,
-      images: product.image_url ? [
-        {
-          url: product.image_url,
-          width: 800,
-          height: 600,
-          alt: product.name
-        }
-      ] : [],
-      type: 'product'
-    },
-    other: {
-      'product:price:amount': product.price.toString(),
-      'product:price:currency': product.currency,
-      'product:availability': product.stock > 0 ? 'in stock' : 'out of stock'
+      openGraph: {
+        title: product.name,
+        description: product.description_short,
+        images: [], // TODO: Implement product images from product_images table
+        type: 'website'
+      },
+      other: {
+        'product:price:amount': product.price.toString(),
+        'product:price:currency': product.currency,
+        'product:availability': product.stock > 0 ? 'in stock' : 'out of stock'
+      }
+    }
+  } catch (err) {
+    console.error('Erreur génération metadata:', err)
+    return {
+      title: 'Erreur',
+      description: 'Erreur lors du chargement du produit.'
     }
   }
 }

@@ -20,7 +20,7 @@ import { AUTH_MESSAGES } from '@/lib/messages/auth-messages'
 // Utilise les mocks centralisés
 
 // Mock validateEmail
-jest.mock('@/utils/validateEmail', () => ({
+jest.mock('@/utils/validate-email', () => ({
   validateEmail: jest.fn()
 }))
 
@@ -36,7 +36,7 @@ describe('auth/actions', () => {
     const { createClient } = require('@/lib/supabase/client')
     ;(createClient as jest.Mock).mockReturnValue(mockSupabase)
     
-    const { validateEmail } = require('@/utils/validateEmail')
+    const { validateEmail } = require('@/utils/validate-email')
     mockValidateEmail = validateEmail
   })
 

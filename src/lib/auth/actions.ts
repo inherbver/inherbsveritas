@@ -4,7 +4,7 @@
  */
 
 import { createClient } from '@/lib/supabase/client'
-import { validateEmail } from '@/utils/validateEmail'
+import { validateEmail } from '@/utils/validate-email'
 import { AUTH_MESSAGES, type AuthMessage } from '@/lib/messages/auth-messages'
 import { USER_ROLES, type UserRole, getRoleRedirect, normalizeRole } from '@/lib/auth/roles'
 

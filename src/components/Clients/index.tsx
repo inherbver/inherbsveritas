@@ -1,5 +1,5 @@
 import SingleClient from "./single-client";
-import { clientsData } from "./clientsData";
+import { clientsData } from "./clients-data";
 
 const Clients = () => {
   return (

@@ -8,10 +8,10 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ShoppingCart, Heart } from "lucide-react"
 
 import type { Product } from '@/types/product'
+import { ProductTabs } from './product-tabs'
 
 interface ProductDetailProps {
   product: Product
@@ -34,120 +34,76 @@ export function ProductDetail({ product, onAddToCart }: ProductDetailProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      {/* Image */}
-      <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
-        <p className="text-muted-foreground">Image produit</p>
-      </div>
+    <main className="space-y-8">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Image */}
+        <figure className="aspect-square bg-muted rounded-lg flex items-center justify-center">
+          <p className="text-muted-foreground">Image produit</p>
+        </figure>
 
-      {/* Informations produit */}
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-          <p className="text-lg text-muted-foreground">{product.description_short}</p>
-        </div>
+        {/* Informations produit */}
+        <header className="space-y-6">
+          <section>
+            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+            <p className="text-lg text-muted-foreground">{product.description_short}</p>
+          </section>
 
-        {/* Labels */}
-        {product.labels && product.labels.length > 0 && (
-          <div className="flex flex-wrap gap-2">
-            {product.labels.map((label: string) => (
-              <Badge key={label} variant="secondary">
-                {label}
-              </Badge>
-            ))}
-          </div>
-        )}
+          {/* Labels */}
+          {product.labels && product.labels.length > 0 && (
+            <section className="flex flex-wrap gap-2" aria-label="Certifications et labels">
+              {product.labels.map((label: string) => (
+                <Badge key={label} variant="secondary">
+                  {label}
+                </Badge>
+              ))}
+            </section>
+          )}
 
-        {/* Prix */}
-        <div className="text-2xl font-bold">
-          {product.price}€ <span className="text-sm font-normal">/ {product.unit}</span>
-        </div>
+          {/* Prix */}
+          <section className="text-2xl font-bold" aria-label="Prix du produit">
+            {product.price}€ <span className="text-sm font-normal">/ {product.unit}</span>
+          </section>
 
-        {/* Actions */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center border rounded">
-            <button 
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="px-3 py-2 hover:bg-muted"
+          {/* Actions */}
+          <section className="flex items-center gap-4" aria-label="Actions produit">
+            <fieldset className="flex items-center border rounded">
+              <legend className="sr-only">Quantité</legend>
+              <button 
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="px-3 py-2 hover:bg-muted"
+                aria-label="Diminuer la quantité"
+              >
+                -
+              </button>
+              <span className="px-4 py-2 min-w-[50px] text-center" aria-label={`Quantité: ${quantity}`}>
+                {quantity}
+              </span>
+              <button 
+                onClick={() => setQuantity(quantity + 1)}
+                className="px-3 py-2 hover:bg-muted"
+                aria-label="Augmenter la quantité"
+              >
+                +
+              </button>
+            </fieldset>
+            
+            <Button 
+              onClick={handleAddToCart}
+              disabled={isAddingToCart || product.stock === 0}
+              className="flex-1"
             >
-              -
-            </button>
-            <span className="px-4 py-2 min-w-[50px] text-center">{quantity}</span>
-            <button 
-              onClick={() => setQuantity(quantity + 1)}
-              className="px-3 py-2 hover:bg-muted"
-            >
-              +
-            </button>
-          </div>
-          
-          <Button 
-            onClick={handleAddToCart}
-            disabled={isAddingToCart || product.stock === 0}
-            className="flex-1"
-          >
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            {isAddingToCart ? 'Ajout...' : 'Ajouter au panier'}
-          </Button>
-          
-          <Button variant="outline" size="icon">
-            <Heart className="w-4 h-4" />
-          </Button>
-        </div>
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              {isAddingToCart ? 'Ajout...' : 'Ajouter au panier'}
+            </Button>
+            
+            <Button variant="outline" size="icon" aria-label="Ajouter aux favoris">
+              <Heart className="w-4 h-4" />
+            </Button>
+          </section>
+        </header>
+      </section>
 
-        {/* Description longue */}
-        {product.description_long && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Description</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{product.description_long}</p>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* INCI */}
-        {product.inci_list && product.inci_list.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Composition (INCI)</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {product.inci_list && product.inci_list.length > 0 ? (
-                <section className="space-y-2">
-                  <h4 className="font-semibold text-sm">Liste INCI :</h4>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-1 text-sm text-muted-foreground">
-                    {product.inci_list.map((ingredient, index) => (
-                      <li key={index}>{ingredient}</li>
-                    ))}
-                  </ul>
-                </section>
-              ) : (
-                <p className="text-muted-foreground italic text-sm">Aucune information INCI disponible</p>
-              )}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Propriétés */}
-        {product.properties && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Propriétés</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-1">
-                {product.properties.split('\\n').map((property: string, index: number) => (
-                  <div key={index} className="text-sm text-muted-foreground">
-                    • {property}
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    </div>
+      <ProductTabs product={product} />
+    </main>
   )
 }

@@ -31,6 +31,8 @@
     "test:shop": "jest --config jest.config.shop.js",
     "test:shop:watch": "jest --config jest.config.shop.js --watch",
     "test:shop:coverage": "jest --config jest.config.shop.js --coverage",
+    "pre-commit": "node scripts/pre-commit-checks.js",
+    "pre-commit:fast": "node scripts/pre-commit-checks.js --skip-tests",
     "prepare": "husky install"
   },
   "dependencies": {

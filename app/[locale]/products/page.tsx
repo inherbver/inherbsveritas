@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { setRequestLocale } from 'next-intl/server';
-import Breadcrumb from "@/components/common/Breadcrumb";
+import Breadcrumb from "@/components/common/breadcrumb";
 import { ProductGrid } from "@/components/collections";
-import { Loader } from "@/components/common/Loader";
+import { Loader } from "@/components/common/loader";
 
 interface ProductsPageProps {
   params: Promise<{ locale: string }>
