@@ -10,16 +10,30 @@ import type { Product as DatabaseProduct } from '@/types/database'
 import type { Product } from '@/types/product'
 
 
+// Images Supabase Storage disponibles
+const PRODUCT_IMAGES = [
+  'https://mntndpelpvcskirnyqvx.supabase.co/storage/v1/object/public/products/pdct_1.webp',
+  'https://mntndpelpvcskirnyqvx.supabase.co/storage/v1/object/public/products/pdct_2.webp',
+  'https://mntndpelpvcskirnyqvx.supabase.co/storage/v1/object/public/products/pdct_3.webp',
+  'https://mntndpelpvcskirnyqvx.supabase.co/storage/v1/object/public/products/pdct_4.webp',
+  'https://mntndpelpvcskirnyqvx.supabase.co/storage/v1/object/public/products/pdct_5.webp',
+  'https://mntndpelpvcskirnyqvx.supabase.co/storage/v1/object/public/products/pdct_6.webp'
+]
+
 // Map database product to application product type
 function mapDatabaseProducts(dbProducts: DatabaseProduct[], locale: string = 'fr'): Product[] {
   if (dbProducts.length === 0) {
     return []
   }
 
-  return dbProducts.map(dbProduct => {
+  return dbProducts.map((dbProduct, index) => {
     const translationsData = dbProduct.translations || {}
     const fallbackLocale = Object.keys(translationsData)[0] || 'fr'
     const translations = translationsData[locale] || translationsData['fr'] || translationsData[fallbackLocale] || {}
+    
+    // Attribution cyclique des images (réutilise les images si plus de 6 produits)
+    const imageIndex = index % PRODUCT_IMAGES.length
+    const image_url = PRODUCT_IMAGES[imageIndex]
     
     return {
       id: dbProduct.id,
@@ -36,6 +50,9 @@ function mapDatabaseProducts(dbProducts: DatabaseProduct[], locale: string = 'fr
       currency: dbProduct.currency || 'EUR',
       stock: dbProduct.stock,
       unit: dbProduct.unit || 'g',
+      
+      // Image depuis Supabase Storage
+      image_url,
       
       // Labels
       labels: dbProduct.labels,
