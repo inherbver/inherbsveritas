@@ -73,45 +73,23 @@ export function useCartQuery() {
   return useQuery({
     queryKey,
     queryFn: async (): Promise<CartQueryData | null> => {
-      try {
-        const { data, error } = await supabase
-          .from('user_cart_view')
-          .select('*')
-          .eq(user?.id ? 'user_id' : 'guest_id', user?.id || guestSessionId)
-          .single();
+      const { data, error } = await supabase
+        .from('user_cart_view')
+        .select('*')
+        .eq(user?.id ? 'user_id' : 'guest_id', user?.id || guestSessionId)
+        .single();
 
-        if (error) {
-          // Si pas de cart trouvé, créer un cart vide logique
-          if (error.code === 'PGRST116') {
-            return {
-              id: crypto.randomUUID(),
-              user_id: user?.id || null,
-              guest_id: user?.id ? null : guestSessionId,
-              updated_at: new Date().toISOString(),
-              status: 'active',
-              items: [],
-              total_items: 0,
-              subtotal: 0,
-            };
-          }
-          throw error;
-        }
-
-        return data;
-      } catch (error) {
-        console.error('Error fetching cart:', error);
-        // Fallback vers cart vide en cas d'erreur
-        return {
-          id: crypto.randomUUID(),
-          user_id: user?.id || null,
-          guest_id: user?.id ? null : guestSessionId,
-          updated_at: new Date().toISOString(),
-          status: 'active',
-          items: [],
-          total_items: 0,
-          subtotal: 0,
-        };
+      if (error) {
+        console.error('Error fetching cart:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
+        throw error;
       }
+
+      return data;
     },
     staleTime: 1000 * 60, // 1 minute
     gcTime: 1000 * 60 * 5, // 5 minutes
