@@ -66,7 +66,7 @@ export function ProductGrid({
       )}
       title="Nos Produits"
       description={`${products.length} produits cosmétiques naturels`}
-      emptyMessage="Aucun produit disponible pour le moment"
+      emptyMessage="Notre boutique est en cours de préparation. Les produits seront bientôt disponibles !"
       pagination={paginationConfig}
       actions={productActions}
       allowViewToggle={true}
