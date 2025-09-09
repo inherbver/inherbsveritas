@@ -3,6 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { Cart, CartItem, Product, calculateCartTotal, validateProductStock } from '@/types/herbis-veritas';
 import { createCartSlice, type CartSlice } from './slices/cart-slice';
 import { createUISlice, type UISlice } from './slices/ui-slice';
+import { calculateShipping, type ShippingCalculationResult } from '@/lib/shipping/shipping-calculator';
 
 /**
  * === 🛒 Cart Store Zustand MVP ===
@@ -19,8 +20,14 @@ interface CartState {
   // Getters (computed)
   itemCount: number;
   subtotal: number;
-  total: number;
+  shippingCost: number;
   tva: number;
+  total: number;
+  
+  // Shipping
+  shippingCalculation: ShippingCalculationResult | null;
+  selectedShippingMethod: string;
+  destinationCountry: string;
 }
 
 interface CartActions {
