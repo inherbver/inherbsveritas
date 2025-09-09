@@ -1,25 +1,57 @@
 /**
- * Simple toast system - temporary replacement for Sonner
- * Phase 2: Basic implementation for cart notifications
+ * Toast notification system - Sonner integration for HerbisVeritas
+ * Phase 1: Real UI implementation with Sonner
  */
 
-// Simple console-based toast for Phase 2
+import { toast as sonnerToast } from 'sonner'
+
 export const toast = {
-  success: (message: string) => {
-    console.log(`✅ SUCCESS: ${message}`);
-    // TODO: Implement real toast UI component or integrate with existing system
+  success: (message: string, options?: { description?: string; duration?: number }) => {
+    return sonnerToast.success(message, {
+      duration: options?.duration || 4000,
+      description: options?.description,
+    })
   },
   
-  error: (message: string) => {
-    console.error(`❌ ERROR: ${message}`);
-    // TODO: Implement real toast UI component or integrate with existing system
+  error: (message: string, options?: { description?: string; duration?: number }) => {
+    return sonnerToast.error(message, {
+      duration: options?.duration || 6000,
+      description: options?.description,
+    })
   },
   
-  info: (message: string) => {
-    console.info(`ℹ️ INFO: ${message}`);
+  info: (message: string, options?: { description?: string; duration?: number }) => {
+    return sonnerToast.info(message, {
+      duration: options?.duration || 4000,
+      description: options?.description,
+    })
   },
   
-  warning: (message: string) => {
-    console.warn(`⚠️ WARNING: ${message}`);
+  warning: (message: string, options?: { description?: string; duration?: number }) => {
+    return sonnerToast.warning(message, {
+      duration: options?.duration || 5000,
+      description: options?.description,
+    })
+  },
+
+  loading: (message: string, options?: { description?: string }) => {
+    return sonnerToast.loading(message, {
+      description: options?.description,
+    })
+  },
+
+  promise: <T>(
+    promise: Promise<T>,
+    options: {
+      loading: string
+      success: (data: T) => string
+      error: (error: any) => string
+    }
+  ) => {
+    return sonnerToast.promise(promise, options)
+  },
+
+  dismiss: (toastId?: string | number) => {
+    return sonnerToast.dismiss(toastId)
   }
-};
+}

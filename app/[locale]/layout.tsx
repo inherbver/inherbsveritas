@@ -3,6 +3,7 @@ import { getMessages } from 'next-intl/server'
 import { locales } from '@/i18n-config'
 import { notFound } from 'next/navigation'
 import { ModernLayoutWrapper } from '@/components/layout/modern-layout'
+import { Toaster } from 'sonner'
 import '../../src/styles/index.css'
 import '../../src/styles/prism-vsc-dark-plus.css'
 import Providers from '../../src/providers'
@@ -36,6 +37,13 @@ export default async function LocaleLayout({
             <ModernLayoutWrapper locale={locale}>
               {children}
             </ModernLayoutWrapper>
+            <Toaster 
+              position="bottom-right" 
+              richColors 
+              closeButton 
+              expand 
+              visibleToasts={4}
+            />
           </Providers>
         </NextIntlClientProvider>
       </body>

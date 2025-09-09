@@ -6,9 +6,10 @@
  */
 
 import * as React from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ShoppingCart, Heart } from "lucide-react"
+import { ShoppingCart, Heart, ImageIcon } from "lucide-react"
 
 import type { Product } from '@/types/product'
 import { ProductTabs } from './product-tabs'
@@ -16,6 +17,92 @@ import { ProductTabs } from './product-tabs'
 interface ProductDetailProps {
   product: Product
   onAddToCart?: (product: Product, quantity: number) => Promise<void>
+}
+
+// Component image avec fallbacks Supabase
+function ProductImage({ product }: { product: Product }) {
+  const [imageError, setImageError] = React.useState(false)
+  const [isLoading, setIsLoading] = React.useState(true)
+
+  const supabaseBaseUrl = 'https://mntndpelpvcskirnyqvx.supabase.co/storage/v1/object/public/products'
+  
+  // Fallbacks images par ordre de priorité
+  const imageSources = React.useMemo(() => {
+    const sources = []
+    
+    // 1. Image URL directe du produit si disponible
+    if (product.image_url && !imageError) {
+      sources.push(product.image_url)
+    }
+    
+    // 2. Image basée sur l'ID du produit depuis Supabase Storage
+    if (product.id) {
+      sources.push(`${supabaseBaseUrl}/product_${product.id}.webp`)
+      sources.push(`${supabaseBaseUrl}/product_${product.id}.jpg`)
+      sources.push(`${supabaseBaseUrl}/product_${product.id}.png`)
+    }
+    
+    // 3. Image basée sur le slug
+    if (product.slug) {
+      sources.push(`${supabaseBaseUrl}/${product.slug}.webp`)
+      sources.push(`${supabaseBaseUrl}/${product.slug}.jpg`)
+    }
+    
+    // 4. Images génériques par ordre de préférence
+    sources.push(`${supabaseBaseUrl}/pdct_1.webp`)
+    sources.push(`${supabaseBaseUrl}/default-product.webp`)
+    
+    return sources
+  }, [product, imageError, supabaseBaseUrl])
+
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0)
+  const currentImageSrc = imageSources[currentImageIndex]
+
+  const handleImageError = () => {
+    if (currentImageIndex < imageSources.length - 1) {
+      setCurrentImageIndex(prev => prev + 1)
+    } else {
+      setImageError(true)
+      setIsLoading(false)
+    }
+  }
+
+  const handleImageLoad = () => {
+    setIsLoading(false)
+  }
+
+  if (imageError && currentImageIndex >= imageSources.length - 1) {
+    // Fallback final : placeholder avec icône
+    return (
+      <div className="aspect-square bg-muted rounded-lg flex items-center justify-center">
+        <div className="text-center">
+          <ImageIcon className="h-16 w-16 text-muted-foreground mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">{product.name}</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="aspect-square bg-muted rounded-lg overflow-hidden relative">
+      {isLoading && (
+        <div className="absolute inset-0 bg-muted animate-pulse flex items-center justify-center">
+          <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+      
+      <Image
+        src={currentImageSrc}
+        alt={product.name}
+        fill
+        className={`object-cover transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+        onLoad={handleImageLoad}
+        onError={handleImageError}
+        priority
+        sizes="(max-width: 768px) 100vw, 50vw"
+      />
+    </div>
+  )
 }
 
 export function ProductDetail({ product, onAddToCart }: ProductDetailProps) {
@@ -36,10 +123,8 @@ export function ProductDetail({ product, onAddToCart }: ProductDetailProps) {
   return (
     <main className="space-y-8">
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Image */}
-        <figure className="aspect-square bg-muted rounded-lg flex items-center justify-center">
-          <p className="text-muted-foreground">Image produit</p>
-        </figure>
+        {/* Image avec fallbacks Supabase */}
+        <ProductImage product={product} />
 
         {/* Informations produit */}
         <header className="space-y-6">

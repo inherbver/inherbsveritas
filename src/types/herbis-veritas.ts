@@ -242,15 +242,16 @@ export const getProductLabelsMetadata = (labels: HerbisVeritasLabel[]) => {
 };
 
 /**
- * Calculer total panier avec TVA française (20%)
+ * Calculer total panier avec TVA française (20%) et frais de port
  */
-export const calculateCartTotal = (items: CartItem[]) => {
+export const calculateCartTotal = (items: CartItem[], shippingCost: number = 0) => {
   const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tva = subtotal * 0.2; // TVA 20% France
-  const total = subtotal + tva;
+  const tva = (subtotal + shippingCost) * 0.2; // TVA 20% sur total HT + port
+  const total = subtotal + shippingCost + tva;
   
   return {
     subtotal,
+    shippingCost,
     tva,
     total
   };

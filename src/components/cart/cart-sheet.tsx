@@ -22,6 +22,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { ShoppingCart, X, Minus, Plus, Trash2 } from 'lucide-react';
 import { useCartQuery, useUpdateQuantityMutation, useRemoveFromCartMutation, useCartOptimistic, useDebouncedSync } from '@/hooks/cart';
 import { formatPrice } from '@/lib/utils';
+import { CartSummary } from './cart-summary';
 
 // ============================================================================
 // TYPES
@@ -259,19 +260,16 @@ export function CartSheet({ open, onOpenChange, trigger }: CartSheetProps) {
                 </div>
               </ScrollArea>
 
-              {/* Footer avec total et checkout */}
+              {/* Footer avec détails et checkout */}
               <div className="border-t pt-4 space-y-4">
-                <div className="flex items-center justify-between text-lg font-medium">
-                  <span>Total</span>
-                  <span>{formatPrice(subtotal)}</span>
-                </div>
+                <CartSummary showShippingMethods={false} />
 
                 <Button className="w-full" size="lg">
                   Finaliser la commande
                 </Button>
 
                 <p className="text-xs text-center text-muted-foreground">
-                  Livraison et taxes calculées lors du checkout
+                  Prix TTC, livraison incluse
                 </p>
               </div>
             </>
