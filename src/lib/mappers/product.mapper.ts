@@ -17,7 +17,6 @@
 import { 
   type ProductDTO, 
   type ProductViewModel,
-  LABEL_DISPLAY,
   PRODUCT_CONSTANTS
 } from '@/lib/types/domain/product'
 import { validateProductDBRow } from '@/lib/schemas/product'
@@ -53,8 +52,7 @@ export function mapProductDTOToViewModel(
   const image_url = dto.image_url ?? getDefaultProductImage()
   const image_alt = getProductImageAlt(localizedName, dto.labels)
   
-  // Conversion labels -> textes d'affichage
-  const labelDisplayTexts = dto.labels.map(label => LABEL_DISPLAY[label])
+  // Labels simples (déjà prêts pour affichage)
   
   // Calculs stock
   const isInStock = dto.stock > 0
@@ -86,7 +84,6 @@ export function mapProductDTOToViewModel(
     // Cosmétique
     inci_list: dto.inci_list,
     labels: dto.labels,
-    labelDisplayTexts,
     
     // États UI
     is_active: dto.is_active,

@@ -11,18 +11,7 @@
  */
 
 import { z } from 'zod'
-import type { ProductLabel, ProductStatus, ProductDTO } from '@/lib/types/domain/product'
-
-// Schema enum pour ProductLabel (7 valeurs fixes HerbisVeritas)
-export const ProductLabelSchema = z.enum([
-  'recolte_main',
-  'bio', 
-  'origine_occitanie',
-  'partenariat_producteurs',
-  'rituel_bien_etre',
-  'rupture_recolte',
-  'essence_precieuse'
-])
+import type { ProductStatus, ProductDTO } from '@/lib/types/domain/product'
 
 // Schema enum pour ProductStatus
 export const ProductStatusSchema = z.enum(['active', 'inactive', 'draft'])
@@ -67,7 +56,7 @@ export const ProductDTOSchema = z.object({
   
   // Spécificités cosmétique (arrays jamais undefined)
   inci_list: z.array(z.string().min(1, 'INCI ingredient cannot be empty')).default([]),
-  labels: z.array(ProductLabelSchema).default([]),
+  labels: z.array(z.string().min(1, 'Label cannot be empty')).default([]),
   
   // États
   status: ProductStatusSchema.default('active'),
@@ -86,7 +75,7 @@ export const ProductDTOSchema = z.object({
 export const ProductDBRowSchema = ProductDTOSchema.extend({
   // DB peut avoir des nulls qui seront normalisés
   inci_list: z.array(z.string()).nullable().transform(val => val ?? []),
-  labels: z.array(ProductLabelSchema).nullable().transform(val => val ?? []),
+  labels: z.array(z.string()).nullable().transform(val => val ?? []),
   translations: z.any().transform((val) => {
     if (!val || typeof val !== 'object') return {}
     return val
@@ -96,7 +85,7 @@ export const ProductDBRowSchema = ProductDTOSchema.extend({
 // Schema pour filtres de recherche
 export const ProductFiltersSchema = z.object({
   category_id: z.string().uuid().optional(),
-  labels: z.array(ProductLabelSchema).optional(),
+  labels: z.array(z.string().min(1)).optional(),
   priceMin: z.number().min(0).optional(),
   priceMax: z.number().min(0).optional(),
   search: z.string().min(1).max(100).optional(),
@@ -146,18 +135,14 @@ export function validateProductPagination(data: unknown) {
 }
 
 // Type guards pour runtime checks
-export function isValidProductLabel(value: string): value is ProductLabel {
-  return ProductLabelSchema.safeParse(value).success
-}
-
 export function isValidProductStatus(value: string): value is ProductStatus {
   return ProductStatusSchema.safeParse(value).success
 }
 
 // Utilitaires de normalisation
-export function normalizeProductLabels(labels: unknown): ProductLabel[] {
+export function normalizeProductLabels(labels: unknown): string[] {
   if (!Array.isArray(labels)) return []
-  return labels.filter(isValidProductLabel)
+  return labels.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
 }
 
 export function normalizeInciList(inci: unknown): string[] {

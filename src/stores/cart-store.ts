@@ -66,8 +66,14 @@ export const useCartStore = create<CartStore>()(
       error: null,
       itemCount: 0,
       subtotal: 0,
-      total: 0,
+      shippingCost: 0,
       tva: 0,
+      total: 0,
+      
+      // === Shipping State ===
+      shippingCalculation: null,
+      selectedShippingMethod: 'standard',
+      destinationCountry: 'FR',
 
       // === Legacy Actions CRUD (Migration progressive vers slices) ===
       addItem: (product: Product, quantity = 1) => {

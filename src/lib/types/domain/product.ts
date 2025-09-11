@@ -22,15 +22,7 @@
 // Version DTO pour cache invalidation
 export const DTO_VERSION = 1
 
-// HerbisVeritas MVP: 7 labels fixes (business requirement)
-export type ProductLabel = 
-  | 'recolte_main'           // "Récolté à la main"
-  | 'bio'                    // "Bio"
-  | 'origine_occitanie'      // "Origine Occitanie"
-  | 'partenariat_producteurs' // "Partenariat producteurs"
-  | 'rituel_bien_etre'       // "Rituel bien-être"
-  | 'rupture_recolte'        // "Rupture de récolte"
-  | 'essence_precieuse'      // "Essence précieuse"
+// Labels : simple string array pour badges et filtres
 
 // Statuts produit MVP
 export type ProductStatus = 'active' | 'inactive' | 'draft'
@@ -72,7 +64,7 @@ export interface ProductDTO {
   
   // Spécificités cosmétique HerbisVeritas
   inci_list: string[]
-  labels: ProductLabel[]
+  labels: string[]
   
   // États
   status: ProductStatus
@@ -113,8 +105,7 @@ export interface ProductViewModel {
   
   // Cosmétique
   inci_list: string[]
-  labels: ProductLabel[]
-  labelDisplayTexts: string[]
+  labels: string[]
   
   // États UI
   is_active: boolean
@@ -144,7 +135,7 @@ export interface ProductGridProps {
 // Filtres de recherche
 export interface ProductFilters {
   category_id?: string
-  labels?: ProductLabel[]
+  labels?: string[]
   priceMin?: number
   priceMax?: number
   search?: string
@@ -179,24 +170,3 @@ export const PRODUCT_CONSTANTS = {
   MAX_PAGE_SIZE: 100,
 } as const
 
-// Label display mapping (business requirement)
-export const LABEL_DISPLAY: Record<ProductLabel, string> = {
-  'recolte_main': 'Récolté à la main',
-  'bio': 'Bio',
-  'origine_occitanie': 'Origine Occitanie',
-  'partenariat_producteurs': 'Partenariat producteurs',
-  'rituel_bien_etre': 'Rituel bien-être',
-  'rupture_recolte': 'Rupture de récolte',
-  'essence_precieuse': 'Essence précieuse'
-} as const
-
-// Badge variants pour styling
-export const LABEL_BADGE_VARIANTS: Record<ProductLabel, string> = {
-  'bio': 'bio',
-  'recolte_main': 'recolte',
-  'origine_occitanie': 'origine',
-  'partenariat_producteurs': 'partenariat',
-  'rituel_bien_etre': 'rituel',
-  'rupture_recolte': 'rupture',
-  'essence_precieuse': 'essence'
-} as const

@@ -6,7 +6,6 @@
  * Ne jamais upscaler > original; conserver ratio; pas d'URL hardcodées
  */
 
-import type { ProductLabel } from '@/lib/types/domain/product'
 
 // Configuration responsive
 const RESPONSIVE_BREAKPOINTS = [320, 480, 768, 1024] as const
@@ -26,7 +25,7 @@ export function getDefaultProductImage(): string {
  */
 export function getProductImageAlt(
   productName: string,
-  labels: ProductLabel[] = []
+  labels: string[] = []
 ): string {
   const baseAlt = `Photo du produit ${productName}`
   
@@ -34,17 +33,9 @@ export function getProductImageAlt(
     return baseAlt
   }
   
-  // Ajouter les labels importants dans l'alt
-  const importantLabels = labels.filter(label => 
-    ['bio', 'origine_occitanie', 'recolte_main'].includes(label)
-  )
-  
-  if (importantLabels.length > 0) {
-    const labelText = importantLabels.join(', ')
-    return `${baseAlt}, ${labelText}`
-  }
-  
-  return baseAlt
+  // Ajouter quelques labels dans l'alt (max 3 pour lisibilité)
+  const displayLabels = labels.slice(0, 3).join(', ')
+  return `${baseAlt}, ${displayLabels}`
 }
 
 /**
