@@ -35,7 +35,7 @@ export function useCartShipping(
   destinationCountry: string = 'FR',
   locale: 'fr' | 'en' = 'fr'
 ): CartShippingCalculation {
-  const { cart, subtotal, tva, total } = useCartState()
+  const { cart, subtotal } = useCartState()
   
   const calculation = useMemo(() => {
     if (!cart || cart.items.length === 0) {

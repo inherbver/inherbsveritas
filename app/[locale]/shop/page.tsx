@@ -4,7 +4,6 @@ import { HeroSection } from "@/components/shop/hero-section"
 import { TrustIndicators } from "@/components/shop/trust-indicators"
 import { ProductGrid } from "@/components/collections"
 import { Loader } from "@/components/common/loader"
-import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import type { Product as DatabaseProduct } from '@/types/database'
 import type { Product } from '@/types/product'
@@ -33,32 +32,32 @@ function mapDatabaseProducts(dbProducts: DatabaseProduct[], locale: string = 'fr
     
     // Attribution cyclique des images (réutilise les images si plus de 6 produits)
     const imageIndex = index % PRODUCT_IMAGES.length
-    const image_url = PRODUCT_IMAGES[imageIndex]
+    const image_url = PRODUCT_IMAGES[imageIndex] || undefined
     
     return {
       id: dbProduct.id,
       slug: dbProduct.slug,
       category_id: dbProduct.category_id,
       
-      // Name: priorité sur nom direct de la table, puis translations
-      name: dbProduct.name || translations?.name || `Produit ${dbProduct.slug}`,
-      description_short: dbProduct.description_short || translations?.description || '',
-      description_long: dbProduct.description_long || translations?.description || '',
+      // Name: depuis translations uniquement (structure MVP)
+      name: translations?.name || `Produit ${dbProduct.slug}`,
+      description_short: translations?.description || '',
+      description_long: translations?.description || '',
       
       // Commerce
       price: dbProduct.price,
-      currency: dbProduct.currency || 'EUR',
-      stock: dbProduct.stock,
-      unit: dbProduct.unit || 'g',
+      currency: 'EUR',
+      stock: dbProduct.stock_quantity,
+      unit: 'g',
       
       // Image depuis Supabase Storage
-      image_url,
+      ...(image_url && { image_url }),
       
       // Labels
       labels: dbProduct.labels,
       
       // Status
-      status: dbProduct.status || 'active',
+      status: 'active',
       is_active: dbProduct.is_active,
       
       // Timestamps

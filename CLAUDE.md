@@ -310,7 +310,21 @@ flowchart TD
     L --> M[Commit]
 ```
 
-### 9. **Règles de Documentation**
+### 9. **Flux de Données Standardisé (Dataflow)**
+
+**Architecture obligatoire :** DB → DTO → ViewModel → UI
+- ✅ **Commentaires ROOT** en tête de chaque fichier du flux
+- ✅ **DTO_VERSION** pour invalidation cache et évolution
+- ✅ **Validation Zod** stricte des schemas
+- ✅ **Mappers purs** sans side-effects
+- ✅ **React Query** avec clés déterministes
+- ❌ **AUCUN** fetch direct dans composants
+- ❌ **AUCUNE** mutation state côté client
+- ❌ **AUCUNE** logique métier dans l'UI
+
+**Référence :** `docs/claude/dataflow-products.md` (source de vérité)
+
+### 10. **Règles de Documentation**
 **Style obligatoire :**
 - ✅ Ton neutre, purement descriptif
 - ✅ Langage technique précis
@@ -557,7 +571,9 @@ Si **conflit** entre demande utilisateur et architecture MVP :
 
 - `docs/DEVELOPMENT_PLAN_MVP.md` → Planning 12 semaines
 - `docs/DATABASE_SCHEMA_MVP.md` → Architecture technique
+- `docs/claude/dataflow-products.md` → **Flux de données produits standardisé**
 - `src/types/database.ts` → Types TypeScript MVP
+- `src/lib/types/domain/product.ts` → Types produits unifiés (DTO_VERSION: 1)
 - `supabase/migrations/001_mvp_schema.sql` → Schéma SQL
 - `package.json` scripts → Commandes npm
 - `jest.config.js` → Configuration tests unitaires

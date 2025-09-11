@@ -50,7 +50,14 @@
       "WebFetch(domain:pranafoods.ca)",
       "Bash(for file in theme-toggler.tsx menuData.tsx header-auth-section.tsx navigation-menu.tsx mobile-menu-button.tsx use-header-state.ts index.tsx)",
       "Bash(do echo \"=== $file ===\")",
-      "Bash(npx supabase:*)"
+      "Bash(npx supabase:*)",
+      "mcp__playwright__playwright_get_visible_html",
+      "mcp__playwright__playwright_evaluate",
+      "Read(//c/c/inherbisveritas/**)",
+      "WebFetch(domain:localhost)",
+      "Bash(git restore:*)",
+      "Bash(npx jest:*)",
+      "Bash(ping:*)"
     ],
     "deny": [],
     "ask": []

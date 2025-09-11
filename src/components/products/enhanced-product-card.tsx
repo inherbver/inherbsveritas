@@ -1,9 +1,13 @@
-'use client'
-
 /**
- * @file EnhancedProductCard - Product Card refactorisé selon CLAUDE.md
- * @description Card produit composé de sous-composants
+ * ROOT: UI CONTRACT — ProductCard
+ * Props: ProductViewModel (jamais un DBRow direct)
+ * AUCUN fetch ici; affichage pur + micro-interactions
+ * Prix: formatPrice(price, 'EUR', locale) - price déjà en unités
+ * Images: image_url || getDefaultProductImage()
+ * Labels: LABEL_DISPLAY[label] pour texte; LABEL_BADGE_VARIANTS[label] pour styling
  */
+
+'use client'
 
 import * as React from "react"
 import Link from "next/link"

@@ -27,10 +27,10 @@ export default function Error({ error, reset }: ErrorProps) {
         <header className="space-y-4">
           <AlertCircle className="h-20 w-20 text-destructive mx-auto" />
           <h1 className="text-3xl font-bold text-foreground">
-            Une erreur inattendue s'est produite
+            Une erreur inattendue s&apos;est produite
           </h1>
           <p className="text-lg text-muted-foreground">
-            Nous nous excusons pour le désagrément. L'équipe technique a été notifiée.
+            Nous nous excusons pour le désagrément. L&apos;équipe technique a été notifiée.
           </p>
         </header>
 
@@ -65,7 +65,7 @@ export default function Error({ error, reset }: ErrorProps) {
             className="flex-1"
           >
             <Home className="h-5 w-5 mr-2" />
-            Retour à l'accueil
+            Retour à l&apos;accueil
           </Button>
         </nav>
 

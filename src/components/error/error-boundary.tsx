@@ -33,7 +33,7 @@ class ErrorBoundaryClass extends React.Component<
     return { hasError: true, error }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo)
     
     if (this.props.onError) {
@@ -45,7 +45,7 @@ class ErrorBoundaryClass extends React.Component<
     this.setState({ hasError: false, error: null })
   }
 
-  render() {
+  override render() {
     if (this.state.hasError && this.state.error) {
       const FallbackComponent = this.props.fallback
 
@@ -70,17 +70,17 @@ function DefaultErrorFallback({ error, reset }: { error: Error; reset: () => voi
         <header className="space-y-2">
           <AlertCircle className="h-16 w-16 text-destructive mx-auto" />
           <h2 className="text-2xl font-bold text-foreground">
-            Oops ! Une erreur s'est produite
+            Oops ! Une erreur s&apos;est produite
           </h2>
           <p className="text-muted-foreground">
-            Nous sommes désolés, quelque chose ne s'est pas passé comme prévu.
+            Nous sommes désolés, quelque chose ne s&apos;est pas passé comme prévu.
           </p>
         </header>
 
         {isDevelopment && (
           <details className="text-left bg-muted p-4 rounded-lg text-sm">
             <summary className="cursor-pointer font-medium mb-2">
-              Détails de l'erreur (développement)
+              Détails de l&apos;erreur (développement)
             </summary>
             <pre className="whitespace-pre-wrap text-xs overflow-auto max-h-32">
               {error.name}: {error.message}
@@ -109,7 +109,7 @@ function DefaultErrorFallback({ error, reset }: { error: Error; reset: () => voi
 }
 
 // Composants spécialisés pour différents contextes
-export function ProductErrorFallback({ error, reset }: { error: Error; reset: () => void }) {
+export function ProductErrorFallback({ reset }: { error: Error; reset: () => void }) {
   return (
     <section className="text-center p-8 space-y-4" role="alert" aria-labelledby="product-error">
       <AlertCircle className="h-12 w-12 text-destructive mx-auto" />
@@ -127,7 +127,7 @@ export function ProductErrorFallback({ error, reset }: { error: Error; reset: ()
   )
 }
 
-export function CartErrorFallback({ error, reset }: { error: Error; reset: () => void }) {
+export function CartErrorFallback({ reset }: { error: Error; reset: () => void }) {
   return (
     <aside className="text-center p-6 space-y-4" role="alert" aria-labelledby="cart-error">
       <AlertCircle className="h-10 w-10 text-destructive mx-auto" />

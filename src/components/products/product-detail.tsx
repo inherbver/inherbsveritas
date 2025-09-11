@@ -56,7 +56,7 @@ function ProductImage({ product }: { product: Product }) {
   }, [product, imageError, supabaseBaseUrl])
 
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0)
-  const currentImageSrc = imageSources[currentImageIndex]
+  const currentImageSrc = imageSources[currentImageIndex] || '/images/default-product.jpg'
 
   const handleImageError = () => {
     if (currentImageIndex < imageSources.length - 1) {
