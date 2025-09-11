@@ -3,6 +3,7 @@
  * Validation des optimistic updates + RPC functions + error handling
  */
 
+import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -10,7 +11,6 @@ import { useCartActions } from '@/hooks/use-cart-actions';
 import { useCartQuery } from '@/hooks/use-cart-query';
 import { useCartOptimistic } from '@/hooks/use-cart-optimistic';
 import type { HerbisCartItem } from '@/types/herbis-veritas';
-import { HerbisVeritasLabel } from '@/types/herbis-veritas';
 
 // Mock Supabase
 const mockSupabaseRpc = jest.fn();
@@ -50,9 +50,7 @@ const createTestWrapper = () => {
   });
 
   return ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    React.createElement(QueryClientProvider, { client: queryClient }, children)
   );
 };
 
@@ -68,7 +66,7 @@ describe('Cart Phase 2 Integration', () => {
       name: 'Crème Hydratante Bio',
       price: 24.99,
       quantity: 1,
-      labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.NATUREL],
+      labels: ['bio', 'naturel'],
       unit: '50ml',
       inci_list: ['Aqua', 'Butyrospermum Parkii', 'Glycerin'],
       image_url: 'https://example.com/creme.jpg',
@@ -221,7 +219,7 @@ describe('Cart Phase 2 Integration', () => {
         {
           ...mockProduct,
           quantity: 2,
-          labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.NATUREL]
+          labels: ['bio', 'naturel']
         },
         {
           id: 'item-2',
@@ -229,7 +227,7 @@ describe('Cart Phase 2 Integration', () => {
           name: 'Savon Artisanal',
           price: 12.50,
           quantity: 1,
-          labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.ARTISANAL, HerbisVeritasLabel.LOCAL],
+          labels: ['bio', 'artisanal', 'local'],
         }
       ];
 
@@ -245,13 +243,13 @@ describe('Cart Phase 2 Integration', () => {
 
       // Vérifier analytics labels
       expect(result.current.labelsDistribution).toEqual({
-        [HerbisVeritasLabel.BIO]: 3, // 2 + 1
-        [HerbisVeritasLabel.NATUREL]: 2, // 2 seulement sur premier item
-        [HerbisVeritasLabel.ARTISANAL]: 1, // 1 sur deuxième item
-        [HerbisVeritasLabel.LOCAL]: 1, // 1 sur deuxième item
+        'bio': 3, // 2 + 1
+        'naturel': 2, // 2 seulement sur premier item
+        'artisanal': 1, // 1 sur deuxième item
+        'local': 1, // 1 sur deuxième item
       });
 
-      expect(result.current.mostPopularLabel).toBe(HerbisVeritasLabel.BIO);
+      expect(result.current.mostPopularLabel).toBe('bio');
     });
 
     it('should handle optimistic actions correctly', () => {

@@ -14,7 +14,7 @@ export default function Hero() {
     description: "Découvrez notre gamme de cosmétiques biologiques et naturels fabriqués artisanalement avec les meilleurs ingrédients d'Occitanie. Des produits authentiques pour votre bien-être quotidien.",
     primaryCta: {
       text: "Découvrir nos produits",
-      href: "/products"
+      href: "/shop"
     },
     secondaryCta: {
       text: "Notre histoire", 

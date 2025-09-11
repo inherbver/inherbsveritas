@@ -6,7 +6,6 @@
 import { create } from 'zustand';
 import { createCartSlice, type CartSlice } from '@/stores/slices/cart-slice';
 import type { Product } from '@/types/herbis-veritas';
-import { HerbisVeritasLabel } from '@/types/herbis-veritas';
 
 // Mock crypto pour les tests
 Object.defineProperty(global, 'crypto', {
@@ -42,7 +41,7 @@ describe('Cart Slice - Optimistic Updates', () => {
     stock_quantity: 25,
     low_stock_threshold: 3,
     inci_list: ['Lavandula Angustifolia Oil'],
-    labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.ARTISANAL],
+    labels: ['bio', 'artisanal'],
     images: ['lavande-oil.jpg'],
     featured_image: 'lavande-oil-main.jpg',
     is_active: true,
@@ -84,7 +83,7 @@ describe('Cart Slice - Optimistic Updates', () => {
         product_id: 'prod-opt-1',
         quantity: 1,
         price: 15.90,
-        labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.ARTISANAL],
+        labels: ['bio', 'artisanal'],
         unit: 'pièce',
         inci_list: ['Lavandula Angustifolia Oil'],
         image_url: 'lavande-oil-main.jpg',

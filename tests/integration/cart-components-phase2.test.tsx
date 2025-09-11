@@ -11,7 +11,6 @@ import { CartSheet } from '@/components/cart/cart-sheet';
 import { CartDisplay } from '@/components/cart/cart-display';
 import { CartItem } from '@/components/cart/cart-item';
 import type { HerbisCartItem } from '@/types/herbis-veritas';
-import { HerbisVeritasLabel } from '@/types/herbis-veritas';
 
 // Mock Supabase
 const mockSupabaseRpc = jest.fn();
@@ -102,7 +101,7 @@ describe('Cart Components Phase 2 Integration', () => {
         name: 'Crème Hydratante Bio',
         price: 24.99,
         quantity: 2,
-        labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.NATUREL],
+        labels: ['bio', 'naturel'],
         unit: '50ml',
         inci_list: ['Aqua', 'Butyrospermum Parkii'],
         image_url: 'https://example.com/creme.jpg',
@@ -115,7 +114,7 @@ describe('Cart Components Phase 2 Integration', () => {
         name: 'Savon Artisanal Lavande',
         price: 8.50,
         quantity: 1,
-        labels: [HerbisVeritasLabel.ARTISANAL, HerbisVeritasLabel.LOCAL],
+        labels: ['artisanal', 'local'],
         unit: '100g',
         image_url: 'https://example.com/savon.jpg',
         stock_quantity: 5,
