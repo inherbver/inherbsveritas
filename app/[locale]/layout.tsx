@@ -4,6 +4,7 @@ import { locales } from '@/i18n-config'
 import { notFound } from 'next/navigation'
 import { ModernLayoutWrapper } from '@/components/layout/modern-layout'
 import { Toaster } from 'sonner'
+import ErrorBoundary from '@/components/error-boundary'
 import '../../src/styles/index.css'
 import '../../src/styles/prism-vsc-dark-plus.css'
 import Providers from '../../src/providers'
@@ -34,9 +35,11 @@ export default async function LocaleLayout({
       <body>
         <NextIntlClientProvider messages={messages}>
           <Providers>
-            <ModernLayoutWrapper locale={locale}>
-              {children}
-            </ModernLayoutWrapper>
+            <ErrorBoundary>
+              <ModernLayoutWrapper locale={locale}>
+                {children}
+              </ModernLayoutWrapper>
+            </ErrorBoundary>
             <Toaster 
               position="bottom-right" 
               richColors 
