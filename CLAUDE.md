@@ -99,13 +99,13 @@ find src/ -name "*" | sort | uniq -i -c | sort -nr | head -5
 3. ✅ Créer le fichier uniquement si non existant, au bon emplacement.
 ---
 
-### 4. **TodoWrite Obligatoire**
+### 5. **TodoWrite Obligatoire**
 - ✅ Créer todo AVANT de commencer une tâche multi-étapes
 - ✅ Marquer in_progress IMMÉDIATEMENT au début
 - ✅ Marquer completed DÈS que fini
 - ✅ Nettoyer la liste si obsolète
 
-### 5. **Documentation Traçable**
+### 6. **Documentation Traçable**
 Chaque modification DOIT être :
 - 📝 Documentée
 - 🏷️ Taguée avec version/date
@@ -113,7 +113,7 @@ Chaque modification DOIT être :
 - ✅ Validée contre l'architecture
 - ✅ desvriptive (pas d'emphase, pas d"émojis", pas de signature Claude)
 
-### 6. **Règles de Commit Strictes**
+### 7. **Règles de Commit Strictes**
 Format obligatoire : Conventional Commits en français
 ```bash
 type(scope): description concise
@@ -138,21 +138,9 @@ refactor(products): optimisation requêtes Supabase
 4. ✅ Valider cohérence avec plan MVP  
 5. 🔍 Message concis décrivant uniquement les changements
 
-**CHECKPOINT AUTO-VALIDATION COMMIT (Anthropic Best Practice) :**
-Avant CHAQUE commit, Claude DOIT valider :
-```xml
-<commit_validation>
-- FORMAT: type(scope): description concise en français ✓/✗
-- EMOJIS: Aucun emoji présent (🚀, ✅, 🤖) ✓/✗  
-- SIGNATURES: Aucune signature Claude automatique ✓/✗
-- LANGUE: Message 100% français ✓/✗
-- LONGUEUR: Description concise < 60 caractères ✓/✗
-</commit_validation>
-```
+**CHECKPOINT AUTO-VALIDATION COMMIT :** Voir Checklist Pré-Commit Unifiée section ✅
 
-**SI UNE SEULE VALIDATION ÉCHOUE → REGERERER LE MESSAGE**
-
-### 7. **Méthodologie TDD Obligatoire**
+### 8. **Méthodologie TDD Obligatoire**
 **Test-Driven Development (TDD) Pattern Strict :**
 - 🔴 **RED** : Écrire test qui échoue AVANT le code
 - 🟢 **GREEN** : Écrire le minimum de code pour faire passer le test
@@ -185,16 +173,6 @@ tests/
 │   ├── admin/      # Tests interface admin
 ```
 
-**Validation TDD Pré-Commit :**
-```xml
-<tdd_validation>
-- COVERAGE: Couverture > 80% lignes ✓/✗
-- UNIT_TESTS: Tests unitaires pour chaque fonction/composant ✓/✗  
-- INTEGRATION: Tests flows business critiques ✓/✗
-- E2E: Tests parcours utilisateur MVP ✓/✗
-- PERFORMANCE: Tests < 2s Core Web Vitals ✓/✗
-</tdd_validation>
-```
 
 ### **Règles d'Adaptation Tests/Code**
 
@@ -287,7 +265,7 @@ const mockDate = new Date('2025-01-01T10:00:00Z')
 const mockUser = { id: generateUUID(), createdAt: new Date() }
 ```
 
-### 8. **Workflow TDD Décisionnel**
+### 9. **Workflow TDD Décisionnel**
 
 **🔄 Processus de décision Tests vs Code :**
 
@@ -310,7 +288,7 @@ flowchart TD
     L --> M[Commit]
 ```
 
-### 9. **Flux de Données Standardisé (Dataflow)**
+### 10. **Flux de Données Standardisé (Dataflow)**
 
 **Architecture obligatoire :** DB → DTO → ViewModel → UI
 - ✅ **Commentaires ROOT** en tête de chaque fichier du flux
@@ -324,7 +302,7 @@ flowchart TD
 
 **Référence :** `docs/claude/dataflow-products.md` (source de vérité)
 
-### 10. **Règles de Documentation**
+### 11. **Règles de Documentation**
 **Style obligatoire :**
 - ✅ Ton neutre, purement descriptif
 - ✅ Langage technique précis
@@ -363,17 +341,45 @@ flowchart TD
 
 ---
 
-## ✅ Validations Requises
+## ✅ Checklist Pré-Commit Unifiée
 
-Avant CHAQUE modification importante :
-1. **Cohérence MVP** : Est-ce dans le plan 12 semaines ?
-2. **Architecture** : Respecte les 13 tables ?
-3. **Business** : Sert les objectifs de lancement ?
-4. **Simplicité** : Minimal viable ?
-5. **Documentation** : Traçable pour nouveaux devs ?
-6. **Tests TDD** : Tests écrits AVANT le code ?
-7. **Couverture** : > 80% des lignes testées ?
-8. **Performance** : Tests Core Web Vitals < 2s ?
+### **Validation Architecture MVP**
+- [ ] **Cohérence MVP** : Est-ce dans le plan 12 semaines ?
+- [ ] **Architecture** : Respecte les 13 tables ?
+- [ ] **Business** : Sert les objectifs de lancement ?
+- [ ] **Simplicité** : Minimal viable ?
+- [ ] **Documentation** : Traçable pour nouveaux devs ?
+
+### **Validation TDD & Tests**
+- [ ] **Tests TDD** : Tests écrits AVANT le code ?
+- [ ] **Couverture** : > 80% des lignes testées ?
+- [ ] **Performance** : Tests Core Web Vitals < 2s ?
+- [ ] Tests unitaires pour chaque fonction/composant
+- [ ] Tests flows business critiques
+- [ ] Tests parcours utilisateur MVP
+
+### **Validation Client/Serveur Next.js**
+- [ ] Composants serveur par défaut, chaque "use client" justifié
+- [ ] Aucun secret/SDK serveur/fs/ORM importé en client (`server-only` sur helpers sensibles)
+- [ ] Props Server→Client sérialisables (pas classes/fonctions/Date brutes)
+- [ ] Pas d'accès window/localStorage au render serveur
+- [ ] `NEXT_PUBLIC_*` uniquement variables réellement publiques
+- [ ] Pas de double fetch inutile serveur/client
+
+### **Validation Mobile-First Responsive**
+- [ ] Testé sur viewport 320px (iPhone SE)
+- [ ] Navigation mobile fonctionnelle sans JS
+- [ ] Texte lisible sans zoom (min 16px)
+- [ ] Boutons/liens touch-friendly (min 44px)
+- [ ] Performance < 3s First Contentful Paint (mobile)
+- [ ] Core Web Vitals validés sur mobile
+
+### **Validation Commits**
+- [ ] FORMAT: type(scope): description concise en français
+- [ ] EMOJIS: Aucun emoji présent (🚀, ✅, 🤖)
+- [ ] SIGNATURES: Aucune signature Claude automatique
+- [ ] LANGUE: Message 100% français
+- [ ] LONGUEUR: Description concise < 60 caractères
 
 ---
 
@@ -389,7 +395,7 @@ Avant CHAQUE modification importante :
 
 ---
 
-## 8. **Frontière Client/Serveur Next.js 15**
+## 12. **Frontière Client/Serveur Next.js 15**
 
 ### Règles Obligatoires
 Éviter fuites de secrets, erreurs d'hydratation, bloat du bundle et bugs de runtime en respectant strictement la séparation Client/Serveur Next.js 15 App Router.
@@ -422,17 +428,9 @@ Avant CHAQUE modification importante :
 - ✅ **Server Components** : fetch/ORM côté serveur avec `cache: 'no-store'` ou `next: { revalidate: N }`
 - ❌ **Éviter double fetch** SSR puis refetch client si non nécessaire
 
-### Checklist Pré-Commit Client/Serveur
-- [ ] Composants serveur par défaut, chaque "use client" justifié
-- [ ] Aucun secret/SDK serveur/fs/ORM importé en client (`server-only` sur helpers sensibles)
-- [ ] Props Server→Client sérialisables (pas classes/fonctions/Date brutes)
-- [ ] Pas d'accès window/localStorage au render serveur
-- [ ] `NEXT_PUBLIC_*` uniquement variables réellement publiques
-- [ ] Pas de double fetch inutile serveur/client
-
 ---
 
-## 🚥 Règles de Taille de Fichiers
+## 13. **Règles de Taille de Fichiers**
 
 ### **Limites Obligatoires par Type**
 
@@ -530,6 +528,141 @@ npm run lint:file-length || exit 1
 
 ---
 
+## 14. **Architecture Mobile-First Obligatoire**
+
+### Principes Fondamentaux Bootstrap/Foundation
+
+**Philosophie Mobile-First :**
+- ✅ **Styles de base** pour petits écrans (xs: 0px)
+- ✅ **Media queries min-width** pour écrans plus grands
+- ✅ **Performance optimisée** : CSS minimal sur mobile
+- ✅ **Progressive enhancement** : fonctionnalités ajoutées par breakpoint
+
+#### **Breakpoints Standard MVP**
+```scss
+$grid-breakpoints: (
+  xs: 0,        // Mobile portrait
+  sm: 576px,    // Mobile landscape  
+  md: 768px,    // Tablet portrait
+  lg: 992px,    // Tablet landscape / Desktop
+  xl: 1200px,   // Desktop large
+  xxl: 1400px   // Desktop extra-large
+);
+```
+
+#### **Responsive Design Patterns Obligatoires**
+
+**✅ Composants Adaptatifs :**
+- Navigation mobile → hamburger menu (< md)
+- Navigation desktop → horizontal menu (≥ md)
+- Cards → stack vertical (< lg), grid horizontal (≥ lg)
+- Images → responsive avec `.img-fluid` ou `max-width: 100%`
+
+**✅ Typography Mobile-First :**
+```scss
+// Base mobile
+h1 { font-size: 1.5rem; line-height: 1.2; }
+
+// Progressive enhancement
+@include media-breakpoint-up(md) {
+  h1 { font-size: 2rem; }
+}
+@include media-breakpoint-up(lg) {
+  h1 { font-size: 2.5rem; }
+}
+```
+
+#### **Interaction Patterns Mobile**
+
+**✅ Touch-Friendly :**
+- Boutons min 44px × 44px (recommandation Apple/Google)
+- Espacement min 8px entre éléments cliquables
+- Zones d'interaction étendues pour liens texte
+
+**✅ Navigation Gestuelle :**
+- Swipe horizontal pour carrousels produits
+- Pull-to-refresh sur listes (si applicable)
+- Scroll vertical fluide sans pagination forcée
+
+#### **Performance Mobile**
+
+**✅ Optimisations Critiques :**
+- Images responsive avec `srcset` et `sizes`
+- Lazy loading automatique pour images produits
+- CSS critique inline, CSS non-critique asynchrone
+- JavaScript progressif : core mobile, enhancement desktop
+
+**✅ Network Boundary Mobile :**
+```scss
+// Critical mobile CSS (inline)
+.btn, .container, .row, .col { /* base styles */ }
+
+// Enhancement CSS (async load)
+@media (min-width: 768px) {
+  .complex-animations { /* desktop enhancements */ }
+}
+```
+
+#### **Validation Responsive Obligatoire**
+
+**Tests Devices Obligatoires :**
+```bash
+# Playwright mobile testing
+npm run test:e2e -- --project=mobile
+# Viewports: 375×667 (iPhone), 414×896 (iPhone Plus), 360×640 (Android)
+```
+
+#### **CSS Architecture Mobile-First**
+
+**✅ Structure SCSS Recommandée :**
+```scss
+// 1. Base mobile styles
+@import 'base/mobile-first';
+
+// 2. Components responsive
+@import 'components/button';
+@import 'components/navigation';
+
+// 3. Layout breakpoints
+@import 'layout/mobile';      // xs-sm
+@import 'layout/tablet';      // md
+@import 'layout/desktop';     // lg+
+
+// 4. Utilities responsive
+@import 'utilities/spacing';
+@import 'utilities/display';
+```
+
+**✅ Naming Convention Responsive :**
+```scss
+// Classes responsive suivant Bootstrap pattern
+.d-block              // visible sur tous écrans
+.d-none .d-md-block   // caché mobile, visible tablet+
+.d-lg-flex            // flex uniquement desktop+
+.text-center .text-md-left  // centré mobile, aligné gauche tablet+
+```
+
+### Patterns Anti-FOUC (Flash of Unstyled Content)
+
+**✅ Protection JavaScript Loading :**
+```css
+.no-js .mobile-menu { display: block; }
+.no-js .desktop-menu { display: none; }
+
+@media (min-width: 768px) {
+  .no-js .mobile-menu { display: none; }
+  .no-js .desktop-menu { display: block; }
+}
+```
+
+**✅ Progressive Enhancement HerbisVeritas :**
+- Formulaires fonctionnels sans JS (HTML5 validation)
+- Navigation accessible clavier + screen readers
+- Images avec alt text descriptif
+- Contenu principal accessible même si CSS échoue
+
+---
+
 ## 🔄 Workflow Standard
 
 ```mermaid
@@ -540,9 +673,10 @@ graph TD
     D --> E{MVP conforme?}
     E -->|Non| F[Refuser/Simplifier]
     E -->|Oui| G[TodoWrite]
-    G --> H[Implémenter]
-    H --> I[Documenter]
-    I --> J[Marquer complété]
+    G --> H[Implémenter Mobile-First]
+    H --> I[Tester Responsive]
+    I --> J[Documenter]
+    J --> K[Marquer complété]
 ```
 
 ---
