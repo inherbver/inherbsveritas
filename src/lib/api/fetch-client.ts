@@ -11,7 +11,7 @@
  * - Type safety avec TypeScript generics
  */
 
-import { ofetch, type FetchOptions } from 'ofetch'
+import { ofetch } from 'ofetch'
 import { toast } from '@/lib/toast'
 import { createClient } from '@supabase/supabase-js'
 
@@ -277,27 +277,27 @@ export const apiClient = ofetch.create({
 // Wrapper fonctions typed pour API Supabase REST
 export const api = {
   // GET request
-  get: async <T = any>(url: string, options: Omit<FetchOptions, 'method'> = {}): Promise<T> => {
+  get: async <T = any>(url: string, options: any = {}): Promise<T> => {
     return apiClient<T>(url, { method: 'GET', ...options })
   },
 
   // POST request
-  post: async <T = any>(url: string, body?: any, options: Omit<FetchOptions, 'method' | 'body'> = {}): Promise<T> => {
+  post: async <T = any>(url: string, body?: any, options: any = {}): Promise<T> => {
     return apiClient<T>(url, { method: 'POST', body, ...options })
   },
 
   // PUT request
-  put: async <T = any>(url: string, body?: any, options: Omit<FetchOptions, 'method' | 'body'> = {}): Promise<T> => {
+  put: async <T = any>(url: string, body?: any, options: any = {}): Promise<T> => {
     return apiClient<T>(url, { method: 'PUT', body, ...options })
   },
 
   // PATCH request
-  patch: async <T = any>(url: string, body?: any, options: Omit<FetchOptions, 'method' | 'body'> = {}): Promise<T> => {
+  patch: async <T = any>(url: string, body?: any, options: any = {}): Promise<T> => {
     return apiClient<T>(url, { method: 'PATCH', body, ...options })
   },
 
   // DELETE request
-  delete: async <T = any>(url: string, options: Omit<FetchOptions, 'method'> = {}): Promise<T> => {
+  delete: async <T = any>(url: string, options: any = {}): Promise<T> => {
     return apiClient<T>(url, { method: 'DELETE', ...options })
   }
 }

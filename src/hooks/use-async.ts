@@ -147,6 +147,8 @@ export function useAsync<T>(
     // Démarrer execution avec retry
     await executeWithRetry()
   }, [finalCacheKey, cacheDuration, onSuccess])
+  
+  // Fonction d'exécution avec retry logic (définie après execute pour éviter dépendance circulaire)
 
   // Fonction d'exécution avec retry logic
   const executeWithRetry = useCallback(async (): Promise<void> => {
