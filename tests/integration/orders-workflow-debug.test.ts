@@ -6,8 +6,8 @@ import { describe, it, expect, beforeAll } from '@jest/globals';
 import { createClient } from '@supabase/supabase-js';
 
 // Setup test database avec même configuration que le test original
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL']!;
+const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 describe('Orders Workflow Debug - Timing Test', () => {

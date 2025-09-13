@@ -321,7 +321,7 @@ describe('Compatibilité Next.js 15 SSR', () => {
   it('gère l\'hydration sans erreurs', () => {
     // QueryClient ne doit pas accéder window/localStorage au render serveur
     expect(() => {
-      new QueryClient(queryClient.getDefaultOptions())
+      new QueryClient()
     }).not.toThrow()
   })
 

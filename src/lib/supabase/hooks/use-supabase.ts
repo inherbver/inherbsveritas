@@ -6,8 +6,8 @@
 
 "use client"
 
-import { useAuth } from '@/lib/auth/hooks/use-auth-user'
-import { useAuthActions } from '@/lib/auth/hooks/use-auth-actions'
+import { useAuth } from '@/features/auth'
+import { useAuthActions } from '@/features/auth'
 
 /**
  * Hook principal pour Supabase - Compatible avec Header

@@ -15,15 +15,15 @@ function cleanPhone(phone: string): string {
   return phone.replace(/[\s\.\-\(\)]/g, '')
 }
 
-// Validation code postal par pays avec patterns précis
+// Validation code postal par pays avec patterns précis et plages
 const postalCodeValidation = {
-  'FR': /^[0-9]{5}$/,
-  'US': /^[0-9]{5}(-[0-9]{4})?$/,
-  'CA': /^[A-Z][0-9][A-Z]\s?[0-9][A-Z][0-9]$/i,
-  'GB': /^[A-Z]{1,2}[0-9R][0-9A-Z]?\s?[0-9][A-Z]{2}$/i,
-  'DE': /^[0-9]{5}$/,
-  'ES': /^[0-9]{5}$/,
-  'IT': /^[0-9]{5}$/
+  'FR': (code: string) => /^[0-9]{5}$/.test(code) && parseInt(code) >= 1000 && parseInt(code) <= 95999,
+  'US': (code: string) => /^[0-9]{5}(-[0-9]{4})?$/.test(code),
+  'CA': (code: string) => /^[A-Z][0-9][A-Z]\s?[0-9][A-Z][0-9]$/i.test(code),
+  'GB': (code: string) => /^[A-Z]{1,2}[0-9R][0-9A-Z]?\s?[0-9][A-Z]{2}$/i.test(code),
+  'DE': (code: string) => /^[0-9]{5}$/.test(code),
+  'ES': (code: string) => /^[0-9]{5}$/.test(code),
+  'IT': (code: string) => /^[0-9]{5}$/.test(code)
 }
 
 // Validation téléphone flexible
@@ -31,8 +31,11 @@ const phoneValidation = /^(\+[1-9]\d{1,14}|0[1-9]\d{8,9})$/
 
 // Schema principal de création d'adresse
 export const addressCreateSchema = z.object({
-  type: z.enum(['shipping', 'billing'])
-    .transform(val => val.toLowerCase().trim() as 'shipping' | 'billing'),
+  type: z.string()
+    .trim()
+    .transform(val => val.toLowerCase())
+    .refine(val => ['shipping', 'billing'].includes(val), 'Type doit être shipping ou billing')
+    .transform(val => val as 'shipping' | 'billing'),
   
   first_name: z.string()
     .min(1, 'Prénom requis')
@@ -79,12 +82,7 @@ export const addressCreateSchema = z.object({
     
   postal_code: z.string()
     .min(1, 'Code postal requis')
-    .trim()
-    .transform((code, ctx) => {
-      // Le transform a accès au contexte pour valider avec le pays
-      const country = (ctx.path[0] as any)?.country || 'FR'
-      return formatPostalCode(code, country)
-    }),
+    .trim(),
     
   country: z.string()
     .length(2, 'Code pays à 2 caractères requis')
@@ -100,16 +98,16 @@ export const addressCreateSchema = z.object({
       const cleaned = cleanPhone(phone)
       return phoneValidation.test(cleaned)
     }, 'Numéro de téléphone invalide')
-    .transform((phone, ctx) => {
+    .transform((phone) => {
       if (!phone) return phone
-      const country = (ctx.path[0] as any)?.country || 'FR'
-      return formatPhone(phone, country)
+      // Formatage simple : suppression des espaces/points
+      return cleanPhone(phone)
     })
     
 }).refine((data) => {
   // Validation croisée code postal / pays
-  const pattern = postalCodeValidation[data.country as keyof typeof postalCodeValidation]
-  return pattern ? pattern.test(data.postal_code) : true
+  const validator = postalCodeValidation[data.country as keyof typeof postalCodeValidation]
+  return validator ? validator(data.postal_code) : true
 }, {
   message: 'Code postal invalide pour ce pays',
   path: ['postal_code']
@@ -138,7 +136,11 @@ export const addressValidation = {
     
     switch (country) {
       case 'FR':
-        return cleaned.padStart(5, '0') // 75001
+        // Ne fait le padding que si exactement 4 chiffres ET commençant par 0-9
+        if (cleaned.length === 4 && /^[0-9]{4}$/.test(cleaned)) {
+          return cleaned.padStart(5, '0')
+        }
+        return cleaned // Autres cas : pas de padding, validation stricte
       case 'CA':
         // Format: A1A 1A1
         const upper = cleaned.toUpperCase()
@@ -187,13 +189,13 @@ export const addressValidation = {
    * Valide combinaison pays/code postal
    */
   validateCountryPostal(postalCode: string, country: string): { isValid: boolean; error?: string } {
-    const pattern = postalCodeValidation[country as keyof typeof postalCodeValidation]
+    const validator = postalCodeValidation[country as keyof typeof postalCodeValidation]
     
-    if (!pattern) {
+    if (!validator) {
       return { isValid: true } // Pays non supporté = accepté
     }
     
-    const isValid = pattern.test(postalCode)
+    const isValid = validator(postalCode)
     if (isValid) {
       return { isValid }
     }

@@ -4,7 +4,7 @@
  * @jest-environment node
  */
 
-import { NextRequest } from 'next/server'
+// NextRequest import removed - not used in this test file
 
 // Mock Supabase client pour tests isolation
 const mockSignInWithPassword = jest.fn()
@@ -40,7 +40,7 @@ interface LoginResult {
 
 // Functions à implémenter - n'existent pas encore (RED)
 import { loginUser, logoutUser, getCurrentUser } from '@/lib/auth/actions'
-import { expectErrorMessage, expectSuccessMessage, EXPECTED_MESSAGES } from '../../helpers/auth-test-helpers'
+import { expectErrorMessage, EXPECTED_MESSAGES } from '../../helpers/auth-test-helpers'
 
 describe('Login Flow TDD', () => {
   beforeEach(() => {
@@ -74,7 +74,7 @@ describe('Login Flow TDD', () => {
         })
 
         // Act - Action à tester
-        const result = await loginUser(credentials)
+        const result: LoginResult = await loginUser(credentials)
 
         // Assert - Contrat observable attendu
         expect(result.success).toBe(true)

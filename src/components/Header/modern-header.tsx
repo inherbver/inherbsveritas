@@ -14,7 +14,7 @@ import { HeaderSearch, HeaderSearchMobile } from "./header-search"
 import { HeaderActions } from "./header-actions"
 import { MobileNavigation } from "./mobile-navigation"
 import { useSupabase } from '@/lib/supabase/hooks/use-supabase'
-import { useCartStore } from '@/stores/cart-store'
+import { useCartStore } from '@/features/cart'
 import { cn } from "@/lib/utils"
 
 interface NavigationItem {

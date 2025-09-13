@@ -134,12 +134,12 @@ describe('Labels Filtering Integration - MVP', () => {
       const wrapper = createTestWrapper()
       
       const { result } = renderHook(
-        () => useProducts({ labels: ['bio'] }),
+        () => useProducts({ filters: { labels: ['bio'] } }),
         { wrapper }
       )
 
       await waitFor(() => {
-        expect(result.current.isSuccess).toBe(true)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(mockFetch).toHaveBeenCalledWith(
@@ -147,9 +147,9 @@ describe('Labels Filtering Integration - MVP', () => {
         expect.any(Object)
       )
       
-      expect(result.current.data).toHaveLength(2)
-      expect(result.current.data?.[0].labels).toContain('bio')
-      expect(result.current.data?.[1].labels).toContain('bio')
+      expect(result.current.products).toHaveLength(2)
+      expect(result.current.products[0]?.labels).toContain('bio')
+      expect(result.current.products[1]?.labels).toContain('bio')
     })
 
     it('should filter products by multiple labels (OR logic)', async () => {
@@ -164,12 +164,12 @@ describe('Labels Filtering Integration - MVP', () => {
       const wrapper = createTestWrapper()
       
       const { result } = renderHook(
-        () => useProducts({ labels: ['bio', 'local'] }),
+        () => useProducts({ filters: { labels: ['bio', 'local'] } }),
         { wrapper }
       )
 
       await waitFor(() => {
-        expect(result.current.isSuccess).toBe(true)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(mockFetch).toHaveBeenCalledWith(
@@ -177,7 +177,7 @@ describe('Labels Filtering Integration - MVP', () => {
         expect.any(Object)
       )
       
-      expect(result.current.data).toHaveLength(3)
+      expect(result.current.products).toHaveLength(3)
     })
 
     it('should handle empty labels filter', async () => {
@@ -192,12 +192,12 @@ describe('Labels Filtering Integration - MVP', () => {
       const wrapper = createTestWrapper()
       
       const { result } = renderHook(
-        () => useProducts({ labels: [] }),
+        () => useProducts({ filters: { labels: [] } }),
         { wrapper }
       )
 
       await waitFor(() => {
-        expect(result.current.isSuccess).toBe(true)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Pas de paramètre labels dans l'URL
@@ -219,15 +219,15 @@ describe('Labels Filtering Integration - MVP', () => {
       const wrapper = createTestWrapper()
       
       const { result } = renderHook(
-        () => useProducts({ labels: ['nonexistent_label'] }),
+        () => useProducts({ filters: { labels: ['nonexistent_label'] } }),
         { wrapper }
       )
 
       await waitFor(() => {
-        expect(result.current.isSuccess).toBe(true)
+        expect(result.current.isLoading).toBe(false)
       })
 
-      expect(result.current.data).toHaveLength(0)
+      expect(result.current.products).toHaveLength(0)
     })
   })
 
@@ -243,16 +243,16 @@ describe('Labels Filtering Integration - MVP', () => {
       const wrapper = createTestWrapper()
       
       const { result } = renderHook(
-        () => useProducts({ 
+        () => useProducts({ filters: {
           labels: ['bio'], 
           priceMin: 15,
           priceMax: 25
-        }),
+        }}),
         { wrapper }
       )
 
       await waitFor(() => {
-        expect(result.current.isSuccess).toBe(true)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(mockFetch).toHaveBeenCalledWith(
@@ -272,15 +272,15 @@ describe('Labels Filtering Integration - MVP', () => {
       const wrapper = createTestWrapper()
       
       const { result } = renderHook(
-        () => useProducts({ 
+        () => useProducts({ filters: {
           labels: ['bio'], 
           search: 'crème'
-        }),
+        }}),
         { wrapper }
       )
 
       await waitFor(() => {
-        expect(result.current.isSuccess).toBe(true)
+        expect(result.current.isLoading).toBe(false)
       })
 
       expect(mockFetch).toHaveBeenCalledWith(
@@ -300,7 +300,7 @@ describe('Labels Filtering Integration - MVP', () => {
       const wrapper = createTestWrapper()
       
       const { result, rerender } = renderHook(
-        ({ labels }) => useProducts({ labels }),
+        ({ labels }) => useProducts({ filters: { labels } }),
         { 
           wrapper,
           initialProps: { labels: ['bio'] }
@@ -313,7 +313,7 @@ describe('Labels Filtering Integration - MVP', () => {
       rerender({ labels: ['local'] })
 
       await waitFor(() => {
-        expect(result.current.isSuccess).toBe(true)
+        expect(result.current.isLoading).toBe(false)
       })
 
       // Doit faire un seul appel avec les derniers filtres

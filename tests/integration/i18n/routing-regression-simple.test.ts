@@ -26,7 +26,7 @@ describe('i18n Configuration - Tests Critiques', () => {
     console.table(results)
     
     // Tous les fichiers critiques doivent exister
-    results.forEach(({ file, exists }) => {
+    results.forEach(({ file: _file, exists }) => {
       expect(exists).toBe(true)
     })
   })

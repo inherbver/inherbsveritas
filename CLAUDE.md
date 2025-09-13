@@ -41,13 +41,69 @@ Read → Edit/Write
 # TOUJOURS préserver les patterns existants
 ```
 
-### 3 bis Structure & Placement des Fichiers
+### 3 bis Architecture Features Impérative
 
-- ✅ Respecter la structure de dossiers définie dans `docs/PROJECT_STRUCTURE.md`.
-- ✅ Vérifier avant création qu'un fichier **de même nom ou rôle n'existe pas déjà** ailleurs.
-- ✅ Centraliser les composants génériques dans `src/components/`, les pages dans `app/`, et les tests dans `tests/`.
-- ✅ Les noms de fichiers doivent suivre la convention définie (`PascalCase` pour composants, `kebab-case` pour fichiers utilitaires).
-- ❌ Interdiction de créer un **doublon fonctionnel** (ex. `Cart.tsx` et `Cart/index.tsx`).
+**⚠️ RÈGLES ANTI-DOUBLONS OBLIGATOIRES :**
+
+#### **Organisation par Domaine Métier**
+- ✅ **UNIQUEMENT src/features/[domain]/** pour logique métier
+- ✅ **UNIQUEMENT src/components/** pour UI générique réutilisable
+- ✅ **UNIQUEMENT src/lib/** pour utilitaires purs et configuration
+- ✅ **UNIQUEMENT src/hooks/** pour hooks techniques génériques
+
+#### **Structure Features Obligatoire**
+```bash
+src/features/[domain]/
+├── components/          # Composants métier spécifiques
+├── hooks/              # Hooks métier spécifiques  
+├── services/           # API calls, business logic
+├── store/              # Store Zustand si nécessaire
+├── types.ts            # Types spécifiques domaine
+└── index.ts            # API publique UNIQUEMENT
+```
+
+#### **Interdictions Strictes Anti-Doublons**
+- ❌ **JAMAIS de logique métier** dans src/components/
+- ❌ **JAMAIS de hooks métier** dans src/hooks/ (uniquement techniques)
+- ❌ **JAMAIS de doublon fonctionnel** entre features/ et lib/
+- ❌ **JAMAIS de réexports UI** depuis features/[domain]/index.ts
+- ❌ **JAMAIS de types métier** dispersés (centralisés dans features/[domain]/types.ts)
+
+#### **Validation Architecture Obligatoire**
+**AVANT de créer TOUT fichier :**
+```bash
+# 1. Rechercher doublons fonctionnels existants
+find src -name "*[keyword]*" -type f | grep -v test
+
+# 2. Identifier domaine métier correct
+auth → src/features/auth/
+cart → src/features/cart/  
+products → src/features/products/
+ui générique → src/components/ui/
+technique pur → src/lib/
+
+# 3. Valider responsabilité unique
+Métier spécifique → features/[domain]/
+UI réutilisable → components/
+Utilitaire pur → lib/
+Hook technique → hooks/
+```
+
+#### **Règles Domaines Métier MVP**
+- ✅ **auth/** : authentification, rôles, permissions
+- ✅ **cart/** : panier, items, calculs, persistence  
+- ✅ **products/** : catalogue, filtres, recherche
+- ✅ **orders/** : commandes, checkout, paiement
+- ❌ **INTERDICTION** créer nouveaux domaines sans validation MVP
+
+#### **Process de Validation Anti-Doublons**
+1. 🔍 **RECHERCHER** : `find src -name "*[nom]*" | head -10`
+2. 📂 **IDENTIFIER** : Quel domaine métier ? (auth/cart/products/other)
+3. 🎯 **PLACER** : features/[domain]/[type]/[filename]
+4. ✅ **VALIDER** : Aucun doublon fonctionnel existant
+5. 📝 **DOCUMENTER** : Rôle et responsabilité unique
+
+**⚠️ CRITIQUE : Toute violation de ces règles = REFACTOR IMMÉDIAT obligatoire**
 
 ### 4. **Conventions Nommage Next.js (DEV.TO Best Practices)**
 
@@ -663,32 +719,88 @@ npm run test:e2e -- --project=mobile
 
 ---
 
-## 🔄 Workflow Standard
+## 15. **Workflow Anti-Doublons Obligatoire**
+
+### **Checklist AVANT Création de Fichier**
+
+**⚠️ PROCES MANDATORY - 0 EXCEPTION :**
+
+```bash
+# ÉTAPE 1 : Recherche doublons existants
+find src -name "*[keyword]*" -type f | grep -v test
+
+# ÉTAPE 2 : Validation responsabilité  
+if [logique_métier]; then
+  destination="src/features/[domain]/"
+elif [ui_générique]; then
+  destination="src/components/ui/"
+elif [utilitaire_pur]; then
+  destination="src/lib/"
+elif [hook_technique]; then
+  destination="src/hooks/"
+else
+  STOP → Clarifier responsabilité
+fi
+
+# ÉTAPE 3 : Validation unicité
+if [doublon_fonctionnel_exists]; then
+  STOP → Utiliser existant ou refactoriser
+fi
+
+# ÉTAPE 4 : Validation MVP
+if [non_MVP_feature]; then
+  STOP → Reporter V2
+fi
+```
+
+### **Workflow Standard**
 
 ```mermaid
 graph TD
     A[Demande utilisateur] --> B[Lire CLAUDE.md]
-    B --> C[Lire docs MVP]
-    C --> D[Valider vs architecture]
-    D --> E{MVP conforme?}
-    E -->|Non| F[Refuser/Simplifier]
-    E -->|Oui| G[TodoWrite]
-    G --> H[Implémenter Mobile-First]
-    H --> I[Tester Responsive]
-    I --> J[Documenter]
-    J --> K[Marquer complété]
+    B --> C[Checklist Anti-Doublons]
+    C --> D[Recherche doublons existants]
+    D --> E{Doublon détecté?}
+    E -->|Oui| F[UTILISER existant ou REFACTORISER]
+    E -->|Non| G[Valider domaine métier correct]
+    G --> H[Placer dans features/[domain]/]
+    H --> I[TodoWrite]
+    I --> J[Implémenter Mobile-First]
+    J --> K[Tester Responsive]
+    K --> L[Documenter]
+    L --> M[Marquer complété]
+    F --> N[Analyser architecture existante]
+    N --> O[Proposer refactoring si nécessaire]
 ```
 
 ---
 
 ## 📞 Points d'Escalade
 
+### **Conflits Architecture vs Demande**
 Si **conflit** entre demande utilisateur et architecture MVP :
 1. 🛑 **STOPPER** l'action
 2. 📋 **EXPLIQUER** le conflit architecture
 3. 💡 **PROPOSER** alternative MVP-compliant
 4. ✅ **ATTENDRE** validation utilisateur
 5. 📝 **DOCUMENTER** la décision
+
+### **Détection de Doublons OBLIGATOIRE**
+Si **doublon fonctionnel détecté** :
+1. 🚨 **ALERTER** immédiatement l'utilisateur
+2. 📍 **LISTER** tous les emplacements du doublon
+3. 🎯 **PROPOSER** architecture unifiée cohérente
+4. 🔄 **SUGGÉRER** refactoring selon features/[domain]/
+5. ❌ **INTERDIRE** création nouveau doublon
+6. ✅ **DOCUMENTER** décision d'unification
+
+### **Violation Règles Architecture CRITIQUE**
+Si **violation des règles anti-doublons** :
+1. 🛑 **REFUSER** catégoriquement l'action
+2. 📋 **CITER** la règle violée dans CLAUDE.md
+3. 🏗️ **EXPLIQUER** architecture correcte attendue
+4. 📝 **RÉFÉRENCER** section CLAUDE.md applicable
+5. ✅ **ATTENDRE** reformulation conforme
 
 ---
 
@@ -738,13 +850,35 @@ Si **conflit** entre demande utilisateur et architecture MVP :
 
 ---
 
-## 🎯 Prochaines Étapes Prioritaires
+## 🎯 Règles Générales de Prévention
 
-Selon le plan MVP, les prochaines actions sont :
-1. ✅ Schéma 13 tables (FAIT)
-2. 🔄 Configuration labels HerbisVeritas (EN COURS)
-3. 📋 Setup shadcn/ui design system
-4. 🌐 Configuration next-intl FR/EN
-5. 👤 Système auth 3 rôles
+### **Prévention Doublons Architecturaux**
 
-**Claude : Consulte TOUJOURS cette liste avant de suggérer des actions !**
+**Causes racines identifiées des incohérences :**
+- ❌ Refactoring partiel sans vision globale
+- ❌ Création fichiers sans recherche préalable
+- ❌ Mélange responsabilités (métier vs UI vs technique)
+- ❌ Architecture features/ incohérente avec lib/ et hooks/
+
+**Principes préventifs obligatoires :**
+- ✅ **Toujours rechercher l'existant AVANT de créer**
+- ✅ **Une seule source de vérité par responsabilité**
+- ✅ **Refactoring complet ou pas de refactoring**
+- ✅ **Architecture cohérente sur tout le projet**
+- ✅ **Validation architecture à chaque modification structurelle**
+
+### **Standards de Cohérence MVP**
+
+**Domaines métier autorisés UNIQUEMENT :**
+- `auth/` : authentification, rôles, sessions
+- `cart/` : panier, items, calculs, persistence
+- `products/` : catalogue, filtres, recherche, détails
+- `orders/` : commandes, checkout, paiement
+
+**Séparation responsabilités stricte :**
+- `src/features/[domain]/` → Logique métier exclusive
+- `src/components/` → UI générique réutilisable exclusive
+- `src/lib/` → Configuration et utilitaires purs exclusive
+- `src/hooks/` → Hooks techniques génériques exclusive
+
+**Claude : Consulter ces règles générales avant CHAQUE action structurelle !**

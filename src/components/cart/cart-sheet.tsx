@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ShoppingCart, X, Minus, Plus, Trash2 } from 'lucide-react';
-import { useCartQuery, useUpdateQuantityMutation, useRemoveFromCartMutation, useCartOptimistic, useDebouncedSync } from '@/hooks/cart';
+import { useCartQuery, useUpdateQuantityMutation, useRemoveFromCartMutation, useCartOptimistic, useDebouncedSync } from '@/features/cart';
 import { formatPrice } from '@/lib/utils';
 import { CartSummary } from './cart-summary';
 

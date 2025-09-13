@@ -4,7 +4,7 @@
  * @jest-environment node
  */
 
-import { NextRequest } from 'next/server'
+// NextRequest import removed - not used in this test file
 
 // Mock Supabase client pour tests isolation
 const mockSignUp = jest.fn()
@@ -19,25 +19,8 @@ jest.mock('@/lib/supabase/client', () => ({
   })
 }))
 
-// Types pour tests
-interface RegisterCredentials {
-  email: string
-  password: string
-  confirmPassword: string
-  acceptTerms?: boolean
-}
-
-interface RegisterResult {
-  success: boolean
-  user?: {
-    id: string
-    email: string
-    role: string
-  }
-  error?: string
-  requiresConfirmation?: boolean
-  message?: string
-}
+// Types pour tests - utilise les types officiels du système
+import type { RegisterCredentials, RegisterResult } from '@/lib/auth/actions'
 
 // Function à implémenter - n'existe pas encore (RED)
 import { registerUser } from '@/lib/auth/actions'
@@ -78,7 +61,7 @@ describe('Register Flow TDD', () => {
         })
 
         // Act - Action à tester
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         // Assert - Contrat observable attendu
         expect(result.success).toBe(true)
@@ -118,7 +101,7 @@ describe('Register Flow TDD', () => {
           error: null
         })
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(true)
         expect(result.requiresConfirmation).toBe(false)
@@ -134,7 +117,7 @@ describe('Register Flow TDD', () => {
           confirmPassword: 'ValidPass123!'
         }
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(false)
         expect(result.error).toBe('Email invalide')
@@ -148,7 +131,7 @@ describe('Register Flow TDD', () => {
           confirmPassword: '123'
         }
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(false)
         expect(result.error).toBe('Mot de passe trop court (min 8 caractères)')
@@ -162,7 +145,7 @@ describe('Register Flow TDD', () => {
           confirmPassword: 'DifferentPass456!'
         }
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(false)
         expect(result.error).toBe('Les mots de passe ne correspondent pas')
@@ -177,7 +160,7 @@ describe('Register Flow TDD', () => {
           acceptTerms: false
         }
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(false)
         expect(result.error).toBe('Vous devez accepter les conditions d\'utilisation')
@@ -192,7 +175,7 @@ describe('Register Flow TDD', () => {
           // acceptTerms non défini → devrait être traité comme false
         }
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(false)
         expect(result.error).toBe('Vous devez accepter les conditions d\'utilisation')
@@ -216,7 +199,7 @@ describe('Register Flow TDD', () => {
           }
         })
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(false)
         expect(result.error).toBe('Un compte existe déjà avec cet email')
@@ -232,7 +215,7 @@ describe('Register Flow TDD', () => {
 
         mockSignUp.mockRejectedValue(new Error('Network error'))
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(false)
         expect(result.error).toBe('Erreur de connexion, réessayez plus tard')
@@ -254,7 +237,7 @@ describe('Register Flow TDD', () => {
           }
         })
 
-        const result = await registerUser(credentials)
+        const result: RegisterResult = await registerUser(credentials)
 
         expect(result.success).toBe(false)
         expect(result.error).toBe('Le mot de passe doit respecter les critères de sécurité')
@@ -271,7 +254,7 @@ describe('Register Flow TDD', () => {
         ]
 
         for (const password of weakPasswords) {
-          const result = await registerUser({
+          await registerUser({
             email: 'user@herbisveritas.fr',
             password,
             confirmPassword: password,
@@ -320,7 +303,7 @@ describe('Register Flow TDD', () => {
 
     describe('Edge cases register', () => {
       it('devrait gérer email avec espaces', async () => {
-        const result = await registerUser({
+        await registerUser({
           email: '  user@herbisveritas.fr  ',
           password: 'ValidPass123!',
           confirmPassword: 'ValidPass123!',
@@ -335,7 +318,7 @@ describe('Register Flow TDD', () => {
       })
 
       it('devrait gérer passwords avec espaces', async () => {
-        const result = await registerUser({
+        await registerUser({
           email: 'user@herbisveritas.fr',
           password: '  SecurePass123!  ',
           confirmPassword: '  SecurePass123!  ',
@@ -361,7 +344,7 @@ describe('Register Flow TDD', () => {
           error: null
         })
 
-        const result = await registerUser({
+        await registerUser({
           email: 'USER@HERBISVERITAS.FR',
           password: 'ValidPass123!',
           confirmPassword: 'ValidPass123!',

@@ -19,8 +19,33 @@ jest.mock('@tanstack/react-query-devtools', () => ({
   )
 }))
 
-// Mock de l'environnement
+// Mock de l'environnement - Solution TypeScript strict pour process.env read-only
 const originalEnv = process.env.NODE_ENV
+
+/**
+ * Helper pour mock NODE_ENV de manière TypeScript-safe
+ * Utilise Object.defineProperty pour contourner la restriction read-only
+ */
+const mockNodeEnv = (env: string) => {
+  Object.defineProperty(process.env, 'NODE_ENV', {
+    value: env,
+    writable: true,
+    enumerable: true,
+    configurable: true
+  })
+}
+
+/**
+ * Helper pour restaurer NODE_ENV original
+ */
+const restoreNodeEnv = () => {
+  Object.defineProperty(process.env, 'NODE_ENV', {
+    value: originalEnv,
+    writable: true,
+    enumerable: true,
+    configurable: true
+  })
+}
 
 describe('QueryProvider', () => {
   beforeEach(() => {
@@ -30,7 +55,7 @@ describe('QueryProvider', () => {
 
   afterEach(() => {
     // Restore NODE_ENV
-    process.env.NODE_ENV = originalEnv
+    restoreNodeEnv()
   })
 
   describe('Rendu de base', () => {
@@ -96,7 +121,7 @@ describe('QueryProvider', () => {
 
   describe('DevTools conditionnels', () => {
     it('affiche DevTools en mode développement', () => {
-      process.env.NODE_ENV = 'development'
+      mockNodeEnv('development')
 
       render(
         <QueryProvider>
@@ -110,7 +135,7 @@ describe('QueryProvider', () => {
     })
 
     it('masque DevTools en mode production', () => {
-      process.env.NODE_ENV = 'production'
+      mockNodeEnv('production')
 
       render(
         <QueryProvider>
@@ -122,7 +147,7 @@ describe('QueryProvider', () => {
     })
 
     it('masque DevTools en mode test', () => {
-      process.env.NODE_ENV = 'test'
+      mockNodeEnv('test')
 
       render(
         <QueryProvider>
@@ -273,7 +298,7 @@ describe('QueryProvider', () => {
   describe('Performance et Bundle Size', () => {
     it('ne charge les DevTools qu\'en développement', () => {
       // En mode production, les DevTools ne doivent pas être dans le bundle
-      process.env.NODE_ENV = 'production'
+      mockNodeEnv('production')
       
       render(
         <QueryProvider>

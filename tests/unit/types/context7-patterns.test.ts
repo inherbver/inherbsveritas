@@ -61,8 +61,8 @@ describe('types/context7-patterns', () => {
       }
       
       expect(dataPattern.schema['table']).toBe('products')
-      expect(dataPattern.validations[0].field).toBe('name')
-      expect(dataPattern.validations[0].required).toBe(true)
+      expect(dataPattern.validations[0]?.field).toBe('name')
+      expect(dataPattern.validations[0]?.required).toBe(true)
     })
 
     it('should validate UIPattern structure', () => {

@@ -17,7 +17,7 @@ import { ProductCardImage } from "./product-card-image"
 import { ProductCardContent } from "./product-card-content"
 import { ProductCardActions } from "./product-card-actions"
 import { createHerbisVeritasBadges } from "@/components/shop/product-badges"
-import { useCartActions, useIsInCart } from "@/hooks/cart"
+import { useCartActions, useIsInCart } from "@/features/cart"
 import { ProductCardProps } from "@/types/product"
 import { cn } from "@/lib/utils"
 
@@ -57,7 +57,7 @@ export function EnhancedProductCard({
         name: product.name,
         price: product.price,
         quantity: 1,
-        labels: product.labels || [],
+        labels: (product.labels || []) as any,
         slug: product.slug,
         ...(product.image_url && { image_url: product.image_url })
       })

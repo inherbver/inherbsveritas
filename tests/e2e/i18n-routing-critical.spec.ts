@@ -10,7 +10,7 @@ import { test, expect } from '@playwright/test'
 /**
  * Configuration Test Environment
  */
-const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3007'
+const BASE_URL = process.env['PLAYWRIGHT_TEST_BASE_URL'] || 'http://localhost:3007'
 
 /**
  * Routes Critiques Identifiées
@@ -168,8 +168,9 @@ describe('i18n Routes Critiques - Prévention 404', () => {
     test('headers i18n doivent être présents', async ({ page }) => {
       const response = await page.goto(`${BASE_URL}/fr`)
       
-      // Vérification headers middleware i18n
+      // Vérification headers middleware i18n (analyse des headers pour debug middleware)
       const headers = response?.headers()
+      console.log('Response headers:', headers ? Object.fromEntries(Object.entries(headers)) : 'No headers')
       
       // Next.js doit traiter la requête (pas d'erreur middleware)
       expect(response?.status()).toBe(200)

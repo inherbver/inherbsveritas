@@ -3,7 +3,7 @@
  * Vérification que le store principal integre bien les slices cart et UI
  */
 
-import { useCartStore } from '@/stores/cart-store';
+import { useCartStore } from '@/features/cart';
 import type { Product } from '@/types/herbis-veritas';
 import { HerbisVeritasLabel } from '@/types/herbis-veritas';
 
@@ -93,7 +93,7 @@ describe('Cart Store + Slices Integration', () => {
       expect(store.itemCount).toBe(1);
       
       // Ajout optimistic (pour preview nouvelles features)
-      const optimisticId = store.addOptimisticItem(mockProduct, 2);
+      store.addOptimisticItem(mockProduct, 2);
       expect(store.optimisticItems).toHaveLength(1);
       expect(store.isOptimistic).toBe(true);
       
@@ -203,11 +203,11 @@ describe('Cart Store + Slices Integration', () => {
       store.setAddingToCart(true);
       store.setUpdatingCart(true);
       
-      const optimisticId1 = store.addOptimisticItem(mockProduct, 1);
+      store.addOptimisticItem(mockProduct, 1);
       store.addItem(mockProduct, 1);
       
       const secondProduct = { ...mockProduct, id: 'prod-2' };
-      const optimisticId2 = store.addOptimisticItem(secondProduct, 2);
+      store.addOptimisticItem(secondProduct, 2);
       
       // Vérifier état intermédiaire
       expect(store.optimisticItems).toHaveLength(2);

@@ -6,7 +6,7 @@
 
 import { test, expect } from '@playwright/test'
 
-const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000'
+const BASE_URL = process.env['PLAYWRIGHT_TEST_BASE_URL'] || 'http://localhost:3000'
 
 test.describe('MVP Core Flows - HerbisVeritas V2', () => {
   

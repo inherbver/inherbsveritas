@@ -9,7 +9,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-import { validateProductFilters, validateProductPagination } from '@/lib/schemas/product'
+import { validateProductFilters, validateProductPagination } from '@/features/products/schemas'
 
 export async function GET(request: NextRequest) {
   try {

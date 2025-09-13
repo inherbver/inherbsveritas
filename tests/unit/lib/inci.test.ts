@@ -17,19 +17,19 @@ describe('INCI System', () => {
     it('devrait trouver un ingrédient par nom INCI', () => {
       const results = findInciIngredient('Lavandula')
       expect(results).toHaveLength(1)
-      expect(results[0].inci_name).toBe('Lavandula Angustifolia Oil')
+      expect(results[0]?.inci_name).toBe('Lavandula Angustifolia Oil')
     })
 
     it('devrait trouver un ingrédient par nom commun français', () => {
       const results = findInciIngredient('olive')
       expect(results).toHaveLength(1)
-      expect(results[0].inci_name).toBe('Olea Europaea Fruit Oil')
+      expect(results[0]?.inci_name).toBe('Olea Europaea Fruit Oil')
     })
 
     it('devrait trouver un ingrédient par nom commun anglais', () => {
       const results = findInciIngredient('Shea Butter')
       expect(results).toHaveLength(1)
-      expect(results[0].inci_name).toBe('Butyrospermum Parkii Butter')
+      expect(results[0]?.inci_name).toBe('Butyrospermum Parkii Butter')
     })
 
     it('devrait retourner un tableau vide si aucun résultat', () => {
@@ -40,7 +40,7 @@ describe('INCI System', () => {
     it('devrait être insensible à la casse', () => {
       const results = findInciIngredient('OLEA EUROPAEA')
       expect(results).toHaveLength(1)
-      expect(results[0].inci_name).toBe('Olea Europaea Fruit Oil')
+      expect(results[0]?.inci_name).toBe('Olea Europaea Fruit Oil')
     })
   })
 

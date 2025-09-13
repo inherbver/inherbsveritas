@@ -3,7 +3,7 @@
  * TDD pour la protection des routes et redirection
  */
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { auth } from '@/lib/auth/middleware'
 import { PROTECTED_ROUTES, PUBLIC_ROUTES } from '@/lib/auth/types'
 

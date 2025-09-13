@@ -11,6 +11,7 @@ import { CartSheet } from '@/components/cart/cart-sheet';
 import { CartDisplay } from '@/components/cart/cart-display';
 import { CartItem } from '@/components/cart/cart-item';
 import type { HerbisCartItem } from '@/types/herbis-veritas';
+import { HerbisVeritasLabel } from '@/types/herbis-veritas';
 
 // Mock Supabase
 const mockSupabaseRpc = jest.fn();
@@ -101,7 +102,7 @@ describe('Cart Components Phase 2 Integration', () => {
         name: 'Crème Hydratante Bio',
         price: 24.99,
         quantity: 2,
-        labels: ['bio', 'naturel'],
+        labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.NATUREL],
         unit: '50ml',
         inci_list: ['Aqua', 'Butyrospermum Parkii'],
         image_url: 'https://example.com/creme.jpg',
@@ -114,7 +115,7 @@ describe('Cart Components Phase 2 Integration', () => {
         name: 'Savon Artisanal Lavande',
         price: 8.50,
         quantity: 1,
-        labels: ['artisanal', 'local'],
+        labels: [HerbisVeritasLabel.ARTISANAL, HerbisVeritasLabel.LOCAL],
         unit: '100g',
         image_url: 'https://example.com/savon.jpg',
         stock_quantity: 5,
@@ -303,7 +304,7 @@ describe('Cart Components Phase 2 Integration', () => {
     it('should render item with all details', () => {
       render(
         <CartItem
-          item={mockItems[0]}
+          item={mockItems[0]!}
           onUpdateQuantity={mockHandlers.onUpdateQuantity}
           onRemoveItem={mockHandlers.onRemoveItem}
         />
@@ -321,7 +322,7 @@ describe('Cart Components Phase 2 Integration', () => {
     it('should handle quantity input changes', () => {
       render(
         <CartItem
-          item={mockItems[0]}
+          item={mockItems[0]!}
           onUpdateQuantity={mockHandlers.onUpdateQuantity}
           onRemoveItem={mockHandlers.onRemoveItem}
         />
@@ -336,7 +337,7 @@ describe('Cart Components Phase 2 Integration', () => {
     it('should handle increment/decrement buttons', () => {
       render(
         <CartItem
-          item={mockItems[0]}
+          item={mockItems[0]!}
           onUpdateQuantity={mockHandlers.onUpdateQuantity}
           onRemoveItem={mockHandlers.onRemoveItem}
         />
@@ -359,7 +360,7 @@ describe('Cart Components Phase 2 Integration', () => {
     });
 
     it('should show remove confirmation for quantity 1', () => {
-      const singleItem = { ...mockItems[0], quantity: 1 };
+      const singleItem = { ...mockItems[0]!, quantity: 1 };
       
       render(
         <CartItem
@@ -385,7 +386,7 @@ describe('Cart Components Phase 2 Integration', () => {
     it('should render compact variant correctly', () => {
       render(
         <CartItem
-          item={mockItems[0]}
+          item={mockItems[0]!}
           onUpdateQuantity={mockHandlers.onUpdateQuantity}
           onRemoveItem={mockHandlers.onRemoveItem}
           variant="compact"
@@ -402,7 +403,7 @@ describe('Cart Components Phase 2 Integration', () => {
 
     it('should show stock warnings', () => {
       const lowStockItem = { 
-        ...mockItems[1], 
+        ...mockItems[1]!, 
         stock_quantity: 1, 
         low_stock_threshold: 2 
       };
@@ -421,7 +422,7 @@ describe('Cart Components Phase 2 Integration', () => {
 
     it('should show out of stock warning', () => {
       const outOfStockItem = { 
-        ...mockItems[1], 
+        ...mockItems[1]!, 
         stock_quantity: 0 
       };
       

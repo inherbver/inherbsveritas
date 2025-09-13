@@ -139,10 +139,10 @@ describe('Shipping Calculator - TDD Frais de Port', () => {
 
   describe('Configuration shipping methods', () => {
     it('devrait avoir toutes les méthodes configurées', () => {
-      expect(SHIPPING_METHODS.colissimo_standard).toBeDefined()
-      expect(SHIPPING_METHODS.colissimo_express).toBeDefined()
-      expect(SHIPPING_METHODS.mondial_relay).toBeDefined()
-      expect(SHIPPING_METHODS.chronopost).toBeDefined()
+      expect(SHIPPING_METHODS['colissimo_standard']).toBeDefined()
+      expect(SHIPPING_METHODS['colissimo_express']).toBeDefined()
+      expect(SHIPPING_METHODS['mondial_relay']).toBeDefined()
+      expect(SHIPPING_METHODS['chronopost']).toBeDefined()
     })
 
     it('devrait avoir seuil livraison gratuite configuré', () => {
@@ -151,10 +151,10 @@ describe('Shipping Calculator - TDD Frais de Port', () => {
     })
 
     it('devrait avoir Mondial Relay comme option la moins chère', () => {
-      const mondialRelay = SHIPPING_METHODS.mondial_relay
-      const colissimoStd = SHIPPING_METHODS.colissimo_standard
+      const mondialRelay = SHIPPING_METHODS['mondial_relay']
+      const colissimoStd = SHIPPING_METHODS['colissimo_standard']
       
-      expect(mondialRelay.basePrice).toBeLessThan(colissimoStd.basePrice)
+      expect(mondialRelay?.basePrice).toBeLessThan(colissimoStd?.basePrice ?? Infinity)
     })
   })
 

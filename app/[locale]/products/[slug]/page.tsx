@@ -5,7 +5,7 @@ import { ProductDetail } from '@/components/products/product-detail'
 import { Spinner } from '@/components/ui/spinner'
 import { createClient } from '@/lib/supabase/server'
 import type { Product as DatabaseProduct } from '@/types/database'
-import type { Product } from '@/types/product'
+import type { ProductViewModel as Product } from '@/features/products'
 
 // Map database product to application product type
 function mapDatabaseProduct(dbProduct: DatabaseProduct, locale: string = 'fr'): Product {

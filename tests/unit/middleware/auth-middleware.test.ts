@@ -5,7 +5,20 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { middleware } from '@/middleware'
-import { createMockSupabaseClient } from '@/lib/supabase/server'
+// Mock Supabase client factory
+const createMockSupabaseClient = () => ({
+  auth: {
+    getSession: jest.fn(),
+    getUser: jest.fn(),
+    signOut: jest.fn()
+  },
+  from: jest.fn(() => ({
+    select: jest.fn(),
+    insert: jest.fn(),
+    update: jest.fn(),
+    delete: jest.fn()
+  }))
+})
 
 // Mock données utilisateur déterministes
 const mockUserSession = {

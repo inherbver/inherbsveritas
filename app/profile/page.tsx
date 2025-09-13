@@ -5,7 +5,7 @@
  * Protection: user/admin/dev
  */
 
-import { requireAuth, getServerSession } from '@/lib/auth/server'
+import { requireAuth, getServerSession } from '@/features/auth/server-exports'
 import { LogoutButton } from '@/components/auth/logout-button'
 import Link from 'next/link'
 

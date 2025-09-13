@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { ShoppingCart, Minus, Plus, Trash2, Package } from 'lucide-react';
-import { useCartQuery, useUpdateQuantityMutation, useRemoveFromCartMutation, useCartOptimistic, useDebouncedSync } from '@/hooks/cart';
+import { useCartQuery, useUpdateQuantityMutation, useRemoveFromCartMutation, useCartOptimistic, useDebouncedSync } from '@/features/cart';
 import { formatPrice } from '@/lib/utils';
 import type { HerbisCartItem } from '@/types/herbis-veritas';
 

@@ -5,7 +5,7 @@
  * Protection: admin/dev uniquement
  */
 
-import { requireRole } from '@/lib/auth/server'
+import { requireRole } from '@/features/auth/server-exports'
 import Link from 'next/link'
 
 // Composants UI temporaires

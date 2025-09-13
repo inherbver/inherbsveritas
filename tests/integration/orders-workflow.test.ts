@@ -8,8 +8,8 @@ import { describe, it, expect, beforeAll, beforeEach, afterAll } from '@jest/glo
 import { createClient } from '@supabase/supabase-js';
 
 // Setup test database
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL']!;
+const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 describe('Orders Workflow Database Functions - TDD', () => {

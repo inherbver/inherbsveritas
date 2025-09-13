@@ -5,7 +5,10 @@
 
 import { NextRequest } from 'next/server'
 import { updateSession, getSessionDetails } from '@/lib/auth/middleware'
-import { PROTECTED_ROUTES, PUBLIC_ROUTES, type UserRole } from '@/lib/auth/types'
+import { PUBLIC_ROUTES } from '@/lib/auth/types'
+
+// Protected routes testing - comprehensive coverage examples
+// These routes are tested individually in test cases below
 
 // Mock Supabase
 const mockSupabaseUser = {
@@ -39,8 +42,8 @@ jest.mock('@supabase/ssr', () => ({
 }))
 
 // Mock environment variables
-process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co'
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = 'test-anon-key'
+process.env['NEXT_PUBLIC_SUPABASE_URL'] = 'https://test.supabase.co'
+process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] = 'test-anon-key'
 
 describe('Auth Middleware', () => {
   beforeEach(() => {

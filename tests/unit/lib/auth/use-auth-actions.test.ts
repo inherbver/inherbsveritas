@@ -6,7 +6,7 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
-import { useAuthActions } from '@/lib/auth/hooks/use-auth-actions'
+import { useAuthActions } from '@/features/auth'
 import { createClient } from '@/lib/supabase/client'
 
 // Mock Next.js router

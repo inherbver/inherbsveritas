@@ -9,7 +9,7 @@
 "use client"
 
 import { useState } from 'react'
-import { useAuthActions } from '@/lib/auth/hooks/use-auth-actions'
+import { useAuthActions } from '@/features/auth'
 import Link from 'next/link'
 
 import { Button, Alert } from './signup-form/temporary-ui'

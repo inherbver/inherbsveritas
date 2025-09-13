@@ -57,7 +57,17 @@
       "WebFetch(domain:localhost)",
       "Bash(git restore:*)",
       "Bash(npx jest:*)",
-      "Bash(ping:*)"
+      "Bash(ping:*)",
+      "Bash(npx tsc:*)",
+      "Bash(awk:*)",
+      "Bash(grep:*)",
+      "Bash(for file in ./src/components/auth/logout-button.tsx ./src/components/forms/login-form.tsx ./src/components/forms/signup-form.tsx ./src/lib/supabase/hooks/use-supabase.ts ./tests/unit/lib/auth/use-auth-actions.test.ts)",
+      "Bash(echo \"Updated imports in $file\")",
+      "Bash(for file in ./src/features/cart/hooks/use-cart-shipping.ts ./tests/unit/stores/cart-store-integration.test.ts ./tests/unit/stores/cart-store.test.ts)",
+      "Bash(echo:*)",
+      "Bash(for file in ./src/components/cart/cart-display.tsx ./src/components/cart/cart-sheet.tsx ./src/components/products/enhanced-product-card.tsx)",
+      "Bash(timeout 30s npm run build:*)",
+      "Bash(timeout 60s npm run build:*)"
     ],
     "deny": [],
     "ask": []

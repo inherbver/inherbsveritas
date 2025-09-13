@@ -8,9 +8,9 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { useCartActions } from '@/hooks/use-cart-actions';
-import { useCartQuery } from '@/hooks/use-cart-query';
 import { useCartOptimistic } from '@/hooks/use-cart-optimistic';
 import type { HerbisCartItem } from '@/types/herbis-veritas';
+import { HerbisVeritasLabel } from '@/types/herbis-veritas';
 
 // Mock Supabase
 const mockSupabaseRpc = jest.fn();
@@ -66,7 +66,7 @@ describe('Cart Phase 2 Integration', () => {
       name: 'Crème Hydratante Bio',
       price: 24.99,
       quantity: 1,
-      labels: ['bio', 'naturel'],
+      labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.NATUREL],
       unit: '50ml',
       inci_list: ['Aqua', 'Butyrospermum Parkii', 'Glycerin'],
       image_url: 'https://example.com/creme.jpg',
@@ -93,9 +93,9 @@ describe('Cart Phase 2 Integration', () => {
           name: mockProduct.name,
           price: mockProduct.price,
           quantity: 1,
-          labels: mockProduct.labels,
-          unit: mockProduct.unit,
-          stock_quantity: mockProduct.stock_quantity,
+          labels: mockProduct.labels || [],
+          ...(mockProduct.unit && { unit: mockProduct.unit }),
+          ...(mockProduct.stock_quantity && { stock_quantity: mockProduct.stock_quantity }),
         });
       });
 
@@ -219,7 +219,7 @@ describe('Cart Phase 2 Integration', () => {
         {
           ...mockProduct,
           quantity: 2,
-          labels: ['bio', 'naturel']
+          labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.NATUREL]
         },
         {
           id: 'item-2',
@@ -227,7 +227,7 @@ describe('Cart Phase 2 Integration', () => {
           name: 'Savon Artisanal',
           price: 12.50,
           quantity: 1,
-          labels: ['bio', 'artisanal', 'local'],
+          labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.ARTISANAL, HerbisVeritasLabel.LOCAL],
         }
       ];
 
@@ -266,7 +266,7 @@ describe('Cart Phase 2 Integration', () => {
           name: mockProduct.name,
           price: mockProduct.price,
           quantity: 1,
-          labels: mockProduct.labels,
+          labels: mockProduct.labels || [],
         });
       });
 
@@ -278,7 +278,7 @@ describe('Cart Phase 2 Integration', () => {
         result.current.updateQuantityOptimistic(mockProduct.productId, 3);
       });
 
-      expect(result.current.optimisticItems[0].quantity).toBe(3);
+      expect(result.current.optimisticItems[0]?.quantity).toBe(3);
       expect(result.current.itemCount).toBe(3);
 
       // Remove item

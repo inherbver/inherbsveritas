@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useCartStore, useCartActions, useCartState } from '@/stores/cart-store';
+import { useCartStore, useCartActions, useCartState } from '@/features/cart';
 import { Product, HerbisVeritasLabel } from '@/types/herbis-veritas';
 
 // Mock crypto pour les tests

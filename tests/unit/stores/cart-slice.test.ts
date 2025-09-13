@@ -6,6 +6,7 @@
 import { create } from 'zustand';
 import { createCartSlice, type CartSlice } from '@/stores/slices/cart-slice';
 import type { Product } from '@/types/herbis-veritas';
+import { HerbisVeritasLabel } from '@/types/herbis-veritas';
 
 // Mock crypto pour les tests
 Object.defineProperty(global, 'crypto', {
@@ -41,7 +42,7 @@ describe('Cart Slice - Optimistic Updates', () => {
     stock_quantity: 25,
     low_stock_threshold: 3,
     inci_list: ['Lavandula Angustifolia Oil'],
-    labels: ['bio', 'artisanal'],
+    labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.ARTISANAL],
     images: ['lavande-oil.jpg'],
     featured_image: 'lavande-oil-main.jpg',
     is_active: true,
@@ -83,7 +84,7 @@ describe('Cart Slice - Optimistic Updates', () => {
         product_id: 'prod-opt-1',
         quantity: 1,
         price: 15.90,
-        labels: ['bio', 'artisanal'],
+        labels: [HerbisVeritasLabel.BIO, HerbisVeritasLabel.ARTISANAL],
         unit: 'pièce',
         inci_list: ['Lavandula Angustifolia Oil'],
         image_url: 'lavande-oil-main.jpg',
@@ -95,21 +96,23 @@ describe('Cart Slice - Optimistic Updates', () => {
       });
     });
 
-    it('updates existing product quantity optimistically', () => {
+    it('creates separate optimistic items for same product (no auto-merge)', () => {
       const store = useTestStore.getState();
       
       // Premier ajout
       const firstId = store.addOptimisticItem(mockProduct, 2);
       
-      // Deuxième ajout du même produit
+      // Deuxième ajout du même produit (cree un nouvel item separe)
       const secondId = store.addOptimisticItem(mockProduct, 1);
       
       const state = useTestStore.getState();
       
-      expect(state.optimisticItems).toHaveLength(1);
-      expect(state.optimisticItems[0]!.quantity).toBe(3);
-      expect(state.optimisticItems[0]!.optimisticId).toBe(secondId);
-      expect(state.pendingOperations.size).toBe(1);
+      // Deux items optimistic separes car pas de fusion automatique entre optimistic items
+      expect(state.optimisticItems).toHaveLength(2);
+      expect(state.optimisticItems[0]!.quantity).toBe(2);
+      expect(state.optimisticItems[1]!.quantity).toBe(1);
+      expect(state.pendingOperations.size).toBe(2);
+      expect(state.pendingOperations.has(firstId)).toBe(true);
       expect(state.pendingOperations.has(secondId)).toBe(true);
     });
   });
@@ -132,11 +135,11 @@ describe('Cart Slice - Optimistic Updates', () => {
     it('maintains isOptimistic state with remaining items', () => {
       const store = useTestStore.getState();
       
-      const _firstId = store.addOptimisticItem(mockProduct, 1);
+      const firstId = store.addOptimisticItem(mockProduct, 1);
       const secondProduct = { ...mockProduct, id: 'prod-2' };
       const secondId = store.addOptimisticItem(secondProduct, 2);
       
-      store.removeOptimisticItem(_firstId);
+      store.removeOptimisticItem(firstId);
       const state = useTestStore.getState();
       
       expect(state.optimisticItems).toHaveLength(1);

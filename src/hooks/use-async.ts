@@ -86,6 +86,7 @@ export function useAsync<T>(
   const abortControllerRef = useRef<AbortController | null>(null)
   const retryTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const currentRetryRef = useRef(0)
+  const executeWithRetryRef = useRef<() => Promise<void>>()
 
   // Clé de cache automatique ou fournie
   const finalCacheKey = cacheKey || generateCacheKey(asyncFn)
@@ -145,7 +146,7 @@ export function useAsync<T>(
     currentRetryRef.current = 0
 
     // Démarrer execution avec retry
-    await executeWithRetry()
+    await executeWithRetryRef.current!()
   }, [finalCacheKey, cacheDuration, onSuccess])
   
   // Fonction d'exécution avec retry logic (définie après execute pour éviter dépendance circulaire)
@@ -227,7 +228,7 @@ export function useAsync<T>(
         const delay = retryDelay * Math.pow(2, currentRetryRef.current - 1)
         
         retryTimeoutRef.current = setTimeout(() => {
-          executeWithRetry()
+          executeWithRetryRef.current!()
         }, delay)
 
         return
@@ -248,6 +249,9 @@ export function useAsync<T>(
       }
     }
   }, [asyncFn, finalCacheKey, retryCount, retryDelay, enableToast, onSuccess, onError])
+
+  // Assigner la fonction à la ref pour éviter la dépendance circulaire
+  executeWithRetryRef.current = executeWithRetry
 
   // Fonction retry manuelle
   const retry = useCallback(async (): Promise<void> => {

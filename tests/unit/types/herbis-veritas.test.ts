@@ -68,9 +68,9 @@ describe('HerbisVeritas Business Logic', () => {
       const metadata = getProductLabelsMetadata(labels);
       
       expect(metadata).toHaveLength(3);
-      expect(metadata[0].priority).toBe(1); // BIO first
-      expect(metadata[1].priority).toBe(4); // ARTISANAL second
-      expect(metadata[2].priority).toBe(5); // LOCAL last
+      expect(metadata[0]?.priority).toBe(1); // BIO first
+      expect(metadata[1]?.priority).toBe(4); // ARTISANAL second
+      expect(metadata[2]?.priority).toBe(5); // LOCAL last
     });
   });
 

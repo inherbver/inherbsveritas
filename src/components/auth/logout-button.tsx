@@ -9,7 +9,7 @@
 "use client"
 
 import { useState } from 'react'
-import { useAuthActions } from '@/lib/auth/hooks/use-auth-actions'
+import { useAuthActions } from '@/features/auth'
 
 interface LogoutButtonProps {
   children?: React.ReactNode
